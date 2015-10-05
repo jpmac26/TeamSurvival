@@ -54,7 +54,7 @@ public class GameSession {
 	}
 	
 	/**
-	 * Adds a team to teh session
+	 * Adds a team to the session
 	 * @param team
 	 */
 	public void addTeam(Team team) {
@@ -98,7 +98,7 @@ public class GameSession {
 	 */
 	public Team getTeam(OfflinePlayer player) {
 		for(Team t: teams){
-			if(t.hasPlayer(player)){
+			if(t.hasPlayer(player) != null){
 				return t;
 			}
 		}

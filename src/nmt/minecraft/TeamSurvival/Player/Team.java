@@ -3,6 +3,7 @@ package nmt.minecraft.TeamSurvival.Player;
 import java.util.Collection;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 
 /**
  * A group of players.<br />
@@ -50,7 +51,6 @@ public class Team {
 	 */
 	public SurvivalPlayer hasPlayer(OfflinePlayer player){
 		for(SurvivalPlayer p : players){
-			//TODO: Check this after i get the libraries linked
 			if(p.getOfflinePlayer().equals(player)){
 				return p;
 			}
