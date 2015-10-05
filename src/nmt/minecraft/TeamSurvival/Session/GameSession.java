@@ -40,7 +40,7 @@ public class GameSession {
 	
 	/**
 	 * Stops the game.<br />
-	 * Games stop automatically, so this method is considered an emergancy operation.
+	 * Games stop automatically, so this method is considered an emergency operation.
 	 */
 	public void stop() {
 		; //TODO
@@ -73,10 +73,16 @@ public class GameSession {
 	/**
 	 * Tries to look up a team
 	 * @param player the player to look up
-	 * @return
+	 * @return The team the player is on, null if the player is not on a team.
 	 */
 	public Team getTeam(SurvivalPlayer player) {
-		return null; //TODO
+		for(Team t : teams){
+			if(t.hasPlayer(player)){
+				return t;
+			}
+		}
+		
+		return null;
 	}
 	
 	public Team getTeam(OfflinePlayer player) {

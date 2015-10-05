@@ -35,6 +35,15 @@ public class Team {
 	}
 	
 	/**
+	 * Checks to see if a player is on this team
+	 * @param player the player to look for
+	 * @return true if the player is on the team, false otherwise
+	 */
+	public boolean hasPlayer(SurvivalPlayer player){
+		return players.contains(player);
+	}	
+	
+	/**
 	 * Mainly a glamour function. Does whatever we want the players see/experience when they win, like
 	 * play a sound and display something in chat, etc. Lots of room for creativity here.<br />
 	 * Should also return players to lobby, etc
