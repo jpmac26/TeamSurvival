@@ -58,15 +58,21 @@ public class GameSession {
 	 * @param team
 	 */
 	public void addTeam(Team team) {
+		//should we check to see if the team is unique?
 		; //TODO
 	}
 	
 	/**
 	 * Tries to look up a team
 	 * @param name The name to look up
-	 * @return
+	 * @return The team with the given name, null if it cannot be found
 	 */
 	public Team getTeam(String name) {
+		for(Team t : teams){
+			if(t.getName().equals(name)){
+				return t;
+			}
+		}
 		return null; //TODO
 	}
 	
@@ -85,7 +91,17 @@ public class GameSession {
 		return null;
 	}
 	
+	/**
+	 * Tries to look up a team
+	 * @param player the player to look up
+	 * @return The team the player is on, null if the player is not on a team.
+	 */
 	public Team getTeam(OfflinePlayer player) {
+		for(Team t: teams){
+			if(t.hasPlayer(player)){
+				return t;
+			}
+		}
 		return null; //TODO
 	}
 	
@@ -95,6 +111,12 @@ public class GameSession {
 	 * @return
 	 */
 	public SurvivalPlayer getPlayer(OfflinePlayer player) {
+		for(Team t : teams){
+			SurvivalPlayer tmp=t.hasPlayer(player);
+			if(tmp != null){
+				return tmp;
+			}
+		}
 		return null; //TODO
 	}
 }

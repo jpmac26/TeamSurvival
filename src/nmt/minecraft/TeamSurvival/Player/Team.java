@@ -41,7 +41,23 @@ public class Team {
 	 */
 	public boolean hasPlayer(SurvivalPlayer player){
 		return players.contains(player);
-	}	
+	}
+	
+	/**
+	 * Checks to see if a player is on this team
+	 * @param player the player to look for
+	 * @return will return the SurvivalPlayer if found, null otherwise
+	 */
+	public SurvivalPlayer hasPlayer(OfflinePlayer player){
+		for(SurvivalPlayer p : players){
+			//TODO: Check this after i get the libraries linked
+			if(p.getOfflinePlayer().equals(player)){
+				return p;
+			}
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Mainly a glamour function. Does whatever we want the players see/experience when they win, like
