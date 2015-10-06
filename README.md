@@ -26,6 +26,7 @@ git push origin [branch name]
 * Your commit messages should be insightful into what changes you made
 * **DO NOT PUSH TO ORIGIN MASTER**
 If your changes are ready to be put into the Master Branch, navigate to this repository and **submit a pull request**.
+
 ###Tutorial Links for using Git:
 For those unfamiliar with using Git here are some helpful resources to get you started:
 
