@@ -9,20 +9,20 @@ Before running any of these commands in Shell or GitShell, please be sure to clo
 If you are familiar with git but may not be familiar with working in separate branches here are the commands:
 
 To create a branch:
-'''Shell
+```Shell
 git branch [branch name]
-'''
+```
 
 To change branches:
-'''Shell
+```Shell
 git checkout [branch name]
-'''
+```
 
 ###Commit Standards
 * Please commit and push to **your team's branch** using:
-'''Shell
+```Shell
 git push origin [branch name]
-'''
+```
 * Your commit messages should be insightful into what changes you made
 * **DO NOT PUSH TO ORIGIN MASTER**
 If your changes are ready to be put into the Master Branch, navigate to this repository and **submit a pull request**.
