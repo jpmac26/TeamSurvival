@@ -1,6 +1,7 @@
 package nmt.minecraft.TeamSurvival.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 
@@ -22,16 +23,31 @@ public class Team {
 	 */
 	private String name;
 	
-	public Team(String name, Collection<SurvivalPlayer> players) {
-		; //TODO
+	/**
+	 * Main constructor for the Team Class.
+	 * @param name The name for the Team
+	 * @param players A collection of players that are associated with a team
+	 * TODO We should probably somehow limit the size and character set of a team name.
+	 */
+	public Team(String name, HashSet<SurvivalPlayer> players) {
+		this.name = name;
 	}
 	
+	/**
+	 * Returns a team's name.
+	 * @return the Team's name.
+	 */
 	public String getName() {
 		return name;
 	}
 	
-	public void addPlayer(SurvivalPlayer player) {
-		players.add(player);
+	/**
+	 * This method adds a player to a team.
+	 * @param player
+	 * @return True if the player was successfully added to the Team.
+	 */
+	public boolean addPlayer(SurvivalPlayer player) {
+		return players.add(player);
 	}
 	
 	/**
