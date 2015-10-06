@@ -40,7 +40,7 @@ public class Team {
 	 * @return the Team's name.
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 
@@ -50,7 +50,18 @@ public class Team {
 	 * @return True if the player was successfully added to the Team.
 	 */
 	public boolean addPlayer(SurvivalPlayer player) {
-		return players.add(player);
+		return this.players.add(player);
+	}
+	
+	/**
+	 * This method removes a player from a team.
+	 * @param player The player to be removed.
+	 * @return <b>True</b> if the player was successfully removed.<br>
+	 * <b>False</b> if the player could not be removed or was not in the team to 
+	 * begin with.
+	 */
+	public boolean removePlayer(SurvivalPlayer player) {
+		return this.players.remove(player);
 	}
 	
 	/**

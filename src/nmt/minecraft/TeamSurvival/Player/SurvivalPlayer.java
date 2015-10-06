@@ -8,7 +8,7 @@ import org.bukkit.OfflinePlayer;
 /**
  * A wrapper class for someone playing the game.<br />
  * @author Skyler
- *
+ * @author William
  */
 public class SurvivalPlayer {
 	
@@ -44,7 +44,7 @@ public class SurvivalPlayer {
 	
 	/**
 	 * Looks up and returns the player wrapped by this object.<br />
-	 * We have to do it this way incase someone logs off, then back in; their 'Player' id/reference to their Player is now broken.
+	 * We have to do it this way in case someone logs off, then back in; their 'Player' id/reference to their Player is now broken.
 	 * @return The OfflinePlayer associated with this player
 	 * @note don't forget to make sure the player's online
 	 * @see OfflinePlayer
