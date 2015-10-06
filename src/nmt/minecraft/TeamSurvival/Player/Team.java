@@ -31,8 +31,8 @@ public class Team {
 		return name;
 	}
 	
-	public void addPlayer(SurvivalPlayer player) {
-		players.add(player);
+	public boolean addPlayer(SurvivalPlayer player) {
+		return players.add(player);
 	}
 	
 	/**
