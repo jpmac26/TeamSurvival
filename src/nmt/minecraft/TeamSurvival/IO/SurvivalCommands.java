@@ -82,15 +82,16 @@ public class SurvivalCommands implements CommandExecutor {
 	 * @param args
 	 */
 	private void onSessionCommand(CommandSender sender, String[] args) {
-		
+		//[list | create | start | stop | remove | info] ?
+		//this is what EDFs has, and it feels pretty similar in terms of 'sessions'
 	}
 	
 	/**
-	 * HAndles the admin 'team' command
+	 * Handles the admin 'team' command
 	 * @param sender
 	 * @param args
 	 */
 	private void onTeamCommand(CommandSender sender, String[] args) {
-		
+		//[list | create | info | disband] ?
 	}
 }
