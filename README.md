@@ -4,7 +4,7 @@
 Team Assignments have been made. For more information, contact Franz @ chavezfk@gmail.com
 
 ####Teams should work on their own separate branch.
-Before running any of these commands in Shell or GitShell, please be sure to clone the repository. If you are unfamiliar with this shell please refer to the Tutorial Links section of this readme.
+Before running any of these commands in Bash or GitShell, please be sure to clone the repository. If you are unfamiliar with this shell please refer to the Tutorial Links section of this readme.
 
 If you are familiar with git but may not be familiar with working in separate branches here are the commands:
 
