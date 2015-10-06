@@ -40,7 +40,7 @@ public class GameSession {
 	
 	/**
 	 * Stops the game.<br />
-	 * Games stop automatically, so this method is considered an emergancy operation.
+	 * Games stop automatically, so this method is considered an emergency operation.
 	 */
 	public void stop() {
 		; //TODO
@@ -54,33 +54,55 @@ public class GameSession {
 	}
 	
 	/**
-	 * Adds a team to teh session
+	 * Adds a team to the session
 	 * @param team
 	 */
 	public void addTeam(Team team) {
+		//should we check to see if the team is unique?
 		; //TODO
 	}
 	
 	/**
 	 * Tries to look up a team
 	 * @param name The name to look up
-	 * @return
+	 * @return The team with the given name, null if it cannot be found
 	 */
 	public Team getTeam(String name) {
-		return null; //TODO
+		for(Team t : teams){
+			if(t.getName().equals(name)){
+				return t;
+			}
+		}
+		return null;
 	}
 	
 	/**
 	 * Tries to look up a team
 	 * @param player the player to look up
-	 * @return
+	 * @return The team the player is on, null if the player is not on a team.
 	 */
 	public Team getTeam(SurvivalPlayer player) {
-		return null; //TODO
+		for(Team t : teams){
+			if(t.hasPlayer(player)){
+				return t;
+			}
+		}
+		
+		return null;
 	}
 	
+	/**
+	 * Tries to look up a team
+	 * @param player the player to look up
+	 * @return The team the player is on, null if the player is not on a team.
+	 */
 	public Team getTeam(OfflinePlayer player) {
-		return null; //TODO
+		for(Team t: teams){
+			if(t.hasPlayer(player) != null){
+				return t;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -89,6 +111,12 @@ public class GameSession {
 	 * @return
 	 */
 	public SurvivalPlayer getPlayer(OfflinePlayer player) {
-		return null; //TODO
+		for(Team t : teams){
+			SurvivalPlayer tmp=t.hasPlayer(player);
+			if(tmp != null){
+				return tmp;
+			}
+		}
+		return null;
 	}
 }

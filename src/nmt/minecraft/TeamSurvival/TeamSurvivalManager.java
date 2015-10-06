@@ -20,11 +20,23 @@ public class TeamSurvivalManager {
 	private static Collection<GameSession> sessions = new HashSet<GameSession>();
 	
 	public static SurvivalPlayer getPlayer(OfflinePlayer player) {
-		return null; //TODO
+		for(GameSession s : sessions){
+			SurvivalPlayer play = s.getPlayer(player);
+			if(play != null){
+				return play;
+			}
+		}
+		return null;
 	}
 	
 	public static Team getTeam(SurvivalPlayer player) {
-		return null; //TODO
+		for(GameSession s : sessions){
+			Team team = s.getTeam(player);
+			if(team != null){
+				return team;
+			}
+		}
+		return null;
 	}
 	
 	public static Collection<GameSession> getSessions() {
