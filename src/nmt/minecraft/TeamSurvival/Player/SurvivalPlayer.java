@@ -3,7 +3,10 @@ package nmt.minecraft.TeamSurvival.Player;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 /**
  * A wrapper class for someone playing the game.<br />
@@ -29,21 +32,71 @@ public class SurvivalPlayer {
 	
 	/**
 	 * @see Team#win()
+	 * TODO Add more 'winning' content
 	 */
 	protected void win() {
 		//Send the Player a winning message
-		this.getOfflinePlayer().getPlayer().sendMessage("Winning Message!");
-		; //TODO
+		this.sendMessage("Winning Message!");
 	}
 	
 	/**
 	 * @see Team#lose()
+	 * TODO Add more 'losing' content
 	 */
 	protected void lose() {
-		this.getOfflinePlayer().getPlayer().sendMessage("Losing Message!");
-		; //TODO
+		//Send the Player a winning message
+		this.sendMessage("Losing Message!");
 	}
 	
+	/**
+	 * This method sends a message to the player.<br />
+	 * If no player exists for this class then nothing is performed.
+	 * @param message The string message to send to the player.
+	 */
+	public void sendMessage(String message) {
+		Player p = this.getPlayer();
+		if (p != null) {
+			p.sendMessage(message);
+		}
+	}
+	
+	/**
+	 * This method plays a sound to the player using default pitch and volume.<br />
+	 * If no player exists for this class then nothing is performed.
+	 * @param sound The sound to be played.
+	 */
+	public void playSound(Sound sound) {
+		Player p = this.getPlayer();
+		if (p != null) {
+			p.playSound(p.getLocation(), sound, 1, 0);
+		}
+	}
+	
+	/**
+	 * This method plays a sound to the player using the specified pitch and volume.<br />
+	 * If no player exists for this class then nothing is performed.
+	 * @param sound The sound to be played.
+	 * @param volume The volume of the sound (default value is 1).
+	 * @param pitch The pitch of the sound (default value is 0).
+	 */
+	public void playSound(Sound sound, float volume, float pitch) {
+		Player p = this.getPlayer();
+		if (p != null) {
+			p.playSound(p.getLocation(), sound, volume, pitch);
+		}
+	}
+	
+	/**
+	 * This method teleports a player to a given location.<br />
+	 * If no player exists for this class then nothing is performed.
+	 * @param location The location to send the SurvivalPlayer to.
+	 */
+	public void teleportPlayer(Location location) {
+		Player p = this.getPlayer();
+		if (p != null) {
+			p.teleport(location);
+		}
+	}
 	
 	/**
 	 * Looks up and returns the player wrapped by this object.<br />
@@ -53,9 +106,16 @@ public class SurvivalPlayer {
 	 * @see OfflinePlayer
 	 */
 	public OfflinePlayer getOfflinePlayer() {
-		return Bukkit.getOfflinePlayer(playerID);
+		return Bukkit.getOfflinePlayer(this.playerID);
 	}
 	
-	
+	/**
+	 * This method performs a UUID lookup with bukkit to return a Player class.<br />
+	 * <b>WARNING</b>: This method returns <i>null</i> if no Player class could be returned.
+	 * @return A the Player class or null if no player could be found.
+	 */
+	public Player getPlayer() {
+		return Bukkit.getPlayer(this.playerID);
+	}
 	
 }

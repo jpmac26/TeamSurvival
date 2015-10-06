@@ -152,7 +152,7 @@ public class Team {
 		//For each player in this team...
 		for (SurvivalPlayer p : this.players) {
 			//This next command gets the Player and teleports them to 'location'
-			p.getOfflinePlayer().getPlayer().teleport(location);
+			p.teleportPlayer(location);
 		}
 	}
 	
