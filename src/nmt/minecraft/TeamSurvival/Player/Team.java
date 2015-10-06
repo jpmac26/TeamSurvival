@@ -25,14 +25,41 @@ public class Team {
 	private String name;
 	
 	/**
+	 * This is the lobby location for the team.
+	 */
+	private Location lobbyLocation;
+	
+	/**
 	 * Main constructor for the Team Class.
-	 * @param name The name for the Team
-	 * @param players A collection of players that are associated with a team
+	 * @param name The name for the team.
+	 * @param players A collection of players that are associated with a team.
 	 * TODO We should probably somehow limit the size and character set of a team name.
 	 */
 	public Team(String name, Collection<SurvivalPlayer> players) {
 		this.name = name;
 		this.players = new HashSet<SurvivalPlayer>(players);
+	}
+	
+	/**
+	 * A secondary constructor where the lobbyLocation can be specified.
+	 * @param name The name for the team.
+	 * @param players A collection of players that are associated with a team.
+	 * @param lobbyLocation The location of the lobby. Players are teleported
+	 * here when the game ends.
+	 */
+	public Team(String name, Collection<SurvivalPlayer> players, Location lobbyLocation) {
+		this.name = name;
+		this.players = new HashSet<SurvivalPlayer>(players);
+		this.lobbyLocation = lobbyLocation;
+	}
+	
+	/**
+	 * This method sets the team's lobby location
+	 * @param lobbyLocation The location of the lobby. Players are teleported
+	 * here when the game ends.
+	 */
+	public void setLobbyLocation(Location lobbyLocation) {
+		this.lobbyLocation = lobbyLocation;
 	}
 	
 	/**
@@ -74,6 +101,8 @@ public class Team {
 		for (SurvivalPlayer p : this.players) {
 			p.win();
 		}
+		//Teleport all players
+		this.moveTo(lobbyLocation);
 	}
 	
 	/**
@@ -85,6 +114,8 @@ public class Team {
 		for (SurvivalPlayer p : this.players) {
 			p.lose();
 		}
+		//Teleport all players
+		this.moveTo(lobbyLocation);
 	}
 	
 	/**

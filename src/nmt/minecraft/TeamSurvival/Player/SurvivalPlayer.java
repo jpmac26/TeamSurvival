@@ -31,6 +31,8 @@ public class SurvivalPlayer {
 	 * @see Team#win()
 	 */
 	protected void win() {
+		//Send the Player a winning message
+		this.getOfflinePlayer().getPlayer().sendMessage("Winning Message!");
 		; //TODO
 	}
 	
@@ -38,6 +40,7 @@ public class SurvivalPlayer {
 	 * @see Team#lose()
 	 */
 	protected void lose() {
+		this.getOfflinePlayer().getPlayer().sendMessage("Losing Message!");
 		; //TODO
 	}
 	
@@ -52,5 +55,7 @@ public class SurvivalPlayer {
 	public OfflinePlayer getOfflinePlayer() {
 		return Bukkit.getOfflinePlayer(playerID);
 	}
+	
+	
 	
 }
