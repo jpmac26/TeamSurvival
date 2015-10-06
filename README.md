@@ -1,21 +1,40 @@
 # TeamSurvival
-Team Survival event, by the NMT Minecraft Club
+###Team Survival event, by the NMT Minecraft Club
 
 Team Assignments have been made. For more information, contact Franz @ chavezfk@gmail.com
 
-Work on your own branch, then merge to master. If you are unfamiliar with how to do this:
-  //after you have cloned the projeect to your local machine and are cd'ed into it
-  git branch players // replace players with whatever you wanna call your branch. has to be unique
-  git checkout players //use the same thing as you did above
-  
-After this, you'll be on your own branch. Work like normal. Then, once you're ready to REALLY commit the changed to the
-master branch where everyone can see it, merge them. The easiest and most efficient for review way is to:
-  get on github
-  go to this repo
-  submit a pull request
-    get the branch thing all set up on the top of he form
+####Teams should work on their own separate branch.
+Before running any of these commands in Shell or GitShell, please be sure to clone the repository. If you are unfamiliar with this shell please refer to the Tutorial Links section of this readme.
+
+If you are familiar with git but may not be familiar with working in separate branches here are the commands:
+
+To create a branch:
+'''Shell
+git branch [branch name]
+'''
+
+To change branches:
+'''Shell
+git checkout [branch name]
+'''
+
+###Commit Standards
+* Please commit and push to **your team's branch** using:
+'''Shell
+git push origin [branch name]
+'''
+* Your commit messages should be insightful into what changes you made
+* **DO NOT PUSH TO ORIGIN MASTER**
+If your changes are ready to be put into the Master Branch, navigate to this repository and **submit a pull request**.
+###Tutorial Links for using Git:
+For those unfamiliar with using Git here are some helpful resources to get you started:
+
+* [Git - The Simple Guide](http://rogerdudler.github.io/git-guide/)
+* [Atlassian Tutorials](https://www.atlassian.com/git/tutorials/)
+* [SCM](http://git-scm.com/docs/gittutorial)
   
 If you have any other questions, email any of the following:
-  nmt.minecraft@gmail.com
-  chavezfk@gmail.com
-  smanzana@nmt.edu
+
+* nmt.minecraft@gmail.com
+* chavezfk@gmail.com
+* smanzana@nmt.edu
