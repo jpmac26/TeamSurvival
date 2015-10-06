@@ -1,6 +1,7 @@
 package nmt.minecraft.TeamSurvival.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 
@@ -15,7 +16,7 @@ public class Team {
 	/**
 	 * Collection of the players that are part of this team
 	 */
-	private Collection<SurvivalPlayer> players;
+	private HashSet<SurvivalPlayer> players;
 	
 	/**
 	 * This team's name
@@ -30,6 +31,7 @@ public class Team {
 	 */
 	public Team(String name, Collection<SurvivalPlayer> players) {
 		this.name = name;
+		this.players = new HashSet<SurvivalPlayer>(players);
 	}
 	
 	/**
