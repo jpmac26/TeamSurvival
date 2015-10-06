@@ -1,0 +1,28 @@
+name: TeamSurvival
+main: nmt.minecraft.TeamSurvival.TeamSurvivalPlugin
+version: 0.1
+permissions:
+    teamsurvival.*:
+        children:
+            teamsurvival.team.create: true
+            teamsurvival.team.disband: true
+            teamsurvival.team.info: true
+            teamsurvival.session.create: true
+            teamsurvival.session.start: true
+            teamsurvival.session.info: true
+            teamsurvival.session.stop: true
+        default: op
+    teamsurvival.team.join: true
+      default: true
+commands:
+    teamsurvival:
+        permission: teamsurvival.*
+        usage: /ts []
+        description: Container command for admin-level commands
+        aliases: ts
+    jointeam:
+        permission: teamsurvival.team.join
+        ussage: /jointeam [teamname]
+        description: Joins a TeamSurvival team
+        alias: join
+    
