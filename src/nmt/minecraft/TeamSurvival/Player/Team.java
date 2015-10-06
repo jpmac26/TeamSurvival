@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 
 /**
  * A group of players.<br />
@@ -89,6 +90,30 @@ public class Team {
 	 */
 	public boolean removePlayer(SurvivalPlayer player) {
 		return this.players.remove(player);
+	}
+	
+	/**
+	 * Checks to see if a player is on this team
+	 * @param player the player to look for
+	 * @return true if the player is on the team, false otherwise
+	 */
+	public boolean hasPlayer(SurvivalPlayer player){
+		return players.contains(player);
+	}
+	
+	/**
+	 * Checks to see if a player is on this team
+	 * @param player the player to look for
+	 * @return will return the SurvivalPlayer if found, null otherwise
+	 */
+	public SurvivalPlayer hasPlayer(OfflinePlayer player){
+		for(SurvivalPlayer p : players){
+			if(p.getOfflinePlayer().equals(player)){
+				return p;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
