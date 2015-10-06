@@ -23,7 +23,8 @@ public class SurvivalPlayer {
 	 * @param player The player to wrap around
 	 */
 	private SurvivalPlayer(OfflinePlayer player) {
-		; //TODO
+		//Only need the Player User ID
+		this.playerID = player.getUniqueId();
 	}
 	
 	/**

@@ -10,6 +10,7 @@ import org.bukkit.Location;
  * Teams are the the big operational block for the user part of our game. We rarely will operate on single players;
  * instead we'll use teams.
  * @author Skyler
+ * @author William
  */
 public class Team {
 	
@@ -58,7 +59,10 @@ public class Team {
 	 * Should also return players to lobby, etc
 	 */
 	public void win() {
-		; //TODO
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			p.win();
+		}
 	}
 	
 	/**
@@ -66,7 +70,10 @@ public class Team {
 	 * @see #win()
 	 */
 	public void lose() {
-		; //TODO
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			p.lose();
+		}
 	}
 	
 	/**
@@ -75,7 +82,11 @@ public class Team {
 	 * @param location
 	 */
 	public void moveTo(Location location) {
-		; //TODO
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			//This next command gets the Player and teleports them to 'location'
+			p.getOfflinePlayer().getPlayer().teleport(location);
+		}
 	}
 	
 	
