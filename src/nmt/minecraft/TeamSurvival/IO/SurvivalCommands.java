@@ -59,6 +59,38 @@ public class SurvivalCommands implements CommandExecutor {
 	 * @param args The arguments they supplied
 	 */
 	private void onTeamSurvivalCommand(CommandSender sender, String[] args) {
+		if (args.length == 0) {
+			//print usage
+			sender.sendMessage("/ts [session|team] {args}");
+			return;
+		}
+		
+		if (args[0].equalsIgnoreCase("session")) {
+			onSessionCommand(sender, args);
+			return;
+		}
+		
+		if (args[0].equalsIgnoreCase("team")) {
+			onTeamCommand(sender, args);
+			return;
+		}
+	}
+	
+	/**
+	 * Handles the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionCommand(CommandSender sender, String[] args) {
+		
+	}
+	
+	/**
+	 * HAndles the admin 'team' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onTeamCommand(CommandSender sender, String[] args) {
 		
 	}
 }
