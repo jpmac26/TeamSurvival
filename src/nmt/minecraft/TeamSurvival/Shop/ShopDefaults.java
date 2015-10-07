@@ -74,6 +74,10 @@ strength - lvl1 350
 		return cost;
 	}
 	
+	public ShopItem getShopItem() {
+		return new ShopItem(item, cost);
+	}
+	
 	private enum EnchantedBook {
 			
 		SHARPNESS(Enchantment.DAMAGE_ALL),
