@@ -51,7 +51,7 @@ public class SurvivalPlayer {
 	/**
 	 * This method teleports the player to the set PreGame Location<br />
 	 */
-	protected void returnToPreGame() {
+	private void returnToPreGame() {
 		Player p = this.getPlayer();
 		//Check to ensure that the player's pregame location was set.
 		if (this.preGameLocation == null) {
@@ -71,6 +71,7 @@ public class SurvivalPlayer {
 	protected void win() {
 		//Send the Player a winning message
 		this.sendMessage("Winning Message!");
+		this.returnToPreGame();
 	}
 	
 	/**
@@ -80,6 +81,7 @@ public class SurvivalPlayer {
 	protected void lose() {
 		//Send the Player a winning message
 		this.sendMessage("Losing Message!");
+		this.returnToPreGame();
 	}
 	
 	/**
