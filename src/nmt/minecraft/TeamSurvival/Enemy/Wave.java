@@ -8,7 +8,6 @@ import org.bukkit.entity.LivingEntity;
 /**
  * A wave of enemies.<br />
  * Responsible for keeping track of how many enemies are left to spawn and providing a way to spawn one.
- * @author Skyler
  * @author Franz Chavez
  * @author James Pelster
  */

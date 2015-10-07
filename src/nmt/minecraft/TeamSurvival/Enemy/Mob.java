@@ -8,7 +8,9 @@ import org.bukkit.entity.LivingEntity;
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
  * The information about equipment and health is stored here so that random-per-mob
  * spawns are doable
- * @author Skyler
+ * @author Herobrine
+ * @author Franz Chavez
+ * @author James Pelster
  *
  */
 public class Mob {
