@@ -13,7 +13,11 @@ import org.bukkit.entity.Player;
 import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
-public class SurvivalCommands implements CommandExecutor {
+/**
+ * 
+ * @author Stephanie Martinez
+ */
+public class SurvivalCommand implements CommandExecutor {
 	
 	/**
 	 * The plugin's commands, handled by this executor
@@ -23,7 +27,11 @@ public class SurvivalCommands implements CommandExecutor {
 	/**
 	 * A list of commands handled by the 'team survival' wrapping command
 	 */
-	private static final String[] subCommandList = {"session", "team"};
+	private static final String[] teamSurvivalCommandList = {"session", "team"};
+
+	private static final String[] sessionCommandList = {"list", "create", "info", "dispatch"};
+	
+	private static final String[] teamCommandList = {"list", "create", "info", "dispatch"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -40,12 +48,20 @@ public class SurvivalCommands implements CommandExecutor {
 		return false;
 	}
 	
-	public static List<String> getCommandList(){
+	public static List<String> getCommandlist() {
 		return Arrays.asList(commandList);
 	}
-	
-	public static List<String> getSubCommandList(){
-		return Arrays.asList(subCommandList);
+
+	public static List<String> getTeamsurvivalcommandlist() {
+		return Arrays.asList(teamSurvivalCommandList);
+	}
+
+	public static List<String> getSessioncommandlist() {
+		return Arrays.asList(sessionCommandList);
+	}
+
+	public static List<String> getTeamcommandlist() {
+		return Arrays.asList(teamCommandList);
 	}
 	
 	/**

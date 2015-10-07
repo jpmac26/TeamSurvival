@@ -61,19 +61,36 @@ public class TeamSurvivalManager {
 	
 	/**
 	 * Registers a game session, if it's not already registered
-	 * @param session
+	 * @param session The game session to add.
 	 * @return true if the session was added
 	 */
 	public static boolean register(GameSession session) {
-		return false;
+		boolean check = sessions.add(session);
+		if (check) {
+			System.out.println("Successfully added session: " + session.getName());
+		} else {
+			System.out.println("WARNING! Session: " + session.getName() + " was not added!");
+		}
+		return check;
 	}
 	
 	/**
 	 * Attempts to unregister a game session
-	 * @param session 
+	 * @param session The game session to remove.
 	 * @return true if the session was found and unregistered
+	 * TODO Make sure that these messages are put into the LOG
 	 */
 	public static boolean unregister(GameSession session) {
+		if (session.getState() != GameSession.State.FINISHED) {
+			System.out.println("ERROR! Session: " + session.getName() + " is not finished! Please wait!");
+			return false;
+		}
+		boolean check = sessions.remove(session);
+		if (check) {
+			System.out.println("Successfully removed session: " + session.getName());
+		} else {
+			System.out.println("WARNING! Session: " + session.getName() + " was not added!");
+		}
 		return false;
 	}
 	
