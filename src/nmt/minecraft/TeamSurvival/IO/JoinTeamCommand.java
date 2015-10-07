@@ -36,11 +36,15 @@ public class JoinTeamCommand implements CommandExecutor{
 		
 		//find the team they want to join
 		Team team = getTeam(args[1], getSession(args[0]));
+		if(team == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate team "+args[1]+" in session "+args[0]));
+			return false;
+		}
+		
+		//add them to the team
 		if(sender instanceof OfflinePlayer){
-			//TODO really need a way to create a new SurvivalPlayer or add a Player
-			/*SurvivalPlayer player = new SurvivalPlayer((OfflinePlayer)sender);
+			SurvivalPlayer player = new SurvivalPlayer((OfflinePlayer)sender);
 			team.addPlayer(player);
-			//*/
 		}
 		
 		return true;
@@ -57,6 +61,10 @@ public class JoinTeamCommand implements CommandExecutor{
 	}
 	
 	private Team getTeam(String name, GameSession session){
+		if(session == null){
+			return null;
+		}
+		
 		for(Team t: session.getTeams()){
 			if(t.getName().equals(name));
 		}
