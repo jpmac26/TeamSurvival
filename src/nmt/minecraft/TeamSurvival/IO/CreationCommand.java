@@ -12,8 +12,7 @@ import nmt.minecraft.TeamSurvival.Map.Creator;
 
 /**
  * 
- * @author Stephanie Martinez
- *
+ * @author Stephanie
  */
 public class CreationCommand implements CommandExecutor{
 	
@@ -23,7 +22,7 @@ public class CreationCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
 			//print usage
-			sender.sendMessage(ChatFormat.WARNING.wrap("/ts [session|team] {args}"));
+			sender.sendMessage(ChatFormat.ERROR.wrap("/ts [session|team] {args}"));
 			return false;
 		}
 		
@@ -74,7 +73,7 @@ public class CreationCommand implements CommandExecutor{
 	 */
 	private boolean onCloseCommand(CommandSender sender, String[] args) {
 		if(args.length != 0){
-			sender.sendMessage(ChatFormat.IMPORTANT.wrap("Wrong number of arguments. Still closing..."));
+			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still closing..."));
 		}
 		return Creator.close(sender);
 	}
@@ -86,7 +85,7 @@ public class CreationCommand implements CommandExecutor{
 	 */
 	private boolean onSetShopCommand(CommandSender sender, String[] args) {
 		if(args.length != 0){
-			sender.sendMessage(ChatFormat.IMPORTANT.wrap("Wrong number of arguments. Still attempting to set..."));
+			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to set..."));
 		}
 		return Creator.setShopLocation(sender);
 	}
@@ -98,7 +97,7 @@ public class CreationCommand implements CommandExecutor{
 	 */
 	private boolean onSetShopButtonCommand(CommandSender sender, String[] args) {
 		if(args.length != 0){
-			sender.sendMessage(ChatFormat.IMPORTANT.wrap("Wrong number of arguments. Still attempting to set..."));
+			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to set..."));
 		}
 		return Creator.setShopButton(sender);
 	}
@@ -110,7 +109,7 @@ public class CreationCommand implements CommandExecutor{
 	 */
 	private boolean onAddArenaCommand(CommandSender sender, String[] args) {
 		if(args.length != 0){
-			sender.sendMessage(ChatFormat.IMPORTANT.wrap("Wrong number of arguments. Still attempting to add..."));
+			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to add..."));
 		}
 		return Creator.setShopLocation(sender);
 	}
