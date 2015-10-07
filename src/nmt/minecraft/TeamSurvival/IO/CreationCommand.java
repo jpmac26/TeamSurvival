@@ -14,45 +14,48 @@ import org.bukkit.command.CommandSender;
  */
 public class CreationCommand implements CommandExecutor{
 	
-	private static final String[] commands = {"new", "open", "close", "setShop", "addArena"};
+	private static final String[] commands = {"new", "open", "close", "setShop", "addArena", "addShopButton"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 0) {
 			//print usage
-			sender.sendMessage("/ts [session|team] {args}");
-			return true;
+			sender.sendMessage(ChatFormat.WARNING.wrap("/ts [session|team] {args}"));
+			return false;
 		}
 		
 		if (args[0].equalsIgnoreCase("new")) {
 			onNewCommand(sender, args);
-			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("open")) {
 			onOpenCommand(sender, args);
-			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("close")) {
 			onCloseCommand(sender, args);
-			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("setShop")) {
 			onSetShopCommand(sender, args);
-			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("addArena")) {
 			onAddArenaCommand(sender, args);
-			return true;
 		}
 		
-		return false;
+		if (args[0].equalsIgnoreCase("addShopButton")) {
+			onAddShopButtonCommand(sender, args);
+		}
+		return true;
 	}
 	
+	private void onAddShopButtonCommand(CommandSender sender, String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public static List<String> getCommands(){
 		return Arrays.asList(commands);
 	}
