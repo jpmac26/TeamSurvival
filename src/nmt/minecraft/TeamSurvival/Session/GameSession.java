@@ -144,4 +144,8 @@ public class GameSession {
 	public String getName() {
 		return name;
 	}
+	
+	public Collection<Team> getTeams(){
+		return teams;
+	}
 }
