@@ -39,7 +39,7 @@ public class JoinTeamCommand implements CommandExecutor{
 		}
 		
 		//find the team they want to join
-		GameSession session = getSession(args[0]);
+		GameSession session = TeamSurvivalManager.getSession(args[0]);
 		if(session == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate session "+args[0]));
 			return false;
@@ -73,21 +73,6 @@ public class JoinTeamCommand implements CommandExecutor{
 			}
 		}
 		return false;
-	}
-	
-	/**
-	 * retrieves a session with the given name
-	 * @param name name of the session
-	 * @return the game session, or null if it cannot be found
-	 */
-	private GameSession getSession(String name){
-		for(GameSession g : TeamSurvivalManager.getSessions()){
-			if(g.getName().equals(name)){
-				return g;
-			}
-		}
-		
-		return null;
 	}
 	
 }

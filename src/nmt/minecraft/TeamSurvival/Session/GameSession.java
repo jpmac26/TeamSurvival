@@ -44,6 +44,10 @@ public class GameSession {
 	 */
 	private Map map;
 	
+	public Map getMap() {
+		return map;
+	}
+
 	/**
 	 * The shop instance that's unique to this session
 	 */

@@ -108,6 +108,9 @@ public class Map {
 		return shopButtonLocation;
 	}
 
+	public int getMaxTeams(){
+		return this.arenaLocations.size();
+	}
 	/**
 	 * This static method prints out all the yml configuration files<br />
 	 * that could possibly be loaded into a map.
