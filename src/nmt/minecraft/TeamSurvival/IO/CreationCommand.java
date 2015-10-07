@@ -7,6 +7,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+/**
+ * 
+ * @author Stephanie Martinez
+ *
+ */
 public class CreationCommand implements CommandExecutor{
 	
 	private static final String[] commands = {"new", "open", "close", "setShop", "addArena"};

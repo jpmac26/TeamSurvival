@@ -18,12 +18,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  * @author Stephanie Martinez
  */
 public class SurvivalCommand implements CommandExecutor {
-	
-	/**
-	 * The plugin's commands, handled by this executor
-	 */
-	private static final String[] commandList = {"teamsurvival", "jointeam"};
-	
+
 	/**
 	 * A list of commands handled by the 'team survival' wrapping command
 	 */
@@ -55,10 +50,6 @@ public class SurvivalCommand implements CommandExecutor {
 		return false;
 	}
 	
-	public static List<String> getCommandlist() {
-		return Arrays.asList(commandList);
-	}
-
 	public static List<String> getTeamsurvivalcommandlist() {
 		return Arrays.asList(teamSurvivalCommandList);
 	}
