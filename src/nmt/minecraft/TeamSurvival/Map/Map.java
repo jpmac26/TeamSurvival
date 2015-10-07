@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Util.LocationState;
 
 /**
  * This Class represents a single map within Team Survival.<br />
@@ -23,34 +24,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author Stephanie
  */
 public class Map {
-
-	/**
-	 * 
-	 */
-	private Location startingLocation;
-	/**
-	 * This is the Location of the Shop within Team Survival
-	 */
-	private Location ShopLocation;
-	
-	/**
-	 * Location of the Shop Button
-	 */
-	private Location shopButtonLocation;
-	
-	/**
-	 * This collection contains all the initial spawn locations for the Map.
-	 */
-	private Collection<Location> ArenaLocations;
-	
 	private String name;
+	private Location startingLocation;
+	private Location shopLocation; //This is the Location of the Shop within Team Survival
+	private Location shopButtonLocation; //Location of the Shop Button
+	private Collection<Location> arenaLocations;//This collection contains all the initial spawn locations for the Map.
 	
 	protected Map(String name) {
+		super();
 		this.name=name;
+		
+		//create new config file
 	}
 		
 	private Map(){
-		
+		super();
 	}
 	
 	/**
@@ -58,16 +46,24 @@ public class Map {
 	 * @param location The Location of the Shop.
 	 */
 	public void setShopLocation(Location location) {
-		this.ShopLocation = location;
+		this.shopLocation = location;
 	}
 	
+	public void setShopButton(Location shopButton) {
+		shopButtonLocation = shopButton;
+	}
+
+	public void setStartingLocation(Location startingLocation) {
+		this.startingLocation = startingLocation;
+	}
+
 	/**
 	 * This adds a single location to this Map's Arena Locations.
 	 * @param location The location to add.
 	 * @return True if the location was successfully added.
 	 */
 	public boolean addArenaLocation(Location location) {
-		return this.ArenaLocations.add(location);
+		return this.arenaLocations.add(location);
 	}
 	
 	/**
@@ -76,7 +72,7 @@ public class Map {
 	 * @return True if all the locations could be added.
 	 */
 	public boolean addArenaLocation(Collection<Location> locations) {
-		return this.ArenaLocations.addAll(locations);
+		return this.arenaLocations.addAll(locations);
 	}
 	
 	/**
@@ -84,7 +80,7 @@ public class Map {
 	 * @return A collection of all the Arena Locations.
 	 */
 	public Collection<Location> getArenaLocations()	{
-		return this.ArenaLocations;
+		return this.arenaLocations;
 	}
 	
 	/**
@@ -92,11 +88,15 @@ public class Map {
 	 * @return
 	 */
 	public Location getShopLocation() {
-		return this.ShopLocation;
+		return this.shopLocation;
 	}
 	
 	public Location getShopButtonLocation() {
 		return this.shopButtonLocation;
+	}
+
+	public Location getStartingLocation() {
+		return startingLocation;
 	}
 
 	public String getName(){
@@ -109,10 +109,6 @@ public class Map {
 
 
 
-	public void setShopButton(Location shopButton) {
-		shopButtonLocation = shopButton;
-	}
-	
 	/**
 	 * This static method prints out all the yml configuration files<br />
 	 * that could possibly be loaded into a map.
@@ -139,6 +135,7 @@ public class Map {
 	
 	public static Map loadConfig(String name){
 		Map tmp = new Map();
+		tmp.name=name;
 		
 		File file = new File(TeamSurvivalPlugin.plugin.getDataFolder(), name+".yml");
 		
@@ -146,30 +143,29 @@ public class Map {
 		
 		try {
 			config.load(file);
+			tmp.startingLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.shopButtonLocation = ((LocationState)config.get("shopButtonLocation")).getLocation();
+			tmp.shopLocation = ((LocationState)config.get("startLocation")).getLocation();
+			
+			//get the arena locations
+			//TODO really not sure if this will work
+			@SuppressWarnings("unchecked")
+			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations");
+			for(LocationState l : arenas){
+				tmp.arenaLocations.add(l.getLocation());
+			}
+			
+			return tmp;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		} catch (InvalidConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
-		
-		config.getDouble("etc");
-		
-		return tmp;
-	}
-
-	public Location getStartingLocation() {
-		return startingLocation;
-	}
-
-	public void setStartingLocation(Location startingLocation) {
-		this.startingLocation = startingLocation;
+		return null;
 	}
 }
