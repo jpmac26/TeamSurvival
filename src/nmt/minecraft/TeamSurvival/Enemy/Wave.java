@@ -73,4 +73,29 @@ public class Wave {
 		//location.getWorld().spawnEntity(location, ent.type);
 		return null; //TODO, but do we really need to return the entity?
 	}
+	
+	/**
+	 * Sets the wave to begin spawning the mobs<br />
+	 * Handles registering for events, etc
+	 */
+	public void start() {
+		; //TODO
+	}
+	
+	/**
+	 * Stops the wave, for emergency purposes.<br />
+	 * Entities should be cleared, and the wave should handle unregistration
+	 */
+	public void stop() {
+		; //TODO
+	}
+	
+	/**
+	 * Checks whether this wave is complete.<br />
+	 * Complete is defined to be that all entities belonging to this wave are dead.
+	 * @return
+	 */
+	public boolean isComplete() {
+		return false; //TODO
+	}
 }
