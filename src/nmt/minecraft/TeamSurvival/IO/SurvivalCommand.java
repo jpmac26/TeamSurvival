@@ -11,11 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
+import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
  * 
- * @author Stephanie Martinez
+ * @author Stephanie
  */
 public class SurvivalCommand implements CommandExecutor {
 
@@ -50,19 +51,26 @@ public class SurvivalCommand implements CommandExecutor {
 		return false;
 	}
 	
-	public static List<String> getTeamsurvivalcommandlist() {
+	protected static List<String> getTeamsurvivalcommandlist() {
 		return Arrays.asList(teamSurvivalCommandList);
 	}
 
-	public static List<String> getSessioncommandlist() {
+	protected static List<String> getSessioncommandlist() {
 		return Arrays.asList(sessionCommandList);
 	}
 
-	public static List<String> getTeamcommandlist() {
+	protected static List<String> getTeamcommandlist() {
 		return Arrays.asList(teamCommandList);
 	}
 	
-	
+	private GameSession hasSession(String sessionName){
+		for(GameSession s : TeamSurvivalManager.getSessions()){
+			if(s.getName().equalsIgnoreCase(sessionName)){
+				return s;
+			}
+		}
+		return null;
+	}
 	
 	/**
 	 * Handles the admin 'session' command
@@ -143,8 +151,42 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param sender
 	 * @param args
 	 */
-	private void onSessionCreateCommand(CommandSender sender, String[] args) {
-		//TODO
+	private boolean onSessionCreateCommand(CommandSender sender, String[] args) {
+		// /ts session create [sessionName] [mapName]
+		if(args.length != 4){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
+					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session create [sessionName] [mapName]"));
+			return false;
+		}
+		
+		if(hasSession(args[2])!=null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("There already exists an active session with that name"));
+			return false;
+		}
+		
+		//check for map matching the given name
+		if(!Map.listConfigs().contains(args[3])){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find config for the given map"));
+			return false;
+		}
+		
+		Map tmpMap = Map.loadConfig(args[3]);
+		if(tmpMap == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not load the config file for the map"));
+			return false;
+		}
+		
+		GameSession session = new GameSession(args[2], tmpMap);
+		
+		if(!TeamSurvivalManager.register(session)){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not register the session with the TSManager"));
+			return false;
+		}
+		
+		sender.sendMessage(ChatFormat.SESSION.wrap("Session successfully created"));
+		return true;
+		
+		
 	}
 	
 	/**

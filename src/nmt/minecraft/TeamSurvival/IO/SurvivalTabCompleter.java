@@ -15,7 +15,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
  * 
- * @author Stephanie Martinez
+ * @author Stephanie
  *
  */
 public class SurvivalTabCompleter implements TabCompleter{
