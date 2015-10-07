@@ -22,34 +22,64 @@ public class JoinTeamCommand implements CommandExecutor{
 	 * Handles a join command
 	 * @param sender Who send the command
 	 * @param args The args passed to the command
+	 * @return true if the sender was successfully added
 	 */
 	private boolean onJoinCommand(CommandSender sender, String[] args) {
-		if (!(sender instanceof Player)) {
+		if (!(sender instanceof Player) || !(sender instanceof OfflinePlayer)) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Only players can use this command!"));
 			return false;
 		}else if(args.length != 2){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments."));
 			sender.sendMessage(ChatFormat.IMPORTANT.wrap("usage: /jointeam [session] [team]"));
 			return false;
+		}else if(onTeam((OfflinePlayer)sender)){
+			//make sure the player is not already on a team
+			sender.sendMessage(ChatFormat.ERROR.wrap("You are already registered to a team!"));
+			return false;
 		}
 		
-		
 		//find the team they want to join
-		Team team = getTeam(args[1], getSession(args[0]));
+		GameSession session = getSession(args[0]);
+		if(session == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate session "+args[0]));
+			return false;
+		}
+		Team team = session.getTeam(args[1]);
 		if(team == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate team "+args[1]+" in session "+args[0]));
 			return false;
 		}
 		
 		//add them to the team
-		if(sender instanceof OfflinePlayer){
-			SurvivalPlayer player = new SurvivalPlayer((OfflinePlayer)sender);
-			team.addPlayer(player);
+		SurvivalPlayer player = new SurvivalPlayer((OfflinePlayer)sender);
+		if(!team.addPlayer(player)){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not add you to the team"));
+			return false;
 		}
 		
+		sender.sendMessage(ChatFormat.TEAM.wrap("You have been added to "+team.getName()));
 		return true;
 	}
 	
+	/**
+	 * Checks to see if player is on any team
+	 * @param player the player to look for
+	 * @return true if the player is on a team
+	 */
+	private boolean onTeam(OfflinePlayer player){
+		for(GameSession s: TeamSurvivalManager.getSessions()){
+			if(s.getPlayer(player) != null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * retrieves a session with the given name
+	 * @param name name of the session
+	 * @return the game session, or null if it cannot be found
+	 */
 	private GameSession getSession(String name){
 		for(GameSession g : TeamSurvivalManager.getSessions()){
 			if(g.getName().equals(name)){
@@ -57,17 +87,6 @@ public class JoinTeamCommand implements CommandExecutor{
 			}
 		}
 		
-		return null;
-	}
-	
-	private Team getTeam(String name, GameSession session){
-		if(session == null){
-			return null;
-		}
-		
-		for(Team t: session.getTeams()){
-			if(t.getName().equals(name));
-		}
 		return null;
 	}
 	
