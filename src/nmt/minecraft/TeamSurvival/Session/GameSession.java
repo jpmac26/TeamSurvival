@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.event.HandlerList;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
@@ -53,6 +54,7 @@ public class GameSession {
 		this.map = map;
 		this.state = State.PREGAME;
 		this.teams = new LinkedList<Team>();
+		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
 	
 	/**
@@ -84,7 +86,8 @@ public class GameSession {
 	 * Games stop automatically, so this method is considered an emergency operation.
 	 */
 	public void stop() {
-		
+		HandlerList.unregisterAll(sessionShop);
+		sessionShop = null;
 	}
 	
 	/**
