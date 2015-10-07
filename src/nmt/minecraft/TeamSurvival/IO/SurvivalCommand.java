@@ -17,7 +17,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  * 
  * @author Stephanie Martinez
  */
-public class SurvivalCommands implements CommandExecutor {
+public class SurvivalCommand implements CommandExecutor {
 	
 	/**
 	 * The plugin's commands, handled by this executor
