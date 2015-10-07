@@ -16,21 +16,40 @@ public class SurvivalTabCompleter implements TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		List<String> list = null;
 		
-		if(args.length == 1){
-			return getBeginList(args[0], SurvivalCommands.getCommandList());
+		if(args.length == 0){
+			return getBeginList(cmd.getName(), SurvivalCommands.getCommandlist());
 		}
 				
 		switch(cmd.getName()){
+		// /teamsurvival [session|team] [args]
 		case "teamsurvival":
-			if(args.length ==2){
-				list = getBeginList(args[1],SurvivalCommands.getSubCommandList());
+			if(args.length ==1){
+				list = getBeginList(args[0],SurvivalCommands.getTeamsurvivalcommandlist());
 				return list;
 			}
+			switch(args[0]){
+			case "session":
+				if(args.length == 2){
+					
+				}
+				break;
+			case "team":
+				
+				break;
+			}
 			break;
-		case "jointeam":
-			//figure out a way to get a list of teams
-			Collection<GameSession> sessions = TeamSurvivalManager.getSessions();
 			
+		// /jointeam [session] [team]
+		case "jointeam":
+			Collection<GameSession> sessions = TeamSurvivalManager.getSessions();
+			if(args.length==1){
+				//get a list of session names
+				List<String> sessionList = new ArrayList<String>();
+				for(GameSession s : sessions){
+					sessionList.add(s.getName());
+				}
+				return getBeginList(args[0],sessionList);
+			}
 			break;
 		case "default":
 			return null;
