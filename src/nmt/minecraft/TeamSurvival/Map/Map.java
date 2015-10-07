@@ -133,6 +133,11 @@ public class Map {
 		return configFilenames;
 	}
 	
+	/**
+	 * loads a new Map from the configuration file with name.yml
+	 * @param name name of the file
+	 * @return the new Map or null if something went wrong.
+	 */
 	public static Map loadConfig(String name){
 		Map tmp = new Map();
 		tmp.name=name;
@@ -167,5 +172,31 @@ public class Map {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * Saves this Map to a config file name.yml
+	 * @return true if it worked, false otherwise
+	 */
+	public boolean saveConfig(){
+		File file = new File(TeamSurvivalPlugin.plugin.getDataFolder(), this.name+".yml");
+		YamlConfiguration config = new YamlConfiguration();
+		
+		//TODO I have no idea if this works :p -Steph
+		config.set("name", this.name);
+		config.set("startingLocation", this.startingLocation);
+		config.set("shopLocation", this.shopLocation);
+		config.set("shopButtonLocation", this.shopButtonLocation);
+		config.set("arenaLocations", this.arenaLocations);
+		
+		try {
+			config.save(file);
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }
