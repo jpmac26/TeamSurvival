@@ -34,12 +34,12 @@ public class Map {
 	 */
 	private Collection<Location> ArenaLocations;
 	
-	private Map() {
-		
+	private String name;
+	
+	protected Map(String name) {
+		this.name=name;
 	}
-	
-	
-	
+		
 	/**
 	 * This method sets the Shop Location for the Map.
 	 * @param location The Location of the Shop.
@@ -109,4 +109,19 @@ public class Map {
 		}
 		return configFilenames;
 	}
+
+	public String getName(){
+		return name;
+	}
+
+	public Location getShopButton() {
+		return shopButtonLocation;
+	}
+
+
+
+	public void setShopButton(Location shopButton) {
+		shopButtonLocation = shopButton;
+	}
+
 }
