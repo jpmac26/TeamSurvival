@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
@@ -24,19 +25,23 @@ public class Wave {
 	private int maxSpawned;
 	private boolean forceStop = false;
 	private boolean started = false;
+	private List<Location> MobSpawnPoints = new ArrayList<Location>();
+	
 	/**
 	 * Creates a wave with the given types of mobs.
 	 * @param WaveNumber is the wave number
+	 * @param spawnPoints is the list of Mob spawn points for the map
 	 * @param TotalMobCount total number of mobs in wave
 	 * @note See wave implementation in google doc file
 	 */
-	public Wave(int WaveNumber, int TotalMobCount) {
+	public Wave(int WaveNumber, List<Location> spawnPoints, int TotalMobCount) {
 		Mobs = new ArrayList<Mob>();
 		Entities = new ArrayList<LivingEntity>();
 		maxSpawned = 40;
+		MobSpawnPoints = spawnPoints;
 		Random rn = new Random();
 		int MobPool = (WaveNumber-1)*2;
-		int RandNum = rn.nextInt() % 7;
+		int RandNum = rn.nextInt(7);
 		int UsedCount = 0;
 		String MobsUsed[] = {"","",""};
 		int MobDiffs[] = {0,0,0};
@@ -50,20 +55,22 @@ public class Wave {
 				UsedCount++;
 			}
 		}
-		SetupMobs(MobsUsed, TotalMobCount,MobDiffs);
+		SetupMobs(MobsUsed, TotalMobCount, MobDiffs);
 	}
 	
 	/**
 	 * Creates a wave with the given types of mobs.
 	 * @param WaveNumber is the wave number
+	 * @param spawnPoints is the list of Mob spawn points for the map
 	 * @param TotalMobCount total number of mobs in wave
 	 * @param MaxToSpawn maximum number of mobs that can be spawned at any given time
 	 * @note See wave implementation in google doc file
 	 */
-	public Wave(int WaveNumber, int TotalMobCount, int MaxToSpawn) {
+	public Wave(int WaveNumber, List<Location> spawnPoints, int TotalMobCount, int MaxToSpawn) {
 		Mobs = new ArrayList<Mob>();
 		Entities = new ArrayList<LivingEntity>();
 		maxSpawned = MaxToSpawn;
+		MobSpawnPoints = spawnPoints;
 		Random rn = new Random();
 		int MobPool = (WaveNumber-1)*2;
 		int RandNum;
@@ -72,7 +79,7 @@ public class Wave {
 		int MobDiffs[] = {0,0,0};
 		
 		while(MobPool > 0 || UsedCount < 3){
-			RandNum = rn.nextInt() % 7;
+			RandNum = rn.nextInt(7);
 			MobDiffs[UsedCount] = MobVals[RandNum];
 			if(MobPool - MobDiffs[UsedCount] >= 0){
 				/* the mob can be added */
@@ -80,7 +87,7 @@ public class Wave {
 				UsedCount++;
 			}
 		}
-		SetupMobs(MobsUsed, TotalMobCount,MobDiffs);
+		SetupMobs(MobsUsed, TotalMobCount, MobDiffs);
 	}
 	
 	/**
@@ -112,7 +119,7 @@ public class Wave {
 	 */
 	public void spawnRandomMob(Location location) {
 		Random rn = new Random();
-		int RandNum = rn.nextInt() % Mobs.size();
+		int RandNum = rn.nextInt(Mobs.size());
 		Entities.add(Mobs.get(RandNum).SpawnEntity(location));
 		Mobs.remove(RandNum);
 	}
@@ -124,7 +131,9 @@ public class Wave {
 	public void start() {
 		started = true;
 		while(started == true && forceStop == false && Entities.size() < maxSpawned & Mobs.size() > 0) {
-			spawnRandomMob(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("TeamSurvivalWorld"), 0.0f, 64.0f, 0.0f));
+			Random rn = new Random();
+			int RandPoint = rn.nextInt(MobSpawnPoints.size());
+			spawnRandomMob(MobSpawnPoints.get(RandPoint));
 		}
 	}
 	
@@ -144,8 +153,9 @@ public class Wave {
 	 */
 	public void update() {
 		if(started == true && forceStop == false && isComplete() == false && Entities.size() < maxSpawned && Mobs.size() > 0) {
-			//TODO: Use the correct world and spawn locations. These will probably be provided as arguments for the Start() method.
-			spawnRandomMob(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("TeamSurvivalWorld"), 0.0f, 64.0f, 0.0f));
+			Random rn = new Random();
+			int RandPoint = rn.nextInt(MobSpawnPoints.size());
+			spawnRandomMob(MobSpawnPoints.get(RandPoint));
 		}
 		
 		//In case the stop() method doesn't quite clear the wave, we will do it here too
