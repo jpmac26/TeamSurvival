@@ -16,6 +16,9 @@ import nmt.minecraft.TeamSurvival.IO.SurvivalTabCompleter;
  *
  */
 public class TeamSurvivalPlugin extends JavaPlugin {
+
+	public static JavaPlugin plugin;
+	
 	
 	@Override
 	public void onEnable() {
@@ -35,6 +38,6 @@ public class TeamSurvivalPlugin extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-		
+		TeamSurvivalPlugin.plugin = this;
 	}
 }
