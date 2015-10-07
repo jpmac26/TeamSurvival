@@ -107,8 +107,6 @@ public class Map {
 		return shopButtonLocation;
 	}
 
-
-
 	/**
 	 * This static method prints out all the yml configuration files<br />
 	 * that could possibly be loaded into a map.

@@ -6,6 +6,10 @@ import org.bukkit.entity.Player;
 
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 
+/**
+ * This is basically a static wrapper for the Map class and handles all creation commmands
+ * @author Stephanie
+ */
 public final class Creator {
 	private static Map current = null;
 	
@@ -16,10 +20,16 @@ public final class Creator {
 		}
 		
 		if(Map.listConfigs().contains(name)){
-			//TODO: call Map's load config for the file
+			Creator.current = Map.loadConfig(name);
 		}else{
 			Creator.current = new Map(name);
 		}
+		
+		if(Creator.current == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Something went wrong with the configuration file"));
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -42,10 +52,11 @@ public final class Creator {
 		
 		if(sender instanceof Player){
 			Creator.current.addArenaLocation(((Player)sender).getLocation());
+			sender.sendMessage(ChatFormat.SESSION.wrap("Set added arena at: "+Creator.getLocation(((Player)sender).getLocation())));
 		}else{
 			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
-			sender.sendMessage("Set added arena at: "+Creator.getLocation(((Player)sender).getLocation()));
 		}
+		
 		return true;
 	}
 	
@@ -56,8 +67,9 @@ public final class Creator {
 		}
 		
 		if(sender instanceof Player){
-			Creator.current.setShopLocation(((Player)sender).getLocation());
-			sender.sendMessage("Set shop location to: "+Creator.getLocation(((Player)sender).getLocation()));
+			Location loc = ((Player)sender).getLocation();
+			Creator.current.setShopLocation(loc);
+			sender.sendMessage(ChatFormat.SESSION.wrap("Set shop location to: "+Creator.getLocation(loc)));
 		}else{
 			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
 		}
@@ -71,8 +83,9 @@ public final class Creator {
 			return false;
 		}
 		if(sender instanceof Player){
-			Creator.current.setShopButton(((Player)sender).getLocation());
-			sender.sendMessage("Set button to: "+Creator.getLocation(((Player)sender).getLocation()));
+			Location loc = ((Player)sender).getLocation();
+			Creator.current.setShopButton(loc);
+			sender.sendMessage(ChatFormat.SESSION.wrap("Set button to: "+Creator.getLocation(loc)));
 		}else{
 			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
 		}
