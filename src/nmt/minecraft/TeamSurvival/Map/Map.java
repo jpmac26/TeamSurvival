@@ -25,6 +25,11 @@ public class Map {
 	private Location ShopLocation;
 	
 	/**
+	 * Location of the Shop Button
+	 */
+	private Location shopButtonLocation;
+	
+	/**
 	 * This collection contains all the initial spawn locations for the Map.
 	 */
 	private Collection<Location> ArenaLocations;
@@ -75,6 +80,10 @@ public class Map {
 	 */
 	public Location getShopLocation() {
 		return this.ShopLocation;
+	}
+	
+	public Location getShopButtonLocation() {
+		return this.shopButtonLocation;
 	}
 	
 	/**
