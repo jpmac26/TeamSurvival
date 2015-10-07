@@ -7,6 +7,7 @@ import nmt.minecraft.TeamSurvival.IO.JoinTeamTabCompleter;
 import nmt.minecraft.TeamSurvival.IO.SurvivalCommand;
 import nmt.minecraft.TeamSurvival.IO.SurvivalTabCompleter;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
+import nmt.minecraft.TeamSurvival.Util.LocationState;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,6 +30,8 @@ public class TeamSurvivalPlugin extends JavaPlugin {
 		this.getCommand("teamsurvival").setTabCompleter(new SurvivalTabCompleter());
 		this.getCommand("teamsurvivalcreator").setExecutor(new CreationCommand());
 		this.getCommand("teamsurvivalcreator").setTabCompleter(new CreationTabCompleter());
+		
+		LocationState.registerWithAliases();
 		
 	}
 	
