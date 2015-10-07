@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.bukkit.OfflinePlayer;
 
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
 import nmt.minecraft.TeamSurvival.Player.Team;
@@ -73,8 +74,16 @@ public class GameSession {
 	 * @param team
 	 */
 	public void addTeam(Team team) {
-		//should we check to see if the team is unique?
-		; //TODO
+		if (teams.contains(team)) {
+			return;
+		}
+		
+		if (teams.size() >= map.getArenaLocations().size()) {
+			TeamSurvivalPlugin.plugin.getLogger().warning("Unable to add class: session is full!");
+			return;
+		}
+		
+		teams.add(team);
 	}
 	
 	/**
@@ -83,6 +92,10 @@ public class GameSession {
 	 * @return The team with the given name, null if it cannot be found
 	 */
 	public Team getTeam(String name) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
 		for(Team t : teams){
 			if(t.getName().equals(name)){
 				return t;
@@ -97,6 +110,10 @@ public class GameSession {
 	 * @return The team the player is on, null if the player is not on a team.
 	 */
 	public Team getTeam(SurvivalPlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
 		for(Team t : teams){
 			if(t.hasPlayer(player)){
 				return t;
@@ -112,6 +129,10 @@ public class GameSession {
 	 * @return The team the player is on, null if the player is not on a team.
 	 */
 	public Team getTeam(OfflinePlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
 		for(Team t: teams){
 			if(t.hasPlayer(player) != null){
 				return t;
@@ -126,6 +147,10 @@ public class GameSession {
 	 * @return
 	 */
 	public SurvivalPlayer getPlayer(OfflinePlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
 		for(Team t : teams){
 			SurvivalPlayer tmp=t.hasPlayer(player);
 			if(tmp != null){
