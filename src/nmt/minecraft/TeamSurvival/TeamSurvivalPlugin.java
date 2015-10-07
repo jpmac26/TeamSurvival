@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class TeamSurvivalPlugin extends JavaPlugin {
 	
+	public static JavaPlugin plugin;
 	
 	
 	@Override
@@ -24,6 +25,6 @@ public class TeamSurvivalPlugin extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-		
+		TeamSurvivalPlugin.plugin = this;
 	}
 }

@@ -19,6 +19,11 @@ public class TeamSurvivalManager {
 	
 	private static Collection<GameSession> sessions = new HashSet<GameSession>();
 	
+	/**
+	 * Looks up a player using an ofline player.
+	 * @param player
+	 * @return
+	 */
 	public static SurvivalPlayer getPlayer(OfflinePlayer player) {
 		for(GameSession s : sessions){
 			SurvivalPlayer play = s.getPlayer(player);
@@ -29,6 +34,12 @@ public class TeamSurvivalManager {
 		return null;
 	}
 	
+	/**
+	 * Looks up a team by a player.<br />
+	 * In other words, this method returns the team a player belongs to
+	 * @param player
+	 * @return
+	 */
 	public static Team getTeam(SurvivalPlayer player) {
 		for(GameSession s : sessions){
 			Team team = s.getTeam(player);
@@ -39,7 +50,31 @@ public class TeamSurvivalManager {
 		return null;
 	}
 	
+	/**
+	 * Returns the underlying collection of sessions.<br />
+	 * Does NOT clone! This collection is the same collection this thing holds
+	 * @return
+	 */
 	public static Collection<GameSession> getSessions() {
 		return sessions;
 	}
+	
+	/**
+	 * Registers a game session, if it's not already registered
+	 * @param session
+	 * @return true if the session was added
+	 */
+	public static boolean register(GameSession session) {
+		return false;
+	}
+	
+	/**
+	 * Attempts to unregister a game session
+	 * @param session 
+	 * @return true if the session was found and unregistered
+	 */
+	public static boolean unregister(GameSession session) {
+		return false;
+	}
+	
 }
