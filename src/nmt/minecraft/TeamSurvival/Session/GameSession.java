@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.bukkit.OfflinePlayer;
 
+import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
 import nmt.minecraft.TeamSurvival.Player.Team;
 
@@ -33,8 +34,14 @@ public class GameSession {
 	 */
 	private String name;
 	
-	public GameSession(String name) {
+	/**
+	 * The map with the arenas and the shop
+	 */
+	private Map map;
+	
+	public GameSession(String name, Map map) {
 		this.name = name;
+		this.map = map;
 		this.state = State.PREGAME;
 		this.teams = new LinkedList<Team>();
 	}
