@@ -27,11 +27,11 @@ public class Mob {
 	
 	/**
 	 * Creates a mob archetype from the passed difficulty and type.<br />
-	 * @param type What kind of mob is this
+	 * @param mobUsed What kind of mob is this
 	 * @param difficulty How difficult are they. This determines, when entities are spawned, what equips & hp they have
 	 */
-	public Mob(EntityType type, int difficulty) {
-		; //TODO
+	public Mob(String mobUsed, int difficulty) {
+		;
 	}
 	
 	public LivingEntity spawnEntity(Location loc) {
