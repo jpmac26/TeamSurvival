@@ -17,14 +17,14 @@ public class SurvivalTabCompleter implements TabCompleter{
 		List<String> list = null;
 		
 		if(args.length == 0){
-			return getBeginList(cmd.getName(), SurvivalCommands.getCommandlist());
+			return getBeginList(cmd.getName(), SurvivalCommand.getCommandlist());
 		}
 				
 		switch(cmd.getName()){
 		// /teamsurvival [session|team] [args]
 		case "teamsurvival":
 			if(args.length ==1){
-				list = getBeginList(args[0],SurvivalCommands.getTeamsurvivalcommandlist());
+				list = getBeginList(args[0],SurvivalCommand.getTeamsurvivalcommandlist());
 				return list;
 			}
 			switch(args[0]){
