@@ -63,7 +63,7 @@ public class SurvivalCommand implements CommandExecutor {
 		return Arrays.asList(teamCommandList);
 	}
 	
-	private GameSession hasSession(String sessionName){
+	private GameSession getSession(String sessionName){
 		for(GameSession s : TeamSurvivalManager.getSessions()){
 			if(s.getName().equalsIgnoreCase(sessionName)){
 				return s;
@@ -159,7 +159,7 @@ public class SurvivalCommand implements CommandExecutor {
 			return false;
 		}
 		
-		if(hasSession(args[2])!=null){
+		if(getSession(args[2])!=null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There already exists an active session with that name"));
 			return false;
 		}
@@ -194,8 +194,24 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param sender
 	 * @param args
 	 */
-	private void onSessionStartCommand(CommandSender sender, String[] args) {
-		//TODO
+	private boolean onSessionStartCommand(CommandSender sender, String[] args) {
+		// /ts session start [session]
+		if(args.length != 3){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
+					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session start [sessionName]"));
+			return false;
+		}
+		
+		GameSession session = getSession(args[2]);
+		if(session == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session"));
+			return false;
+		}
+		
+		sender.sendMessage(ChatFormat.SESSION.wrap("Starting session..."));
+		session.start();
+		
+		return true;
 	}
 	
 	/**
@@ -203,8 +219,24 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param sender
 	 * @param args
 	 */
-	private void onSessionStopCommand(CommandSender sender, String[] args) {
-		//TODO
+	private boolean onSessionStopCommand(CommandSender sender, String[] args) {
+		// /ts session stop [session]
+			if(args.length != 3){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
+						+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session start [sessionName]"));
+				return false;
+			}
+			
+			GameSession session = getSession(args[2]);
+			if(session == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session"));
+				return false;
+			}
+			
+			sender.sendMessage(ChatFormat.SESSION.wrap("Stoping session..."));
+			session.stop();
+			
+			return true;
 	}
 	
 	/**
