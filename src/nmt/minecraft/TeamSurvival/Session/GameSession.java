@@ -16,6 +16,7 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  * Holds a single game session.<br />
  * Game sessions will hold the current state of things, the teams involved, etc
  * @author Skyler
+ * @author Stephanie
  *
  */
 public class GameSession {

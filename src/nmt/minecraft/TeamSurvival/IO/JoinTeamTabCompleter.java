@@ -12,6 +12,10 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
+/**
+ * 
+ * @author Stephanie
+ */
 public class JoinTeamTabCompleter implements TabCompleter{
 
 	@Override

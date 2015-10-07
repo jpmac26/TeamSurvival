@@ -2,6 +2,7 @@ package nmt.minecraft.TeamSurvival.IO;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -9,56 +10,68 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
+import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
+/**
+ * 
+ * @author Stephanie Martinez
+ *
+ */
 public class SurvivalTabCompleter implements TabCompleter{
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-		List<String> list = null;
-		
-		if(args.length == 0){
-			return getBeginList(cmd.getName(), SurvivalCommand.getCommandlist());
-		}
-				
-		switch(cmd.getName()){
-		// /teamsurvival [session|team] [args]
-		case "teamsurvival":
-			if(args.length ==1){
-				list = getBeginList(args[0],SurvivalCommand.getTeamsurvivalcommandlist());
-				return list;
-			}
-			switch(args[0]){
-			case "session":
-				if(args.length == 2){
-					
-				}
-				break;
-			case "team":
-				
-				break;
-			}
-			break;
-			
-		// /jointeam [session] [team]
-		case "jointeam":
-			Collection<GameSession> sessions = TeamSurvivalManager.getSessions();
-			if(args.length==1){
-				//get a list of session names
-				List<String> sessionList = new ArrayList<String>();
-				for(GameSession s : sessions){
-					sessionList.add(s.getName());
-				}
-				return getBeginList(args[0],sessionList);
-			}
-			break;
-		case "default":
+		if(args.length <1){
 			return null;
 		}
 		
+		// /teamsurvival [session|team] [args]
+		switch(args[0]){
+		case "session":
+			if(args.length == 2){
+				return getBeginList(args[1], SurvivalCommand.getSessioncommandlist());
+			}else if(args.length == 3 && (!args[1].equals("list"))){//list does not take a session argument 
+				return getBeginList(args[2], getSessionList());
+			}
+			break;
+		case "team":
+			if(args.length == 2){
+				return getBeginList(args[1], SurvivalCommand.getTeamcommandlist());
+			}else if(args.length==3){
+				return getBeginList(args[2], getSessionList());
+			}else if(args.length == 4 && (!args[2].equals("list"))){//list does not take a team argument
+				return getBeginList(args[3], getTeamList(args[2]));
+			}
+		default:
+			return getBeginList(args[0], SurvivalCommand.getTeamsurvivalcommandlist());
+		}
 		
-		return list;
+		return null;
 	}
-
+	
+	private List<String> getTeamList(String sessionName){
+		Collection<GameSession> list = TeamSurvivalManager.getSessions();
+		LinkedList<String> names = new LinkedList<String>();
+		for(GameSession s : list){
+			if(s.getName().equals(sessionName)){
+				for(Team t : s.getTeams()){
+					names.add(t.getName());
+				}
+				return names;
+			}
+		}
+		return names;
+	}
+	
+	private List<String> getSessionList(){
+		Collection<GameSession> list = TeamSurvivalManager.getSessions();
+		LinkedList<String> names = new LinkedList<String>();
+		for(GameSession s : list){
+			names.add(s.getName());
+		}
+		return names;
+	}
+	
 	private List<String> getBeginList(String key, List<String> totalList){
 		List<String> list = new ArrayList<String>();
 		
