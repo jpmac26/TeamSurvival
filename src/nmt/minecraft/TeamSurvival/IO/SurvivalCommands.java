@@ -44,6 +44,10 @@ public class SurvivalCommands implements CommandExecutor {
 		return Arrays.asList(commandList);
 	}
 	
+	public static List<String> getSubCommandList(){
+		return Arrays.asList(subCommandList);
+	}
+	
 	/**
 	 * Handles a join command
 	 * @param sender Who send the command
