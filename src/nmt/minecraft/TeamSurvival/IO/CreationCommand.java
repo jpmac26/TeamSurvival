@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
  */
 public class CreationCommand implements CommandExecutor{
 	
-	private static final String[] commands = {"new", "open", "close", "setShop", "addArena", "addShopButton"};
+	private static final String[] commands = {"open", "close", "setShop", "addArena", "addShopButton"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -23,10 +23,6 @@ public class CreationCommand implements CommandExecutor{
 			//print usage
 			sender.sendMessage(ChatFormat.WARNING.wrap("/ts [session|team] {args}"));
 			return false;
-		}
-		
-		if (args[0].equalsIgnoreCase("new")) {
-			onNewCommand(sender, args);
 		}
 		
 		if (args[0].equalsIgnoreCase("open")) {
@@ -58,15 +54,6 @@ public class CreationCommand implements CommandExecutor{
 
 	public static List<String> getCommands(){
 		return Arrays.asList(commands);
-	}
-
-/**
-	 * Handles admin 'new' command
-	 * @param sender
-	 * @param args
-	 */
-	private void onNewCommand(CommandSender sender, String[] args) {
-		//TODO
 	}
 	
 	/**
