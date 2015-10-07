@@ -6,9 +6,11 @@ import java.util.LinkedList;
 import org.bukkit.OfflinePlayer;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
 import nmt.minecraft.TeamSurvival.Player.Team;
+import nmt.minecraft.TeamSurvival.Shop.Shop;
 
 /**
  * Holds a single game session.<br />
@@ -40,6 +42,11 @@ public class GameSession {
 	 */
 	private Map map;
 	
+	/**
+	 * The shop instance that's unique to this session
+	 */
+	private Shop sessionShop;
+	
 	public GameSession(String name, Map map) {
 		this.name = name;
 		this.map = map;
@@ -51,6 +58,23 @@ public class GameSession {
 	 * Starts the game, dealing with the teams and scores, etc
 	 */
 	public void start() {
+		/*
+		 * Teleport teams to their positions
+		 * create waves for each player
+		 * start the wave
+		 */
+		if (teams.size() == 0) {
+			TeamSurvivalPlugin.plugin.getLogger().warning(
+					ChatFormat.ERROR.wrap("Unable to start session, as there are no teams!"));
+			return;
+		}
+		
+		if (state != State.PREGAME) {
+			TeamSurvivalPlugin.plugin.getLogger().warning(
+					ChatFormat.ERROR.wrap("Unable to start session, as it's already been started!"));
+		}
+		
+		state = State.STARTINGPERIOD;
 		; //TODO
 	}
 	
@@ -59,7 +83,7 @@ public class GameSession {
 	 * Games stop automatically, so this method is considered an emergency operation.
 	 */
 	public void stop() {
-		; //TODO
+		
 	}
 	
 	/**
