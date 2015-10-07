@@ -32,7 +32,7 @@ public class SurvivalPlayer {
 	 * Since we only want one survival player per player, we make this private and use static getter
 	 * @param player The player to wrap around
 	 */
-	private SurvivalPlayer(OfflinePlayer player) {
+	public SurvivalPlayer(OfflinePlayer player) {
 		//Only need the Player User ID
 		this.playerID = player.getUniqueId();
 		this.preGameLocation = null;
