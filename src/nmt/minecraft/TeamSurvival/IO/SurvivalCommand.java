@@ -71,19 +71,7 @@ public class SurvivalCommand implements CommandExecutor {
 		return Arrays.asList(teamCommandList);
 	}
 	
-	/**
-	 * Handles a join command
-	 * @param sender Who send the command
-	 * @param args The args passed to the command
-	 */
-	private void onJoinCommand(CommandSender sender, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("Only players can use this command!");
-			return;
-		}
-		
-		; //TODO
-	}
+	
 	
 	/**
 	 * Handles the admin 'session' command
@@ -165,7 +153,7 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param args
 	 */
 	private void onSessionCreateCommand(CommandSender sender, String[] args) {
-		//todo
+		//TODO
 	}
 	
 	/**
@@ -174,7 +162,7 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param args
 	 */
 	private void onSessionStartCommand(CommandSender sender, String[] args) {
-		//todo
+		//TODO
 	}
 	
 	/**
@@ -183,7 +171,7 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param args
 	 */
 	private void onSessionStopCommand(CommandSender sender, String[] args) {
-		//todo
+		//TODO
 	}
 	
 	/**
@@ -192,7 +180,7 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param args
 	 */
 	private void onSessionRemoveCommand(CommandSender sender, String[] args) {
-		//todo
+		//TODO
 	}
 	
 	/**
