@@ -1,6 +1,7 @@
 package nmt.minecraft.TeamSurvival.Session;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.bukkit.OfflinePlayer;
 
@@ -27,8 +28,15 @@ public class GameSession {
 	
 	private State state;
 	
-	public GameSession() {
+	/**
+	 * Keep a name so we can reference the game session
+	 */
+	private String name;
+	
+	public GameSession(String name) {
+		this.name = name;
 		this.state = State.PREGAME;
+		this.teams = new LinkedList<Team>();
 	}
 	
 	/**
@@ -118,5 +126,22 @@ public class GameSession {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Returns summary information about this session.
+	 * @param verbose Should this also give extensive information?
+	 * @return
+	 */
+	public String getInfo(boolean verbose) {
+		return "NOT IMPLEMENTED";
+	}
+	
+	/**
+	 * Get the name associated with this session
+	 * @return
+	 */
+	public String getName() {
+		return name;
 	}
 }
