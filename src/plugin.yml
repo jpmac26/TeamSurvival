@@ -11,13 +11,18 @@ permissions:
             teamsurvival.session.start: true
             teamsurvival.session.info: true
             teamsurvival.session.stop: true
+            teamsurvival.creator.new: true
+            teamsurvival.creator.open: true
+            teamsurvival.creator.close: true
+            teamsurvival.creator.setshop: true
+            teamsurvival.creator.addarena: true
         default: op
     teamsurvival.team.join: true
       default: true
 commands:
     teamsurvival:
         permission: teamsurvival.*
-        usage: /ts []
+        usage: /ts [session|team] {args}
         description: Container command for admin-level commands
         aliases: ts
     jointeam:
@@ -25,4 +30,9 @@ commands:
         ussage: /jointeam [teamname]
         description: Joins a TeamSurvival team
         alias: join
+    teamsurvivalcreator:
+    	permission: teamsurvival.creator.*
+    	usage: /tsc [new|open|close|setshop|addarena] {args}
+    	description: Container commmand for arena creation commands
+    	alias: tsc
     
