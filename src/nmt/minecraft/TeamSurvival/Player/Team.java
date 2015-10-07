@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 
 /**
  * A group of players.<br />
@@ -141,6 +142,40 @@ public class Team {
 		}
 		//Teleport all players
 		this.moveTo(lobbyLocation);
+	}
+	
+	/**
+	 * This method sends a message to all players in the Team.
+	 * @param message The message to send.
+	 */
+	public void sendTeamMessage(String message) {
+		for (SurvivalPlayer p : this.players) {
+			p.sendMessage(message);
+		}
+	}
+	
+	/**
+	 * This method plays a sound to all players in the Team with<br>
+	 * default volumes and pitch.
+	 * @param sound The sound to be played.
+	 */
+	public void sendTeamSound(Sound sound) {
+		for (SurvivalPlayer p : this.players) {
+			p.playSound(sound);
+		}
+	}
+	
+	/**
+	 * This method plays a sound to all players in the Team with a<br>
+	 * specified volume and pitch.
+	 * @param sound The sound to be played.
+	 * @param volume The volume of the sound (default value is 1).
+	 * @param pitch The pitch change of the sound (default value is 0).
+	 */
+	public void sendTeamSound(Sound sound, float volume, float pitch) {
+		for (SurvivalPlayer p : this.players) {
+			p.playSound(sound, volume, pitch);
+		}
 	}
 	
 	/**
