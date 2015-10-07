@@ -1,6 +1,8 @@
 package nmt.minecraft.TeamSurvival.Map;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,15 +12,22 @@ import java.util.regex.Pattern;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * This Class represents a single map within Team Survival.<br />
  * Each map will contain a Shop Location and a Collection of Locations<br>
  * for players to spawn in.
  * @author William
- *
+ * @author Stephanie
  */
 public class Map {
+
+	/**
+	 * 
+	 */
+	private Location startingLocation;
 	/**
 	 * This is the Location of the Shop within Team Survival
 	 */
@@ -40,6 +49,10 @@ public class Map {
 		this.name=name;
 	}
 		
+	private Map(){
+		
+	}
+	
 	/**
 	 * This method sets the Shop Location for the Map.
 	 * @param location The Location of the Shop.
@@ -85,6 +98,20 @@ public class Map {
 	public Location getShopButtonLocation() {
 		return this.shopButtonLocation;
 	}
+
+	public String getName(){
+		return name;
+	}
+
+	public Location getShopButton() {
+		return shopButtonLocation;
+	}
+
+
+
+	public void setShopButton(Location shopButton) {
+		shopButtonLocation = shopButton;
+	}
 	
 	/**
 	 * This static method prints out all the yml configuration files<br />
@@ -109,19 +136,40 @@ public class Map {
 		}
 		return configFilenames;
 	}
-
-	public String getName(){
-		return name;
+	
+	public static Map loadConfig(String name){
+		Map tmp = new Map();
+		
+		File file = new File(TeamSurvivalPlugin.plugin.getDataFolder(), name+".yml");
+		
+		YamlConfiguration config = new YamlConfiguration();
+		
+		try {
+			config.load(file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		config.getDouble("etc");
+		
+		return tmp;
 	}
 
-	public Location getShopButton() {
-		return shopButtonLocation;
+	public Location getStartingLocation() {
+		return startingLocation;
 	}
 
-
-
-	public void setShopButton(Location shopButton) {
-		shopButtonLocation = shopButton;
+	public void setStartingLocation(Location startingLocation) {
+		this.startingLocation = startingLocation;
 	}
-
 }
