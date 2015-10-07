@@ -1,13 +1,14 @@
 package nmt.minecraft.TeamSurvival;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import nmt.minecraft.TeamSurvival.IO.CreationCommand;
 import nmt.minecraft.TeamSurvival.IO.CreationTabCompleter;
 import nmt.minecraft.TeamSurvival.IO.JoinTeamCommand;
 import nmt.minecraft.TeamSurvival.IO.JoinTeamTabCompleter;
 import nmt.minecraft.TeamSurvival.IO.SurvivalCommand;
 import nmt.minecraft.TeamSurvival.IO.SurvivalTabCompleter;
+import nmt.minecraft.TeamSurvival.Session.GameSession;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Plugin class.<br />
@@ -33,6 +34,16 @@ public class TeamSurvivalPlugin extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		if (TeamSurvivalManager.getSessions().isEmpty()) {
+			return; //nothing to stop
+		}
+		
+		getLogger().warning("Stopping " + TeamSurvivalManager.getSessions().size() + " sessions!");
+		
+		for (GameSession session : TeamSurvivalManager.getSessions()) {
+			//stop all sessions
+			session.stop();
+		}
 		
 	}
 	
