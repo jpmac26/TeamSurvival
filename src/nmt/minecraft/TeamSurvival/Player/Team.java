@@ -27,11 +27,6 @@ public class Team {
 	private String name;
 	
 	/**
-	 * This is the lobby location for the team.
-	 */
-	private Location lobbyLocation;
-	
-	/**
 	 * Main constructor for the Team Class.
 	 * @param name The name for the team.
 	 * @param players A collection of players that are associated with a team.
@@ -42,27 +37,6 @@ public class Team {
 		this.players = new HashSet<SurvivalPlayer>(players);
 	}
 	
-	/**
-	 * A secondary constructor where the lobbyLocation can be specified.
-	 * @param name The name for the team.
-	 * @param players A collection of players that are associated with a team.
-	 * @param lobbyLocation The location of the lobby. Players are teleported
-	 * here when the game ends.
-	 */
-	public Team(String name, Collection<SurvivalPlayer> players, Location lobbyLocation) {
-		this.name = name;
-		this.players = new HashSet<SurvivalPlayer>(players);
-		this.lobbyLocation = lobbyLocation;
-	}
-	
-	/**
-	 * This method sets the team's lobby location
-	 * @param lobbyLocation The location of the lobby. Players are teleported
-	 * here when the game ends.
-	 */
-	public void setLobbyLocation(Location lobbyLocation) {
-		this.lobbyLocation = lobbyLocation;
-	}
 	
 	/**
 	 * Returns a team's name.
@@ -74,11 +48,13 @@ public class Team {
 	
 
 	/**
-	 * This method adds a player to a team.
+	 * This method adds a player to a team.<br />
+	 * The player's pregame location is also set at this point.
 	 * @param player
 	 * @return True if the player was successfully added to the Team.
 	 */
 	public boolean addPlayer(SurvivalPlayer player) {
+		player.setPreGameLocation(player.getPlayer().getLocation());
 		return this.players.add(player);
 	}
 	
@@ -128,7 +104,7 @@ public class Team {
 			p.win();
 		}
 		//Teleport all players
-		this.moveTo(lobbyLocation);
+		//this.moveTo(lobbyLocation);
 	}
 	
 	/**
@@ -141,7 +117,7 @@ public class Team {
 			p.lose();
 		}
 		//Teleport all players
-		this.moveTo(lobbyLocation);
+		//this.moveTo(lobbyLocation);
 	}
 	
 	/**
@@ -149,6 +125,7 @@ public class Team {
 	 * @param message The message to send.
 	 */
 	public void sendTeamMessage(String message) {
+		//For each player in this team
 		for (SurvivalPlayer p : this.players) {
 			p.sendMessage(message);
 		}
@@ -160,6 +137,7 @@ public class Team {
 	 * @param sound The sound to be played.
 	 */
 	public void sendTeamSound(Sound sound) {
+		//For each player in this team...
 		for (SurvivalPlayer p : this.players) {
 			p.playSound(sound);
 		}
@@ -173,6 +151,7 @@ public class Team {
 	 * @param pitch The pitch change of the sound (default value is 0).
 	 */
 	public void sendTeamSound(Sound sound, float volume, float pitch) {
+		//For each player in this team..
 		for (SurvivalPlayer p : this.players) {
 			p.playSound(sound, volume, pitch);
 		}

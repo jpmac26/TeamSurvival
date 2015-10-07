@@ -21,6 +21,13 @@ public class SurvivalPlayer {
 	private UUID playerID;
 	
 	/**
+	 * This stores the location of the player before the game begins.
+	 * At the end of a game, the player is returned to this location.
+	 */
+	private Location preGameLocation;
+	
+	
+	/**
 	 * Creates a new wrapper survival player.<br />
 	 * Since we only want one survival player per player, we make this private and use static getter
 	 * @param player The player to wrap around
@@ -28,6 +35,33 @@ public class SurvivalPlayer {
 	private SurvivalPlayer(OfflinePlayer player) {
 		//Only need the Player User ID
 		this.playerID = player.getUniqueId();
+		this.preGameLocation = null;
+	}
+	
+	/**
+	 * This method sets the Pre-Game location of the Player<br />
+	 * Remember that this is where the player is returned to after a 
+	 * game session.
+	 * @param location The Pre-Game location.
+	 */
+	protected void setPreGameLocation(Location location) {
+		this.preGameLocation = location;
+	}
+	
+	/**
+	 * This method teleports the player to the set PreGame Location<br />
+	 */
+	protected void returnToPreGame() {
+		Player p = this.getPlayer();
+		//Check to ensure that the player's pregame location was set.
+		if (this.preGameLocation == null) {
+			System.out.println("ERROR: " + this.getOfflinePlayer().getName() + "'s location was not set!");
+			return;
+		}
+		//Only teleport the player if they are actively in the game.
+		if (p != null) {
+			p.teleport(this.preGameLocation);
+		}
 	}
 	
 	/**
