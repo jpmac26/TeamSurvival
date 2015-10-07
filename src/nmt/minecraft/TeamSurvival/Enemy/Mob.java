@@ -1,8 +1,8 @@
 package nmt.minecraft.TeamSurvival.Enemy;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 
 /**
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
@@ -18,7 +18,7 @@ public class Mob {
 	/**
 	 * Keep track of what type of entity to spawn
 	 */
-	private String type;
+	private EntityType type;
 	
 	/**
 	 * Some sort of indication of how hard the mob is.<br />
@@ -27,20 +27,18 @@ public class Mob {
 	 */
 	private int difficulty;
 	
-	private LivingEntity ent;
-	
 	/**
 	 * Creates a mob archetype from the passed difficulty and type.<br />
 	 * @param mobUsed What kind of mob is this
 	 * @param difficulty How difficult are they. This determines, when entities are spawned, what equips & hp they have
 	 */
 	public Mob(String mobUsed, int difficulty) {
-		this.type = mobUsed;
+		this.type = EntityType.valueOf(mobUsed);
 		this.difficulty = difficulty;
-		switch (mobUsed) {
-		case "Zombie":
-			
-			break;
-		}
+	}
+	
+	public void SpawnEntity(Location loc) {
+		Entity spawnedEntity = loc.getWorld().spawnEntity(loc, type);
+		//spawnedEntity
 	}
 }

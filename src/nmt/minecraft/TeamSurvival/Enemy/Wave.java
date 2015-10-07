@@ -14,6 +14,7 @@ import org.bukkit.entity.LivingEntity;
 public class Wave {
 	private String MobTypes[] = {"Zombie", "Skeleton","CaveSpider","Endermite","Creeper","Jockey","WitherSkeleton"};
 	private int MobVals[] = {0,2,4,6,7,7,8,9};
+	Mob Mobs[];
 	/**
 	 * Creates a wave with the given types of mobs.
 	 * @param WaveNumber is the wave number
@@ -21,6 +22,7 @@ public class Wave {
 	 * @note See wave implementation in google doc file
 	 */
 	public Wave(int WaveNumber, int MobCount) {
+		Mobs = new Mob[MobCount];
 		Random rn = new Random();
 		int MobPool = (WaveNumber-1)*2;
 		int RandNum = rn.nextInt() % 7;
@@ -49,7 +51,6 @@ public class Wave {
 	 */
 	private void SetupMobs(String MobsUsed[], int MobCount, int MobDiffs[]){
 		int count = MobCount;
-		Mob Mobs[] = new Mob[MobCount];
 		while(count > 0){
 			if(count == 0)break;
 			Mobs[MobCount-count] = new Mob(MobsUsed[0],MobDiffs[0]);
@@ -69,6 +70,7 @@ public class Wave {
 	 * @return
 	 */
 	public LivingEntity spawnRandomMob(Location location) {
+		//location.getWorld().spawnEntity(location, ent.type);
 		return null; //TODO, but do we really need to return the entity?
 	}
 }
