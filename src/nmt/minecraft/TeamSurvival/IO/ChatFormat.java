@@ -13,7 +13,7 @@ public enum ChatFormat {
 	WARNING(ChatColor.YELLOW),
 	SESSION(ChatColor.DARK_PURPLE),
 	TEAM(ChatColor.BLUE),
-	IMPORTANT(ChatColor.DARK_GREEN);
+	IMPORTANT(ChatColor.DARK_GREEN, ChatColor.BOLD);
 	
 	private String format;
 	
@@ -29,5 +29,14 @@ public enum ChatFormat {
 	@Override
 	public String toString() {
 		return format;
+	}
+	
+	/**
+	 * Wraps the passed string in the format, including resetting afterwards
+	 * @param msg
+	 * @return
+	 */
+	public String wrap(String msg) {
+		return format + msg + ChatColor.RESET;
 	}
 }
