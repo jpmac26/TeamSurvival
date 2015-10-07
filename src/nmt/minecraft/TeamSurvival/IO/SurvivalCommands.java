@@ -118,6 +118,37 @@ public class SurvivalCommands implements CommandExecutor {
 						+ ChatFormat.IMPORTANT.wrap("[" + s.getState().toString() + "]"));
 			}
 		}
+		
+		if (args[1].equalsIgnoreCase("info")) {
+			if (args.length < 2 || args.length > 4) {
+				sender.sendMessage("/ts session info " + ChatFormat.SESSION.wrap("[sessionName] {verbose}"));
+				return;
+			}
+			
+			String sessionName = args[2];
+			GameSession gameSession = null;
+			
+			for (GameSession session : TeamSurvivalManager.getSessions()) {
+				if (session.getName().equals(sessionName)) {
+					gameSession = session;
+					break;
+				}
+			}
+			
+			if (gameSession == null) {
+				sender.sendMessage(ChatFormat.ERROR.wrap("Unable to find session ") + ChatFormat.SESSION.wrap(sessionName));
+				return;
+			}
+			
+			boolean verbose = false;
+			if (args.length == 4) {
+				if (args[3].equalsIgnoreCase("true") || args[3].equals("verbose")) {
+					verbose = true;
+				}
+			}
+			
+			sender.sendMessage(gameSession.getInfo(verbose));
+		}
 	}
 	
 	/**
