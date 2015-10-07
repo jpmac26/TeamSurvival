@@ -94,4 +94,13 @@ public class TeamSurvivalManager {
 		return false;
 	}
 	
+	public static GameSession getSession(String sessionName){
+		for(GameSession s : TeamSurvivalManager.getSessions()){
+			if(s.getName().equalsIgnoreCase(sessionName)){
+				return s;
+			}
+		}
+		return null;
+	}
+	
 }

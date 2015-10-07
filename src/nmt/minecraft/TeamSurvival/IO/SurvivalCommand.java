@@ -63,15 +63,6 @@ public class SurvivalCommand implements CommandExecutor {
 		return Arrays.asList(teamCommandList);
 	}
 	
-	private GameSession getSession(String sessionName){
-		for(GameSession s : TeamSurvivalManager.getSessions()){
-			if(s.getName().equalsIgnoreCase(sessionName)){
-				return s;
-			}
-		}
-		return null;
-	}
-	
 	/**
 	 * Handles the admin 'session' command
 	 * @param sender
@@ -159,7 +150,7 @@ public class SurvivalCommand implements CommandExecutor {
 			return false;
 		}
 		
-		if(getSession(args[2])!=null){
+		if(TeamSurvivalManager.getSession(args[2])!=null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There already exists an active session with that name"));
 			return false;
 		}
@@ -202,7 +193,7 @@ public class SurvivalCommand implements CommandExecutor {
 			return false;
 		}
 		
-		GameSession session = getSession(args[2]);
+		GameSession session = TeamSurvivalManager.getSession(args[2]);
 		if(session == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session"));
 			return false;
@@ -223,11 +214,11 @@ public class SurvivalCommand implements CommandExecutor {
 		// /ts session stop [session]
 			if(args.length != 3){
 				sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
-						+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session start [sessionName]"));
+						+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session stop [sessionName]"));
 				return false;
 			}
 			
-			GameSession session = getSession(args[2]);
+			GameSession session = TeamSurvivalManager.getSession(args[2]);
 			if(session == null){
 				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session"));
 				return false;
@@ -244,8 +235,27 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param sender
 	 * @param args
 	 */
-	private void onSessionRemoveCommand(CommandSender sender, String[] args) {
-		//TODO
+	private boolean onSessionRemoveCommand(CommandSender sender, String[] args) {
+		// /ts session remove [sessionName]
+		if(args.length != 3){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
+					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session remove [sessionName]"));
+			return false;
+		}
+		
+		GameSession session = TeamSurvivalManager.getSession(args[2]);
+		if(session == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session"));
+			return false;
+		}
+		
+		if(!TeamSurvivalManager.unregister(session)){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not remove session."));
+			return false;
+		}
+		
+		sender.sendMessage(ChatFormat.SESSION.wrap("Session removed."));
+		return true;
 	}
 	
 	/**
