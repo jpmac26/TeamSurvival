@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
 /**
  * A wave of enemies.<br />
@@ -19,6 +22,8 @@ public class Wave {
 	private List<Mob> Mobs;
 	private List<LivingEntity> Entities;
 	private int maxSpawned;
+	private boolean forceStop = false;
+	private boolean started = false;
 	/**
 	 * Creates a wave with the given types of mobs.
 	 * @param WaveNumber is the wave number
@@ -117,17 +122,45 @@ public class Wave {
 	 * Handles registering for events, etc.
 	 */
 	public void start() {
-		while(Entities.size() < maxSpawned & Mobs.size() > 0) {
-			//spawnRandomMob(new Location());
+		started = true;
+		while(started == true && forceStop == false && Entities.size() < maxSpawned & Mobs.size() > 0) {
+			spawnRandomMob(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("TeamSurvivalWorld"), 0.0f, 64.0f, 0.0f));
 		}
 	}
 	
 	/**
 	 * Stops the wave, for emergency purposes.<br />
-	 * Entities should be cleared, and the wave should handle de-registration
+	 * Entities should be cleared, and the wave should handle de-registration.
 	 */
 	public void stop() {
-		; //TODO
+		forceStop = true;
+		started = false;
+		clearWave();
+	}
+	
+	/**
+	 * Tells the wave to check  if it needs to spawn more mobs.<br />
+	 * It will also check if the wave is complete or has been force-stopped.
+	 */
+	public void update() {
+		if(started == true && forceStop == false && isComplete() == false && Entities.size() < maxSpawned && Mobs.size() > 0) {
+			//TODO: Use the correct world and spawn locations. These will probably be provided as arguments for the Start() method.
+			spawnRandomMob(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("TeamSurvivalWorld"), 0.0f, 64.0f, 0.0f));
+		}
+		
+		//In case the stop() method doesn't quite clear the wave, we will do it here too
+		if(forceStop == true) {
+			clearWave();
+		}
+		
+		if(isComplete() == true) {
+			Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+		}
+	}
+	
+	private void clearWave() {
+		Entities.clear();
+		Mobs.clear();
 	}
 	
 	/**
@@ -136,6 +169,11 @@ public class Wave {
 	 * @return
 	 */
 	public boolean isComplete() {
-		return false; //TODO
+		boolean allDead = true;
+		for(LivingEntity ent : Entities) {
+			if(ent.isDead()) allDead = false;
+		}
+		//Optional check: make sure the size() of the "Mobs" list is zero
+		return allDead;
 	}
 }
