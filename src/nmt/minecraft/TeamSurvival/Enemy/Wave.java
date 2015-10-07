@@ -1,5 +1,7 @@
 package nmt.minecraft.TeamSurvival.Enemy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -14,15 +16,19 @@ import org.bukkit.entity.LivingEntity;
 public class Wave {
 	private String MobTypes[] = {"Zombie", "Skeleton","CaveSpider","Endermite","Creeper","Jockey","WitherSkeleton"};
 	private int MobVals[] = {0,2,4,6,7,7,8,9};
-	Mob Mobs[];
+	private List<Mob> Mobs;
+	private List<LivingEntity> Entities;
+	private int maxSpawned;
 	/**
 	 * Creates a wave with the given types of mobs.
 	 * @param WaveNumber is the wave number
-	 * @param MobCount number of mobs
+	 * @param TotalMobCount total number of mobs in wave
 	 * @note See wave implementation in google doc file
 	 */
-	public Wave(int WaveNumber, int MobCount) {
-		Mobs = new Mob[MobCount];
+	public Wave(int WaveNumber, int TotalMobCount) {
+		Mobs = new ArrayList<Mob>();
+		Entities = new ArrayList<LivingEntity>();
+		maxSpawned = 40;
 		Random rn = new Random();
 		int MobPool = (WaveNumber-1)*2;
 		int RandNum = rn.nextInt() % 7;
@@ -39,7 +45,37 @@ public class Wave {
 				UsedCount++;
 			}
 		}
-		SetupMobs(MobsUsed, MobCount,MobDiffs);
+		SetupMobs(MobsUsed, TotalMobCount,MobDiffs);
+	}
+	
+	/**
+	 * Creates a wave with the given types of mobs.
+	 * @param WaveNumber is the wave number
+	 * @param TotalMobCount total number of mobs in wave
+	 * @param MaxToSpawn maximum number of mobs that can be spawned at any given time
+	 * @note See wave implementation in google doc file
+	 */
+	public Wave(int WaveNumber, int TotalMobCount, int MaxToSpawn) {
+		Mobs = new ArrayList<Mob>();
+		Entities = new ArrayList<LivingEntity>();
+		maxSpawned = MaxToSpawn;
+		Random rn = new Random();
+		int MobPool = (WaveNumber-1)*2;
+		int RandNum;
+		int UsedCount = 0;
+		String MobsUsed[] = {"","",""};
+		int MobDiffs[] = {0,0,0};
+		
+		while(MobPool > 0 || UsedCount < 3){
+			RandNum = rn.nextInt() % 7;
+			MobDiffs[UsedCount] = MobVals[RandNum];
+			if(MobPool - MobDiffs[UsedCount] >= 0){
+				/* the mob can be added */
+				MobsUsed[UsedCount] = MobTypes[RandNum];
+				UsedCount++;
+			}
+		}
+		SetupMobs(MobsUsed, TotalMobCount,MobDiffs);
 	}
 	
 	/**
@@ -53,13 +89,13 @@ public class Wave {
 		int count = MobCount;
 		while(count > 0){
 			if(count == 0)break;
-			Mobs[MobCount-count] = new Mob(MobsUsed[0],MobDiffs[0]);
+			Mobs.add(new Mob(MobsUsed[0],MobDiffs[0]));
 			count--;
 			if(count == 0)break;
-			Mobs[MobCount-count] = new Mob(MobsUsed[1],MobDiffs[1]);
+			Mobs.add(new Mob(MobsUsed[1],MobDiffs[1]));
 			count--;
 			if(count == 0)break;
-			Mobs[MobCount-count] = new Mob(MobsUsed[2],MobDiffs[2]);
+			Mobs.add(new Mob(MobsUsed[2],MobDiffs[2]));
 			count--;
 		}
 	}
@@ -69,22 +105,26 @@ public class Wave {
 	 * Gets a random mob from what's left to spawn and spawns it, returning the entity
 	 * @return
 	 */
-	public LivingEntity spawnRandomMob(Location location) {
-		//location.getWorld().spawnEntity(location, ent.type);
-		return null; //TODO, but do we really need to return the entity?
+	public void spawnRandomMob(Location location) {
+		Random rn = new Random();
+		int RandNum = rn.nextInt() % Mobs.size();
+		Entities.add(Mobs.get(RandNum).SpawnEntity(location));
+		Mobs.remove(RandNum);
 	}
 	
 	/**
-	 * Sets the wave to begin spawning the mobs<br />
-	 * Handles registering for events, etc
+	 * Sets the wave to begin spawning the mobs.<br />
+	 * Handles registering for events, etc.
 	 */
 	public void start() {
-		; //TODO
+		while(Entities.size() < maxSpawned & Mobs.size() > 0) {
+			//spawnRandomMob(new Location());
+		}
 	}
 	
 	/**
 	 * Stops the wave, for emergency purposes.<br />
-	 * Entities should be cleared, and the wave should handle unregistration
+	 * Entities should be cleared, and the wave should handle de-registration
 	 */
 	public void stop() {
 		; //TODO

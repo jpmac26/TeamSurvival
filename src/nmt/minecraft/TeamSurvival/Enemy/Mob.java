@@ -3,6 +3,7 @@ package nmt.minecraft.TeamSurvival.Enemy;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
@@ -37,8 +38,9 @@ public class Mob {
 		this.difficulty = difficulty;
 	}
 	
-	public void SpawnEntity(Location loc) {
-		Entity spawnedEntity = loc.getWorld().spawnEntity(loc, type);
-		//spawnedEntity
+	public LivingEntity SpawnEntity(Location loc) {
+		LivingEntity spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, type);
+		//Add equipment here(?)
+		return spawnedEntity;
 	}
 }
