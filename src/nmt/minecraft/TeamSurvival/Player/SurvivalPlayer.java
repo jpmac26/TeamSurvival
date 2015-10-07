@@ -71,7 +71,7 @@ public class SurvivalPlayer {
 	protected void win() {
 		//Send the Player a winning message
 		this.sendMessage("Winning Message!");
-		this.returnToPreGame();
+		this.returnToPreGame(); //Send then back to their pregame location
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class SurvivalPlayer {
 	protected void lose() {
 		//Send the Player a winning message
 		this.sendMessage("Losing Message!");
-		this.returnToPreGame();
+		this.returnToPreGame(); //Send them back to their pregame location
 	}
 	
 	/**
