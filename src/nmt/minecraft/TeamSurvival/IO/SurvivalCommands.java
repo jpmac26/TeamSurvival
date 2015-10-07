@@ -117,6 +117,8 @@ public class SurvivalCommands implements CommandExecutor {
 				sender.sendMessage(ChatFormat.SESSION.wrap(s.getName()) + "  " 
 						+ ChatFormat.IMPORTANT.wrap("[" + s.getState().toString() + "]"));
 			}
+			
+			return;
 		}
 		
 		if (args[1].equalsIgnoreCase("info")) {
@@ -148,6 +150,8 @@ public class SurvivalCommands implements CommandExecutor {
 			}
 			
 			sender.sendMessage(gameSession.getInfo(verbose));
+			
+			return;
 		}
 	}
 	
