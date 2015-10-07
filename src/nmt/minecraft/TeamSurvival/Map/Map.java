@@ -25,9 +25,9 @@ public class Map {
 	private Location ShopLocation;
 	
 	/**
-	 * This is the Location of the Shop Button within Team Survival
+	 * Location of the Shop Button
 	 */
-	private Location ShopButton;
+	private Location shopButtonLocation;
 	
 	/**
 	 * This collection contains all the initial spawn locations for the Map.
@@ -82,6 +82,10 @@ public class Map {
 		return this.ShopLocation;
 	}
 	
+	public Location getShopButtonLocation() {
+		return this.shopButtonLocation;
+	}
+	
 	/**
 	 * This static method prints out all the yml configuration files<br />
 	 * that could possibly be loaded into a map.
@@ -111,13 +115,13 @@ public class Map {
 	}
 
 	public Location getShopButton() {
-		return ShopButton;
+		return shopButtonLocation;
 	}
 
 
 
 	public void setShopButton(Location shopButton) {
-		ShopButton = shopButton;
+		shopButtonLocation = shopButton;
 	}
 
 }
