@@ -1,6 +1,13 @@
 package nmt.minecraft.TeamSurvival.Map;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
 import org.bukkit.Location;
 
@@ -25,6 +32,8 @@ public class Map {
 	private Map() {
 		
 	}
+	
+	
 	
 	/**
 	 * This method sets the Shop Location for the Map.
@@ -66,5 +75,29 @@ public class Map {
 	 */
 	public Location getShopLocation() {
 		return this.ShopLocation;
+	}
+	
+	/**
+	 * This static method prints out all the yml configuration files<br />
+	 * that could possibly be loaded into a map.
+	 */
+	public static List<String> listConfigs() {
+		File resourceFolder = TeamSurvivalPlugin.plugin.getDataFolder();
+		File[] resourceFiles = resourceFolder.listFiles();
+		Pattern ymlPattern = Pattern.compile("*.yml");
+		
+		List<String> configFilenames = new LinkedList<String>();
+		for (File file : resourceFiles) {
+			//Get the Filename
+			String fileName = file.getName();
+			//Search filename for the .yml extension
+			Matcher isYml = ymlPattern.matcher(fileName);
+			if (isYml.find()) {
+				//Remove .yml extension
+				String cleanString = (fileName.split("."))[0];
+				configFilenames.add(cleanString);
+			}
+		}
+		return configFilenames;
 	}
 }
