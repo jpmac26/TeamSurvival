@@ -69,6 +69,6 @@ public class Wave {
 	 * @return
 	 */
 	public LivingEntity spawnRandomMob(Location location) {
-		return null; //TODO
+		return null; //TODO, but do we really need to return the entity?
 	}
 }

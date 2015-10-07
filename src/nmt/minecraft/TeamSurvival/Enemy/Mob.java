@@ -18,7 +18,7 @@ public class Mob {
 	/**
 	 * Keep track of what type of entity to spawn
 	 */
-	private EntityType type;
+	private String type;
 	
 	/**
 	 * Some sort of indication of how hard the mob is.<br />
@@ -27,16 +27,20 @@ public class Mob {
 	 */
 	private int difficulty;
 	
+	private LivingEntity ent;
+	
 	/**
 	 * Creates a mob archetype from the passed difficulty and type.<br />
 	 * @param mobUsed What kind of mob is this
 	 * @param difficulty How difficult are they. This determines, when entities are spawned, what equips & hp they have
 	 */
 	public Mob(String mobUsed, int difficulty) {
-		;
-	}
-	
-	public LivingEntity spawnEntity(Location loc) {
-		return null; //TODO
+		this.type = mobUsed;
+		this.difficulty = difficulty;
+		switch (mobUsed) {
+		case "Zombie":
+			
+			break;
+		}
 	}
 }
