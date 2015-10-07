@@ -16,7 +16,7 @@ import nmt.minecraft.TeamSurvival.Map.Creator;
  */
 public class CreationCommand implements CommandExecutor{
 	
-	private static final String[] commands = {"open", "close", "setShop", "addArena", "addShopButton"};
+	private static final String[] commands = {"open", "close", "setShop", "addArena", "setShopButton"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -42,7 +42,7 @@ public class CreationCommand implements CommandExecutor{
 			onAddArenaCommand(sender, args);
 		}
 		
-		if (args[0].equalsIgnoreCase("addShopButton")) {
+		if (args[0].equalsIgnoreCase("setShopButton")) {
 			onSetShopButtonCommand(sender, args);
 		}
 		return true;

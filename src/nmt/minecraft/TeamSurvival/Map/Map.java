@@ -35,6 +35,7 @@ public class Map {
 		this.name=name;
 		
 		//create new config file
+		this.saveConfig();
 	}
 		
 	private Map(){
