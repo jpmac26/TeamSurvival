@@ -1,38 +1,72 @@
 package nmt.minecraft.TeamSurvival.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 
 /**
  * A group of players.<br />
  * Teams are the the big operational block for the user part of our game. We rarely will operate on single players;
  * instead we'll use teams.
  * @author Skyler
+ * @author William
  */
 public class Team {
 	
 	/**
 	 * Collection of the players that are part of this team
 	 */
-	private Collection<SurvivalPlayer> players;
+	private HashSet<SurvivalPlayer> players;
 	
 	/**
 	 * This team's name
 	 */
 	private String name;
 	
+	/**
+	 * Main constructor for the Team Class.
+	 * @param name The name for the team.
+	 * @param players A collection of players that are associated with a team.
+	 * TODO We should probably somehow limit the size and character set of a team name.
+	 */
 	public Team(String name, Collection<SurvivalPlayer> players) {
-		; //TODO
+		this.name = name;
+		this.players = new HashSet<SurvivalPlayer>(players);
 	}
 	
+	
+	/**
+	 * Returns a team's name.
+	 * @return the Team's name.
+	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
+
+	/**
+	 * This method adds a player to a team.<br />
+	 * The player's pregame location is also set at this point.
+	 * @param player
+	 * @return True if the player was successfully added to the Team.
+	 */
 	public boolean addPlayer(SurvivalPlayer player) {
-		return players.add(player);
+		player.setPreGameLocation(player.getPlayer().getLocation());
+		return this.players.add(player);
+	}
+	
+	/**
+	 * This method removes a player from a team.
+	 * @param player The player to be removed.
+	 * @return <b>True</b> if the player was successfully removed.<br>
+	 * <b>False</b> if the player could not be removed or was not in the team to 
+	 * begin with.
+	 */
+	public boolean removePlayer(SurvivalPlayer player) {
+		return this.players.remove(player);
 	}
 	
 	/**
@@ -65,7 +99,12 @@ public class Team {
 	 * Should also return players to lobby, etc
 	 */
 	public void win() {
-		; //TODO
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			p.win();
+		}
+		//Teleport all players
+		//this.moveTo(lobbyLocation);
 	}
 	
 	/**
@@ -73,7 +112,49 @@ public class Team {
 	 * @see #win()
 	 */
 	public void lose() {
-		; //TODO
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			p.lose();
+		}
+		//Teleport all players
+		//this.moveTo(lobbyLocation);
+	}
+	
+	/**
+	 * This method sends a message to all players in the Team.
+	 * @param message The message to send.
+	 */
+	public void sendTeamMessage(String message) {
+		//For each player in this team
+		for (SurvivalPlayer p : this.players) {
+			p.sendMessage(message);
+		}
+	}
+	
+	/**
+	 * This method plays a sound to all players in the Team with<br>
+	 * default volumes and pitch.
+	 * @param sound The sound to be played.
+	 */
+	public void sendTeamSound(Sound sound) {
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			p.playSound(sound);
+		}
+	}
+	
+	/**
+	 * This method plays a sound to all players in the Team with a<br>
+	 * specified volume and pitch.
+	 * @param sound The sound to be played.
+	 * @param volume The volume of the sound (default value is 1).
+	 * @param pitch The pitch change of the sound (default value is 0).
+	 */
+	public void sendTeamSound(Sound sound, float volume, float pitch) {
+		//For each player in this team..
+		for (SurvivalPlayer p : this.players) {
+			p.playSound(sound, volume, pitch);
+		}
 	}
 	
 	/**
@@ -82,7 +163,11 @@ public class Team {
 	 * @param location
 	 */
 	public void moveTo(Location location) {
-		; //TODO
+		//For each player in this team...
+		for (SurvivalPlayer p : this.players) {
+			//This next command gets the Player and teleports them to 'location'
+			p.teleportPlayer(location);
+		}
 	}
 	
 	
