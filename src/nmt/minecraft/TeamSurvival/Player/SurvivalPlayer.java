@@ -53,7 +53,7 @@ public class SurvivalPlayer {
 	 * If no player exists for this class then nothing is performed.
 	 * @param message The string message to send to the player.
 	 */
-	public void sendMessage(String message) {
+	protected void sendMessage(String message) {
 		Player p = this.getPlayer();
 		if (p != null) {
 			p.sendMessage(message);
@@ -65,7 +65,7 @@ public class SurvivalPlayer {
 	 * If no player exists for this class then nothing is performed.
 	 * @param sound The sound to be played.
 	 */
-	public void playSound(Sound sound) {
+	protected void playSound(Sound sound) {
 		Player p = this.getPlayer();
 		if (p != null) {
 			p.playSound(p.getLocation(), sound, 1, 0);
@@ -79,7 +79,7 @@ public class SurvivalPlayer {
 	 * @param volume The volume of the sound (default value is 1).
 	 * @param pitch The pitch of the sound (default value is 0).
 	 */
-	public void playSound(Sound sound, float volume, float pitch) {
+	protected void playSound(Sound sound, float volume, float pitch) {
 		Player p = this.getPlayer();
 		if (p != null) {
 			p.playSound(p.getLocation(), sound, volume, pitch);
@@ -91,7 +91,7 @@ public class SurvivalPlayer {
 	 * If no player exists for this class then nothing is performed.
 	 * @param location The location to send the SurvivalPlayer to.
 	 */
-	public void teleportPlayer(Location location) {
+	protected void teleportPlayer(Location location) {
 		Player p = this.getPlayer();
 		if (p != null) {
 			p.teleport(location);
