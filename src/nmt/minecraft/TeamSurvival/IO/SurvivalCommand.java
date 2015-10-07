@@ -36,13 +36,20 @@ public class SurvivalCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		if (cmd.getName().equalsIgnoreCase("teamsurvival")) {
-			onTeamSurvivalCommand(sender, args);
+		if (args.length == 0) {
+			//print usage
+			sender.sendMessage("/ts [session|team] {args}");
 			return true;
 		}
 		
-		if (cmd.getName().equalsIgnoreCase("jointeam")) {
-			onJoinCommand(sender, args);
+		if (args[0].equalsIgnoreCase("session")) {
+			onSessionCommand(sender, args);
+			return true;
+		}
+		
+		if (args[0].equalsIgnoreCase("team")) {
+			onTeamCommand(sender, args);
+			return true;
 		}
 		
 		return false;
@@ -64,42 +71,7 @@ public class SurvivalCommand implements CommandExecutor {
 		return Arrays.asList(teamCommandList);
 	}
 	
-	/**
-	 * Handles a join command
-	 * @param sender Who send the command
-	 * @param args The args passed to the command
-	 */
-	private void onJoinCommand(CommandSender sender, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("Only players can use this command!");
-			return;
-		}
-		
-		; //TODO
-	}
 	
-	/**
-	 * Handles the admin-command wrapper
-	 * @param sender Who sent the command
-	 * @param args The arguments they supplied
-	 */
-	private void onTeamSurvivalCommand(CommandSender sender, String[] args) {
-		if (args.length == 0) {
-			//print usage
-			sender.sendMessage("/ts [session|team] {args}");
-			return;
-		}
-		
-		if (args[0].equalsIgnoreCase("session")) {
-			onSessionCommand(sender, args);
-			return;
-		}
-		
-		if (args[0].equalsIgnoreCase("team")) {
-			onTeamCommand(sender, args);
-			return;
-		}
-	}
 	
 	/**
 	 * Handles the admin 'session' command
@@ -114,65 +86,137 @@ public class SurvivalCommand implements CommandExecutor {
 		}
 		
 		if (args[1].equalsIgnoreCase("list")) {
-			if (args.length > 2) {
-				sender.sendMessage("/ts session list");
-				return;
-			}
-			
-			Collection<GameSession> sessions = TeamSurvivalManager.getSessions();
-			
-			if (sessions == null) {
-				sender.sendMessage(ChatFormat.ERROR.wrap("Session list is null!"));
-				return;
-			}
-			
-			if (sessions.isEmpty()) {
-				sender.sendMessage(ChatFormat.IMPORTANT.wrap("There are no sessions"));
-				return;
-			}
-			
-			sender.sendMessage("There are currently " + ChatColor.GREEN + sessions.size() + ChatColor.RESET + " sessions:");
-			
-			for (GameSession s : sessions) {
-				sender.sendMessage(ChatFormat.SESSION.wrap(s.getName()) + "  " 
-						+ ChatFormat.IMPORTANT.wrap("[" + s.getState().toString() + "]"));
-			}
-			
+			onSessionListCommand(sender, args);
 			return;
 		}
 		
 		if (args[1].equalsIgnoreCase("info")) {
-			if (args.length < 2 || args.length > 4) {
-				sender.sendMessage("/ts session info " + ChatFormat.SESSION.wrap("[sessionName] {verbose}"));
-				return;
-			}
-			
-			String sessionName = args[2];
-			GameSession gameSession = null;
-			
-			for (GameSession session : TeamSurvivalManager.getSessions()) {
-				if (session.getName().equals(sessionName)) {
-					gameSession = session;
-					break;
-				}
-			}
-			
-			if (gameSession == null) {
-				sender.sendMessage(ChatFormat.ERROR.wrap("Unable to find session ") + ChatFormat.SESSION.wrap(sessionName));
-				return;
-			}
-			
-			boolean verbose = false;
-			if (args.length == 4) {
-				if (args[3].equalsIgnoreCase("true") || args[3].equals("verbose")) {
-					verbose = true;
-				}
-			}
-			
-			sender.sendMessage(gameSession.getInfo(verbose));
-			
+			onSessionInfoCommand(sender, args);
 			return;
 		}
+		
+		if (args[1].equalsIgnoreCase("create")) {
+			onSessionCreateCommand(sender, args);
+			return;
+		}
+		
+		if (args[1].equalsIgnoreCase("start")) {
+			onSessionStartCommand(sender, args);
+			return;
+		}
+		
+		if (args[1].equalsIgnoreCase("stop")) {
+			onSessionStopCommand(sender, args);
+			return;
+		}
+		
+		if (args[1].equalsIgnoreCase("remove")) {
+			onSessionRemoveCommand(sender, args);
+			return;
+		}
+	}
+	
+	/**
+	 * Handles the 'list' argument for the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionListCommand(CommandSender sender, String[] args) {
+		if (args.length > 2) {
+			sender.sendMessage("/ts session list");
+			return;
+		}
+		
+		Collection<GameSession> sessions = TeamSurvivalManager.getSessions();
+		
+		if (sessions == null) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("Session list is null!"));
+			return;
+		}
+		
+		if (sessions.isEmpty()) {
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("There are no sessions"));
+			return;
+		}
+		
+		sender.sendMessage("There are currently " + ChatColor.GREEN + sessions.size() + ChatColor.RESET + " sessions:");
+		
+		for (GameSession s : sessions) {
+			sender.sendMessage(ChatFormat.SESSION.wrap(s.getName()) + "  " 
+					+ ChatFormat.IMPORTANT.wrap("[" + s.getState().toString() + "]"));
+		}
+	}
+	
+	/**
+	 * Handles the 'create' argument for the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionCreateCommand(CommandSender sender, String[] args) {
+		//TODO
+	}
+	
+	/**
+	 * Handles the 'start' argument for the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionStartCommand(CommandSender sender, String[] args) {
+		//TODO
+	}
+	
+	/**
+	 * Handles the 'stop' argument for the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionStopCommand(CommandSender sender, String[] args) {
+		//TODO
+	}
+	
+	/**
+	 * Handles the 'remove' argument for the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionRemoveCommand(CommandSender sender, String[] args) {
+		//TODO
+	}
+	
+	/**
+	 * Handles the 'info' argument for the admin 'session' command
+	 * @param sender
+	 * @param args
+	 */
+	private void onSessionInfoCommand(CommandSender sender, String[] args) {
+		if (args.length < 2 || args.length > 4) {
+			sender.sendMessage("/ts session info " + ChatFormat.SESSION.wrap("[sessionName] {verbose}"));
+			return;
+		}
+		
+		String sessionName = args[2];
+		GameSession gameSession = null;
+		
+		for (GameSession session : TeamSurvivalManager.getSessions()) {
+			if (session.getName().equals(sessionName)) {
+				gameSession = session;
+				break;
+			}
+		}
+		
+		if (gameSession == null) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("Unable to find session ") + ChatFormat.SESSION.wrap(sessionName));
+			return;
+		}
+		
+		boolean verbose = false;
+		if (args.length == 4) {
+			if (args[3].equalsIgnoreCase("true") || args[3].equals("verbose")) {
+				verbose = true;
+			}
+		}
+		
+		sender.sendMessage(gameSession.getInfo(verbose));
 	}
 	
 	/**
