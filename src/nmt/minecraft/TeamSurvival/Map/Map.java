@@ -40,6 +40,7 @@ public class Map {
 		
 	private Map(){
 		super();
+		this.arenaLocations = new LinkedList<Location>();
 	}
 	
 	/**
@@ -154,14 +155,15 @@ public class Map {
 		
 		try {
 			config.load(file);
-			tmp.startingLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.startingLocation = ((LocationState)config.get("startingLocation")).getLocation();
 			tmp.shopButtonLocation = ((LocationState)config.get("shopButtonLocation")).getLocation();
-			tmp.shopLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.shopLocation = ((LocationState)config.get("shopLocation")).getLocation();
 			
 			//get the arena locations
 			//TODO really not sure if this will work
 			@SuppressWarnings("unchecked")
 			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations");
+			
 			for(LocationState l : arenas){
 				tmp.arenaLocations.add(l.getLocation());
 			}

@@ -103,5 +103,21 @@ public final class Creator {
 		loc += location.getBlockZ()+", ";
 		return loc;
 	}
+
+	public static boolean setStartingLocation(CommandSender sender) {
+		if(Creator.current == null){
+			ChatFormat.ERROR.wrap("There is no open session");
+			return false;
+		}
+		if(sender instanceof Player){
+			Location loc = ((Player)sender).getLocation();
+			Creator.current.setStartingLocation(loc);
+			sender.sendMessage(ChatFormat.SESSION.wrap("Set starting location to: "+Creator.getLocation(loc)));
+		}else{
+			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
+		}
+		
+		return true;
+	}
 	
 }
