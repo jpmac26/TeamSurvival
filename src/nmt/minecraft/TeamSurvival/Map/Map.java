@@ -40,6 +40,7 @@ public class Map {
 		
 	private Map(){
 		super();
+		this.arenaLocations = new LinkedList<Location>();
 	}
 	
 	/**
@@ -162,6 +163,7 @@ public class Map {
 			//TODO really not sure if this will work
 			@SuppressWarnings("unchecked")
 			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations");
+			
 			for(LocationState l : arenas){
 				tmp.arenaLocations.add(l.getLocation());
 			}
