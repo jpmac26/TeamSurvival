@@ -13,6 +13,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  * Manager class for all sessions.<br />
  * Static class that gives access to global information
  * @author Skyler
+ * @author Stephanie
  * @note Classified as a session job
  */
 public class TeamSurvivalManager {
@@ -20,7 +21,7 @@ public class TeamSurvivalManager {
 	private static Collection<GameSession> sessions = new HashSet<GameSession>();
 	
 	/**
-	 * Looks up a player using an ofline player.
+	 * Looks up a player using an offline player.
 	 * @param player
 	 * @return
 	 */
@@ -78,18 +79,17 @@ public class TeamSurvivalManager {
 	 * Attempts to unregister a game session
 	 * @param session The game session to remove.
 	 * @return true if the session was found and unregistered
-	 * TODO Make sure that these messages are put into the LOG
 	 */
 	public static boolean unregister(GameSession session) {
 		if (session.getState() != GameSession.State.FINISHED) {
-			System.out.println("ERROR! Session: " + session.getName() + " is not finished! Please wait!");
+			TeamSurvivalPlugin.plugin.getLogger().warning("ERROR! Session: " + session.getName() + " is not finished! Please wait!");
 			return false;
 		}
 		boolean check = sessions.remove(session);
 		if (check) {
-			System.out.println("Successfully removed session: " + session.getName());
+			TeamSurvivalPlugin.plugin.getLogger().info("Successfully removed session: " + session.getName());
 		} else {
-			System.out.println("WARNING! Session: " + session.getName() + " was not added!");
+			TeamSurvivalPlugin.plugin.getLogger().warning("WARNING! Session: " + session.getName() + " was not added!");
 		}
 		return false;
 	}

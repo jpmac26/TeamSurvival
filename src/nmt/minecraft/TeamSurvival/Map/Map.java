@@ -164,14 +164,8 @@ public class Map {
 			
 			return tmp;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -184,7 +178,7 @@ public class Map {
 		File file = new File(TeamSurvivalPlugin.plugin.getDataFolder(), this.name+".yml");
 		YamlConfiguration config = new YamlConfiguration();
 		
-		//TODO I have no idea if this works :p -Steph
+		//TODO I have no idea if this works
 		config.set("name", this.name);
 		config.set("startingLocation", this.startingLocation);
 		config.set("shopLocation", this.shopLocation);
@@ -195,8 +189,6 @@ public class Map {
 			config.save(file);
 			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		return false;

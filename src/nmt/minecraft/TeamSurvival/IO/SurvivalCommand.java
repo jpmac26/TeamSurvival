@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +17,6 @@ import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
- * TODO make sure the session is not running before modifying anything
  * @author Stephanie
  */
 public class SurvivalCommand implements CommandExecutor {
