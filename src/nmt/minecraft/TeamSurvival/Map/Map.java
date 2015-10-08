@@ -33,7 +33,7 @@ public class Map {
 	protected Map(String name) {
 		super();
 		this.name=name;
-		
+		this.arenaLocations = new LinkedList<Location>();
 		//create new config file
 		this.saveConfig();
 	}

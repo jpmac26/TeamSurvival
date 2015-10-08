@@ -14,15 +14,17 @@ public final class Creator {
 	private static Map current = null;
 	
 	public static boolean open(CommandSender sender,String name){
-		if(current != null){
+		if(Creator.current != null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There is already an open session"));
 			return false;
 		}
 		
 		if(Map.listConfigs().contains(name)){
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("Load map..."));
 			Creator.current = Map.loadConfig(name);
 		}else{
 			Creator.current = new Map(name);
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("Creating a new map..."));
 		}
 		
 		if(Creator.current == null){
@@ -34,7 +36,7 @@ public final class Creator {
 	}
 	
 	public static boolean close(CommandSender sender){
-		if(current == null){
+		if(Creator.current == null){
 			sender.sendMessage(ChatFormat.WARNING.wrap("There is no open session"));
 			return false;
 		}
@@ -45,14 +47,14 @@ public final class Creator {
 	}
 	
 	public static boolean addArena(CommandSender sender){
-		if(current == null){
+		if(Creator.current == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There is no open session"));
 			return false;
 		}
 		
 		if(sender instanceof Player){
 			Creator.current.addArenaLocation(((Player)sender).getLocation());
-			sender.sendMessage(ChatFormat.SESSION.wrap("Set added arena at: "+Creator.getLocation(((Player)sender).getLocation())));
+			sender.sendMessage(ChatFormat.SESSION.wrap("Added arena at: "+Creator.getLocation(((Player)sender).getLocation())));
 		}else{
 			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
 		}
@@ -61,7 +63,7 @@ public final class Creator {
 	}
 	
 	public static boolean setShopLocation(CommandSender sender){
-		if(current == null){
+		if(Creator.current == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There is no open session"));
 			return false;
 		}
@@ -78,7 +80,7 @@ public final class Creator {
 	}
 	
 	public static boolean setShopButton(CommandSender sender){
-		if(current == null){
+		if(Creator.current == null){
 			ChatFormat.ERROR.wrap("There is no open session");
 			return false;
 		}
@@ -95,9 +97,9 @@ public final class Creator {
 	
 	private static String getLocation(Location location){
 		String loc = "";
-		loc += location.getX()+", ";
-		loc += location.getY()+", ";
-		loc += location.getZ()+", ";
+		loc += location.getBlockX()+", ";
+		loc += location.getBlockY()+", ";
+		loc += location.getBlockZ()+", ";
 		return loc;
 	}
 	

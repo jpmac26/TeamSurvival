@@ -129,7 +129,7 @@ public class CreationCommand implements CommandExecutor{
 		if(args.length != 1){
 			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to add..."));
 		}
-		return Creator.setShopLocation(sender);
+		return Creator.addArena(sender);
 	}
 
 }
