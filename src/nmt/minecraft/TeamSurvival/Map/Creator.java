@@ -41,6 +41,7 @@ public final class Creator {
 			return false;
 		}
 		
+		Creator.current.saveConfig();
 		Creator.current = null;
 		
 		return true;
