@@ -18,7 +18,7 @@ import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
- * 
+ * TODO make sure the session is not running before modifying anything
  * @author Stephanie
  */
 public class SurvivalCommand implements CommandExecutor {
@@ -77,7 +77,8 @@ public class SurvivalCommand implements CommandExecutor {
 		}
 		switch(args[1]){
 		case "list":
-			return onTeamList(sender, args);
+			onTeamList(sender, args);
+			return true;
 		case "create":
 			return onTeamCreate(sender, args);
 		case "info":
@@ -128,13 +129,59 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 
 	private boolean onTeamDispand(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
-		return false;
+		// /ts team dispand [sessionName] [teamName]
+		if(args.length != 4){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
+					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival team dispand [sessionName] [teamName]"));
+			return false;
+		}
+		
+		GameSession session = TeamSurvivalManager.getSession(args[2]);
+		if(session == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session."));
+			return false;
+		}
+		
+		Team team = session.getTeam(args[3]);
+		if(team == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find a team with that name in the session"));
+			return false;
+		}
+		
+		if(!session.removeTeam(team)){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not remove team"));
+			return false;
+		}
+		
+		sender.sendMessage(ChatFormat.IMPORTANT.wrap(args[3]+" has been removed from the session"));
+		return true;
 	}
 
-	private boolean onTeamList(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
-		return false;
+	private void onTeamList(CommandSender sender, String[] args) {
+		if (args.length != 3) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("/ts team list [session]"));
+			return;
+		}
+		
+		GameSession session = TeamSurvivalManager.getSession(args[2]);
+		
+		if (session == null) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("Session list is null!"));
+			return;
+		}
+		
+		Collection<Team> teams = session.getTeams();
+		
+		if (teams.isEmpty()) {
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("There are no sessions"));
+			return;
+		}
+		
+		sender.sendMessage("There are currently " + ChatColor.GREEN + teams.size() + ChatColor.RESET + " sessions:");
+		
+		for (Team s : teams) {
+			sender.sendMessage(ChatFormat.TEAM.wrap(s.getName()));
+		}
 	}
 
 	/**

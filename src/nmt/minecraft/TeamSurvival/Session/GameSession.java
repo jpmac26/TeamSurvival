@@ -118,6 +118,15 @@ public class GameSession {
 		teams.add(team);
 	}
 	
+	public boolean removeTeam(Team team){
+		if(!teams.contains(team)){
+			return false;
+		}
+		
+		return this.teams.remove(team);
+	}
+	
+	
 	/**
 	 * Tries to look up a team
 	 * @param name The name to look up
