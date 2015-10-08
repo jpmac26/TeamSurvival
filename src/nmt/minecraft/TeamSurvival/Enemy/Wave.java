@@ -6,7 +6,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
@@ -18,8 +17,8 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  * @author James Pelster
  */
 public class Wave {
-	private String MobTypes[] = {"Zombie", "Skeleton","CaveSpider","Endermite","Creeper","Jockey","WitherSkeleton"};
-	private int MobVals[] = {0,2,4,6,7,7,8,9};
+	private String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
+	private int MobVals[] = {0,4,3,2,7,7,8,6};
 	private List<Mob> Mobs;
 	private List<LivingEntity> Entities;
 	private int maxSpawned;
@@ -35,27 +34,33 @@ public class Wave {
 	 * @note See wave implementation in google doc file
 	 */
 	public Wave(int WaveNumber, List<Location> spawnPoints, int TotalMobCount) {
-		Mobs = new ArrayList<Mob>();
-		Entities = new ArrayList<LivingEntity>();
-		maxSpawned = 40;
-		MobSpawnPoints = spawnPoints;
-		Random rn = new Random();
-		int MobPool = (WaveNumber-1)*2;
-		int RandNum = rn.nextInt(7);
-		int UsedCount = 0;
-		String MobsUsed[] = {"","",""};
-		int MobDiffs[] = {0,0,0};
-		
-		while(MobPool > 0 || UsedCount < 3){
-			RandNum = rn.nextInt() % 7;
-			MobDiffs[UsedCount] = MobVals[RandNum];
-			if(MobPool - MobDiffs[UsedCount] >= 0){
-				/* the mob can be added */
-				MobsUsed[UsedCount] = MobTypes[RandNum];
-				UsedCount++;
+		try {
+			Mobs = new ArrayList<Mob>();
+			Entities = new ArrayList<LivingEntity>();
+			maxSpawned = 40;
+			MobSpawnPoints = spawnPoints;
+			Random rn = new Random();
+			int MobPool = (WaveNumber-1)*2;
+			int RandNum;
+			int UsedCount = 0;
+			String MobsUsed[] = new String[3];
+			int MobDiffs[] = new int[3];
+			
+			while(MobPool >= 0 & UsedCount < 3) {
+				RandNum = rn.nextInt(7);
+				MobDiffs[UsedCount] = MobVals[RandNum];
+				if(MobPool - MobDiffs[UsedCount] >= 0){
+					/* the mob can be added */
+					MobsUsed[UsedCount] = MobTypes[RandNum];
+					UsedCount++;
+				}
 			}
+			SetupMobs(MobsUsed, TotalMobCount, MobDiffs, WaveNumber);
 		}
-		SetupMobs(MobsUsed, TotalMobCount, MobDiffs);
+		catch (Exception e) {
+			TeamSurvivalPlugin.plugin.getLogger().info("Error: " + e + "\r\n");
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -75,10 +80,10 @@ public class Wave {
 		int MobPool = (WaveNumber-1)*2;
 		int RandNum;
 		int UsedCount = 0;
-		String MobsUsed[] = {"","",""};
-		int MobDiffs[] = {0,0,0};
+		String MobsUsed[] = new String[3];
+		int MobDiffs[] = new int[3];
 		
-		while(MobPool > 0 || UsedCount < 3){
+		while(MobPool >= 0 & UsedCount < 3){
 			RandNum = rn.nextInt(7);
 			MobDiffs[UsedCount] = MobVals[RandNum];
 			if(MobPool - MobDiffs[UsedCount] >= 0){
@@ -87,7 +92,7 @@ public class Wave {
 				UsedCount++;
 			}
 		}
-		SetupMobs(MobsUsed, TotalMobCount, MobDiffs);
+		SetupMobs(MobsUsed, TotalMobCount, MobDiffs, WaveNumber);
 	}
 	
 	/**
@@ -97,17 +102,17 @@ public class Wave {
 	 * @return 
 	 * @note calls another function 
 	 */
-	private void SetupMobs(String MobsUsed[], int MobCount, int MobDiffs[]){
+	private void SetupMobs(String MobsUsed[], int MobCount, int MobDiffs[], int waveNum){
 		int count = MobCount;
 		while(count > 0){
 			if(count == 0)break;
-			Mobs.add(new Mob(MobsUsed[0],MobDiffs[0]));
+			Mobs.add(new Mob(MobsUsed[0],MobDiffs[0], waveNum));
 			count--;
 			if(count == 0)break;
-			Mobs.add(new Mob(MobsUsed[1],MobDiffs[1]));
+			Mobs.add(new Mob(MobsUsed[1],MobDiffs[1], waveNum));
 			count--;
 			if(count == 0)break;
-			Mobs.add(new Mob(MobsUsed[2],MobDiffs[2]));
+			Mobs.add(new Mob(MobsUsed[2],MobDiffs[2], waveNum));
 			count--;
 		}
 	}
@@ -169,6 +174,10 @@ public class Wave {
 	}
 	
 	private void clearWave() {
+		for(LivingEntity ent : Entities) {
+			if(ent.getPassenger() != null) ent.getPassenger().remove();
+			ent.remove();
+		}
 		Entities.clear();
 		Mobs.clear();
 	}
