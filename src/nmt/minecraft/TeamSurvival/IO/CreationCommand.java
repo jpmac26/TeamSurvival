@@ -15,22 +15,35 @@ import nmt.minecraft.TeamSurvival.Map.Creator;
  */
 public class CreationCommand implements CommandExecutor{
 	
-	private static final String[] commands = {"open", "close", "setShop", "addArena", "setShopButton"};
+	private static final String[] commands = {"open", "close", "setShop", "setStartingLocation", "addArena", "setShopButton"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
 			//print usage
-			sender.sendMessage(ChatFormat.ERROR.wrap("/ts [session|team] {args}"));
+			sender.sendMessage(ChatFormat.ERROR.wrap("/tsc [session|team] {args}"));
 			return false;
 		}
-		
+		boolean tmp;
 		if (args[0].equalsIgnoreCase("open")) {
-			onOpenCommand(sender, args);
+			tmp = onOpenCommand(sender, args);
+			if(tmp){
+				sender.sendMessage(ChatFormat.IMPORTANT.wrap("Sucessfully opened session: "+args[1]));
+			}else{
+				sender.sendMessage(ChatFormat.IMPORTANT.wrap("unable to open session"));
+				return false;
+			}
+			
 		}
 		
 		if (args[0].equalsIgnoreCase("close")) {
-			onCloseCommand(sender, args);
+			tmp = onCloseCommand(sender, args);
+			if(tmp){
+				sender.sendMessage(ChatFormat.IMPORTANT.wrap("Sucessfully closed open session."));
+			}else{
+				sender.sendMessage(ChatFormat.IMPORTANT.wrap("unable to close session"));
+				return false;
+			}
 		}
 		
 		if (args[0].equalsIgnoreCase("setShop")) {
@@ -41,10 +54,21 @@ public class CreationCommand implements CommandExecutor{
 			onAddArenaCommand(sender, args);
 		}
 		
+		if (args[0].equalsIgnoreCase("setStartingLocation")) {
+			onSetStartingLocationCommand(sender, args);
+		}
+		
 		if (args[0].equalsIgnoreCase("setShopButton")) {
 			onSetShopButtonCommand(sender, args);
 		}
 		return true;
+	}
+
+	private boolean onSetStartingLocationCommand(CommandSender sender, String[] args) {
+		if(args.length != 1){
+			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to set..."));
+		}
+		return Creator.setStartingLocation(sender);
 	}
 
 	public static List<String> getCommands(){
@@ -57,12 +81,14 @@ public class CreationCommand implements CommandExecutor{
 	 * @param args
 	 */
 	private boolean onOpenCommand(CommandSender sender, String[] args) {
-		if(args.length != 1){
-			sender.sendMessage(ChatFormat.ERROR.wrap("Wrong number of arguments"));
+		// /teamsurvivalcreator open [name]
+		if(args.length != 2){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Wrong number of arguments") +
+					ChatFormat.IMPORTANT.wrap("\n usage: /teamsurvivalcreator open [name]"));
 			return false;
 		}
 		
-		return Creator.open(sender, args[0]);
+		return Creator.open(sender, args[1]);
 	}
 	
 	/**
@@ -71,7 +97,8 @@ public class CreationCommand implements CommandExecutor{
 	 * @param args
 	 */
 	private boolean onCloseCommand(CommandSender sender, String[] args) {
-		if(args.length != 0){
+		// /teamsurvivalcreator close
+		if(args.length != 1){
 			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still closing..."));
 		}
 		return Creator.close(sender);
@@ -83,7 +110,8 @@ public class CreationCommand implements CommandExecutor{
 	 * @param args
 	 */
 	private boolean onSetShopCommand(CommandSender sender, String[] args) {
-		if(args.length != 0){
+		// /teamsurvivalcreator setshop
+		if(args.length != 1){
 			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to set..."));
 		}
 		return Creator.setShopLocation(sender);
@@ -95,7 +123,8 @@ public class CreationCommand implements CommandExecutor{
 	 * @param args
 	 */
 	private boolean onSetShopButtonCommand(CommandSender sender, String[] args) {
-		if(args.length != 0){
+		// /teamsurvivalcreator setshopbutton
+		if(args.length != 1){
 			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to set..."));
 		}
 		return Creator.setShopButton(sender);
@@ -107,10 +136,10 @@ public class CreationCommand implements CommandExecutor{
 	 * @param args
 	 */
 	private boolean onAddArenaCommand(CommandSender sender, String[] args) {
-		if(args.length != 0){
+		if(args.length != 1){
 			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to add..."));
 		}
-		return Creator.setShopLocation(sender);
+		return Creator.addArena(sender);
 	}
 
 }

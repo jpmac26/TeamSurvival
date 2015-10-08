@@ -33,13 +33,14 @@ public class Map {
 	protected Map(String name) {
 		super();
 		this.name=name;
-		
+		this.arenaLocations = new LinkedList<Location>();
 		//create new config file
 		this.saveConfig();
 	}
 		
 	private Map(){
 		super();
+		this.arenaLocations = new LinkedList<Location>();
 	}
 	
 	/**
@@ -118,19 +119,23 @@ public class Map {
 	public static List<String> listConfigs() {
 		File resourceFolder = TeamSurvivalPlugin.plugin.getDataFolder();
 		File[] resourceFiles = resourceFolder.listFiles();
-		Pattern ymlPattern = Pattern.compile("*.yml");
+		//Pattern ymlPattern = Pattern.compile("*.yml");
+		
+		if(resourceFiles == null){
+			return new LinkedList<String>();
+		}
 		
 		List<String> configFilenames = new LinkedList<String>();
 		for (File file : resourceFiles) {
 			//Get the Filename
 			String fileName = file.getName();
-			//Search filename for the .yml extension
-			Matcher isYml = ymlPattern.matcher(fileName);
-			if (isYml.find()) {
-				//Remove .yml extension
-				String cleanString = (fileName.split("."))[0];
-				configFilenames.add(cleanString);
+
+			//check filename for .yml
+			if(fileName.substring(fileName.lastIndexOf('.'), fileName.length()).equals(".yml")){
+				//remove .yml and add it to the list
+				configFilenames.add(fileName.substring(0, fileName.lastIndexOf('.')));
 			}
+
 		}
 		return configFilenames;
 	}
@@ -150,14 +155,15 @@ public class Map {
 		
 		try {
 			config.load(file);
-			tmp.startingLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.startingLocation = ((LocationState)config.get("startingLocation")).getLocation();
 			tmp.shopButtonLocation = ((LocationState)config.get("shopButtonLocation")).getLocation();
-			tmp.shopLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.shopLocation = ((LocationState)config.get("shopLocation")).getLocation();
 			
 			//get the arena locations
 			//TODO really not sure if this will work
 			@SuppressWarnings("unchecked")
 			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations");
+			
 			for(LocationState l : arenas){
 				tmp.arenaLocations.add(l.getLocation());
 			}
