@@ -17,7 +17,7 @@ permissions:
             teamsurvival.creator.setshop: true
             teamsurvival.creator.addarena: true
         default: op
-    teamsurvival.team.join: true
+    teamsurvival.team.join:
       default: true
 commands:
     teamsurvival:

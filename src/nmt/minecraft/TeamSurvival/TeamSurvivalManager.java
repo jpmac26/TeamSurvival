@@ -20,7 +20,7 @@ public class TeamSurvivalManager {
 	private static Collection<GameSession> sessions = new HashSet<GameSession>();
 	
 	/**
-	 * Looks up a player using an ofline player.
+	 * Looks up a player using an offline player.
 	 * @param player
 	 * @return
 	 */
@@ -92,6 +92,15 @@ public class TeamSurvivalManager {
 			System.out.println("WARNING! Session: " + session.getName() + " was not added!");
 		}
 		return false;
+	}
+	
+	public static GameSession getSession(String sessionName){
+		for(GameSession s : TeamSurvivalManager.getSessions()){
+			if(s.getName().equalsIgnoreCase(sessionName)){
+				return s;
+			}
+		}
+		return null;
 	}
 	
 }
