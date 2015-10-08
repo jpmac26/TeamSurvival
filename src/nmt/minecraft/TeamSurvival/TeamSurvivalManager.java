@@ -20,7 +20,7 @@ public class TeamSurvivalManager {
 	private static Collection<GameSession> sessions = new HashSet<GameSession>();
 	
 	/**
-	 * Looks up a player using an ofline player.
+	 * Looks up a player using an offline player.
 	 * @param player
 	 * @return
 	 */

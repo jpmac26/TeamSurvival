@@ -118,19 +118,23 @@ public class Map {
 	public static List<String> listConfigs() {
 		File resourceFolder = TeamSurvivalPlugin.plugin.getDataFolder();
 		File[] resourceFiles = resourceFolder.listFiles();
-		Pattern ymlPattern = Pattern.compile("*.yml");
+		//Pattern ymlPattern = Pattern.compile("*.yml");
+		
+		if(resourceFiles == null){
+			return new LinkedList<String>();
+		}
 		
 		List<String> configFilenames = new LinkedList<String>();
 		for (File file : resourceFiles) {
 			//Get the Filename
 			String fileName = file.getName();
-			//Search filename for the .yml extension
-			Matcher isYml = ymlPattern.matcher(fileName);
-			if (isYml.find()) {
-				//Remove .yml extension
-				String cleanString = (fileName.split("."))[0];
-				configFilenames.add(cleanString);
+
+			//check filename for .yml
+			if(fileName.substring(fileName.lastIndexOf('.'), fileName.length()).equals(".yml")){
+				//remove .yml and add it to the list
+				configFilenames.add(fileName.substring(0, fileName.lastIndexOf('.')));
 			}
+
 		}
 		return configFilenames;
 	}
