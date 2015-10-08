@@ -154,9 +154,9 @@ public class Map {
 		
 		try {
 			config.load(file);
-			tmp.startingLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.startingLocation = ((LocationState)config.get("startingLocation")).getLocation();
 			tmp.shopButtonLocation = ((LocationState)config.get("shopButtonLocation")).getLocation();
-			tmp.shopLocation = ((LocationState)config.get("startLocation")).getLocation();
+			tmp.shopLocation = ((LocationState)config.get("shopLocation")).getLocation();
 			
 			//get the arena locations
 			//TODO really not sure if this will work
