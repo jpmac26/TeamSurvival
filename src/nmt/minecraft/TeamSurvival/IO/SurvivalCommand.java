@@ -124,8 +124,36 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 
 	private boolean onTeamInfo(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
-		return false;
+		// /ts team info [sessionName] [teamName]
+		if(args.length != 4){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments")+
+					ChatFormat.IMPORTANT.wrap("usage: /teamsurvival info [session] [team]"));
+		}
+		
+		GameSession session = TeamSurvivalManager.getSession(args[2]);
+		if(session == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session."));
+			return false;
+		}
+		
+		Team team = session.getTeam(args[3]);
+		if(team == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find a team with that name in the session"));
+			return false;
+		}
+		
+		sender.sendMessage("Session: "+ChatFormat.SESSION.wrap(session.getName())+ " Team: "+ ChatFormat.TEAM.wrap(team.getName()));
+		
+		List<String> playerList = team.getPlayerList();
+		if(playerList.isEmpty()){
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("This team does not have any team members!"));			
+		}else{
+			for(String player : playerList){
+				sender.sendMessage(ChatFormat.IMPORTANT.wrap(player));
+			}
+		}
+		
+		return true;
 	}
 
 	private boolean onTeamDispand(CommandSender sender, String[] args) {
