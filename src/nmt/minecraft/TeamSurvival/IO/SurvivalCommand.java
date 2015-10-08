@@ -104,6 +104,11 @@ public class SurvivalCommand implements CommandExecutor {
 			return false;
 		}
 		
+		if(session.getState() != GameSession.State.PREGAME){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Session is already running."));
+			return false;
+		}
+		
 		if(session.getMap().getMaxTeams() >= session.getTeams().size()){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Cannot create another team, max limit reached"));
 			return false;
@@ -167,6 +172,11 @@ public class SurvivalCommand implements CommandExecutor {
 		GameSession session = TeamSurvivalManager.getSession(args[2]);
 		if(session == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session."));
+			return false;
+		}
+		
+		if(session.getState() != GameSession.State.PREGAME){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Session is already running."));
 			return false;
 		}
 		
