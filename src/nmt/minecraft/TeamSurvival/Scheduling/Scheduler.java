@@ -62,8 +62,8 @@ public final class Scheduler {
 	 * @param reminder
 	 */
 	private void notify(Reminder reminder) {
-		reminder.getOwner().tick(reminder.getKey());
 		map.remove(reminder.getOwner());
+		reminder.getOwner().tick(reminder.getKey());
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public final class Scheduler {
 	 * are not divisible by .05 will be rounded to the nearest .05 (a server tick).
 	 * @return True if there was already a scheduled event for this tickable instance that was overwritten, false otherwise
 	 */
-	public boolean scheduler(Tickable tickable, Object reference, double seconds) {
+	public boolean schedule(Tickable tickable, Object reference, double seconds) {
 		if (tickable == null || seconds < .0001) {
 			return false;
 		}
