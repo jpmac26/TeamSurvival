@@ -29,10 +29,10 @@ commands:
         permission: teamsurvival.team.join
         ussage: /jointeam [teamname]
         description: Joins a TeamSurvival team
-        alias: join
+        aliases: join
     teamsurvivalcreator:
         permission: teamsurvival.creator.*
         usage: /tsc [new|open|close|setshop|addarena] {args}
         description: Container commmand for arena creation commands
-        alias: tsc
+        aliases: tsc
     
