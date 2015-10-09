@@ -156,20 +156,31 @@ public class Wave {
 	 * Tells the wave to check  if it needs to spawn more mobs.<br />
 	 * It will also check if the wave is complete or has been force-stopped.
 	 */
-	public void update() {
-		if(started == true && forceStop == false && isComplete() == false && Entities.size() < maxSpawned && Mobs.size() > 0) {
-			Random rn = new Random();
-			int RandPoint = rn.nextInt(MobSpawnPoints.size());
-			spawnRandomMob(MobSpawnPoints.get(RandPoint));
-		}
-		
-		//In case the stop() method doesn't quite clear the wave, we will do it here too
-		if(forceStop == true) {
-			clearWave();
-		}
-		
-		if(isComplete() == true) {
-			Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+	//@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onEntityDeath(LivingEntity deadEntity) {
+		TeamSurvivalPlugin.plugin.getLogger().info("EntityDeathEvent called.\r\n");
+		if(started == true && forceStop == false && isComplete() == false) {
+			for(LivingEntity ent : Entities) {
+				if(deadEntity == ent && ent.isDead() == true) {
+					ent.remove();
+					
+					if (Mobs.size() > 0) {
+						TeamSurvivalPlugin.plugin.getLogger().info("Spawning new mob to replace dead one. Remaining: " + ((Integer)Mobs.size()).toString() + ".\r\n");
+						Random rn = new Random();
+						int RandPoint = rn.nextInt(MobSpawnPoints.size());
+						spawnRandomMob(MobSpawnPoints.get(RandPoint));
+					}
+					
+					//In case the stop() method doesn't quite clear the wave, we will do it here too
+					if(forceStop == true) {
+						clearWave();
+					}
+					
+					if(isComplete() == true) {
+						Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+					}
+				}
+			}
 		}
 	}
 	

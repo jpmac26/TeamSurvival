@@ -7,7 +7,10 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
@@ -41,6 +44,13 @@ public class TeamSurvivalPlugin extends JavaPlugin implements Listener {
 		TeamSurvivalPlugin.plugin = this;
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	private void triggerWaveNewSpawnCheck(EntityDeathEvent event) {
+		for(Wave foundWave : Waves) {
+			foundWave.onEntityDeath(event.getEntity());
+		}
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		try {
@@ -56,7 +66,7 @@ public class TeamSurvivalPlugin extends JavaPlugin implements Listener {
 				spawnPoints.add(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("world"), 0.0, 70.0, 20.0));
 				spawnPoints.add(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("world"), -20.0, 70.0, 0.0));
 				spawnPoints.add(new Location(TeamSurvivalPlugin.plugin.getServer().getWorld("world"), 0.0, 70.0, -20.0));
-				Wave testWave = new Wave(Integer.parseInt(args[0]), spawnPoints, 100, 100);
+				Wave testWave = new Wave(Integer.parseInt(args[0]), spawnPoints, 100);
 				//Wave testWave = new Wave(1, spawnPoints, 100, 100);
 				testWave.start();
 				Waves.add(testWave);
