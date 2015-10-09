@@ -105,10 +105,6 @@ public class Map {
 		return name;
 	}
 
-	public Location getShopButton() {
-		return shopButtonLocation;
-	}
-
 	public int getMaxTeams(){
 		return this.arenaLocations.size();
 	}

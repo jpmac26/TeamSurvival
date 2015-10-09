@@ -120,4 +120,22 @@ public final class Creator {
 		return true;
 	}
 	
+	
+	public static String getInfo(){
+		if(Creator.current == null){
+			return "There is no open session";
+		}
+		Map cur = Creator.current;
+		String str = cur.getName()+"\n";
+		str += "starting location: "+ getLocation(cur.getStartingLocation())+"\n";
+		str += "shop location: "+ getLocation(cur.getShopLocation())+"\n";
+		str += "shop button location: "+ getLocation(cur.getShopButtonLocation())+ "\n";
+		str += "max teams: " + cur.getMaxTeams()+"\n";
+		str += "arena locations: \n";
+		for(Location arena : cur.getArenaLocations()){
+			str += getLocation(arena);
+		}
+		
+		return str;
+	}
 }
