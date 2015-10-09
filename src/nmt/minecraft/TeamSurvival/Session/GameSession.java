@@ -7,10 +7,12 @@ import java.util.LinkedList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
@@ -93,15 +95,15 @@ public class GameSession implements Listener, Tickable {
 	 */
 	private Map map;
 	
-	public Map getMap() {
-		return map;
-	}
-
 	/**
 	 * The shop instance that's unique to this session
 	 */
 	private Shop sessionShop;
 	
+	private Wave currentWave;
+	
+	private int waveNumber;
+
 	public GameSession(String name, Map map) {
 		this.name = name;
 		this.map = map;
@@ -110,6 +112,121 @@ public class GameSession implements Listener, Tickable {
 		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
 	
+	/**
+	 * @return The current state of the session
+	 */
+	public State getState() {
+		return state;
+	}
+
+	public Map getMap() {
+		return map;
+	}
+
+	/**
+	 * Tries to look up a team
+	 * @param name The name to look up
+	 * @return The team with the given name, null if it cannot be found
+	 */
+	public Team getTeam(String name) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t : teams){
+			if(t.getName().equals(name)){
+				return t;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Tries to look up a team
+	 * @param player the player to look up
+	 * @return The team the player is on, null if the player is not on a team.
+	 */
+	public Team getTeam(SurvivalPlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t : teams){
+			if(t.hasPlayer(player)){
+				return t;
+			}
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Tries to look up a team
+	 * @param player the player to look up
+	 * @return The team the player is on, null if the player is not on a team.
+	 */
+	public Team getTeam(OfflinePlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t: teams){
+			if(t.hasPlayer(player) != null){
+				return t;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Looks for the provided player, returning their wrapper
+	 * @param player
+	 * @return The survival player of the given player, or null if not found
+	 */
+	public SurvivalPlayer getPlayer(OfflinePlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t : teams){
+			SurvivalPlayer tmp=t.hasPlayer(player);
+			if(tmp != null){
+				return tmp;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the name associated with this session
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Returns summary information about this session.
+	 * @param verbose Should this also give extensive information?
+	 * @return a string with the name of the session, it's current state, and 
+	 * the name of the map it is running. On verbose mode it also includes a 
+	 * list of teams in the session as well as the current number of teams and 
+	 * the max number of teams.  
+	 */
+	public String getInfo(boolean verbose) {
+		String str = "Session Name: "+ChatFormat.SESSION.wrap(this.name)+"\n"; 
+		str += "Map Name: "+ ChatFormat.IMPORTANT.wrap(this.map.getName())+"\n";
+		str += "Session State: "+ChatFormat.IMPORTANT.wrap(this.state + "\n");
+		
+		if(verbose){
+			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
+			str += "\n";
+			for(Team t : teams){
+				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
+			}
+		}
+		return str;
+	}
+
 	/**
 	 * Starts the game, dealing with the teams and scores, etc
 	 */
@@ -130,26 +247,14 @@ public class GameSession implements Listener, Tickable {
 					ChatFormat.ERROR.wrap("Unable to start session, as it's already been started!"));
 		}
 		
+		//teleport teams
+		moveToStart(4);//TODO only 4 blocks apart for testing
+		
+		//start the timer
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1*60);//TODO 15 min to start
+		//generate waves
+		
 		state = State.STARTINGPERIOD;
-		
-		//calculate offset based on number of teams
-		int offset = (int) Math.ceil(Math.sqrt(teams.size()));
-		int i = 0;
-		
-		//offset gives how many rows/columns we have
-		//we have 12000 blocks (from pregenerated map) in either direction to give teams //very magic number
-		int distBetween = 12000 / offset;
-		int xoffset, yoffset;
-		for (Team t : teams) {
-			//offset = (column * distance) + 1/2 distance 
-			xoffset = (distBetween / 2) + ((i % offset) * distBetween);
-			yoffset = (distBetween / 2) + ((i / offset) * distBetween);
-			xoffset -= 6000; //adjust to left
-			yoffset -= 6000; //adjust to left
-			
-			Location loc = map.getStartingLocation().clone().add(xoffset, 0, yoffset);
-			t.moveTo(loc);
-		}
 		
 	}
 	
@@ -160,13 +265,7 @@ public class GameSession implements Listener, Tickable {
 	public void stop() {
 		HandlerList.unregisterAll(sessionShop);
 		sessionShop = null;
-	}
-	
-	/**
-	 * @return The current state of the session
-	 */
-	public State getState() {
-		return state;
+		state = State.FINISHED;
 	}
 	
 	/**
@@ -200,116 +299,6 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	
-	/**
-	 * Tries to look up a team
-	 * @param name The name to look up
-	 * @return The team with the given name, null if it cannot be found
-	 */
-	public Team getTeam(String name) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t : teams){
-			if(t.getName().equals(name)){
-				return t;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Tries to look up a team
-	 * @param player the player to look up
-	 * @return The team the player is on, null if the player is not on a team.
-	 */
-	public Team getTeam(SurvivalPlayer player) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t : teams){
-			if(t.hasPlayer(player)){
-				return t;
-			}
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Tries to look up a team
-	 * @param player the player to look up
-	 * @return The team the player is on, null if the player is not on a team.
-	 */
-	public Team getTeam(OfflinePlayer player) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t: teams){
-			if(t.hasPlayer(player) != null){
-				return t;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Looks for the provided player, returning their wrapper
-	 * @param player
-	 * @return The survival player of the given player, or null if not found
-	 */
-	public SurvivalPlayer getPlayer(OfflinePlayer player) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t : teams){
-			SurvivalPlayer tmp=t.hasPlayer(player);
-			if(tmp != null){
-				return tmp;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns summary information about this session.
-	 * @param verbose Should this also give extensive information?
-	 * @return a string with the name of the session, it's current state, and 
-	 * the name of the map it is running. On verbose mode it also includes a 
-	 * list of teams in the session as well as the current number of teams and 
-	 * the max number of teams.  
-	 */
-	public String getInfo(boolean verbose) {
-		String str = "Session Name    Map Name    Session State"; 
-		str += ChatFormat.SESSION.wrap(this.name);
-		str += "    " + this.map.getName();
-		str += "    " + this.state + "\n";
-		
-		if(verbose){
-			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
-			str += "\n";
-			for(Team t : teams){
-				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
-			}
-		}
-		return str;
-	}
-	
-	/**
-	 * Get the name associated with this session
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public String toString() {
-		return "GameSession[" + getName() + "]";
-	}
-	
 	public Collection<Team> getTeams(){
 		return teams;
 	}
@@ -337,7 +326,9 @@ public class GameSession implements Listener, Tickable {
 			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
 			break;
 		case PUSHTOARENA:
-			moveToArena(); //TODO
+			moveToArena(); 
+			//TODO start wave
+			this.currentWave.start();
 			break;
 		case SHOPOVER:
 			moveToArena();
@@ -346,8 +337,13 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	@Override
+	public String toString() {
+		return "GameSession[" + getName() + "]";
+	}
+
+	@Override
 	public boolean equals(Object o) {
-		return o.toString().equals(toString());
+		return o.toString().equalsIgnoreCase(toString());
 	}
 	
 	private void moveToArena() {
@@ -356,5 +352,65 @@ public class GameSession implements Listener, Tickable {
 			team.moveTo(arenaIt.next());
 		}
 		
+	}
+	
+	
+	private void moveToStart(int distanceBetween){
+		int side = (int) Math.floor(Math.sqrt(this.teams.size()));
+		//TODO figure out some way to not teleport them into the ground
+		
+		Location start = map.getStartingLocation().clone();
+		Iterator<Team> iterate = teams.iterator();
+		for(int i =0; i<side; i++){
+			for(int j=0; j<side; j++){
+				if(iterate.hasNext()){
+					Team tmp = iterate.next();
+					tmp.moveTo(start);
+					TeamSurvivalPlugin.plugin.getLogger().info("Team: "
+							+ tmp.getName()+ "\t starting at:"+start.getBlockX()+", "+start.getBlockY()+", "+ start.getBlockZ());
+				}else{
+					return;
+				}
+				start.add(distanceBetween, 0, 0);
+			}
+			start.add(distanceBetween, 0, 0);
+		}
+	}
+	
+	private void moveToShop(){
+		for(Team t : teams){
+			t.moveTo(map.getShopLocation());
+		}
+	}
+	
+	@EventHandler
+	public void onWaveEnd(){//TODO catch the event from mobs
+		this.currentWave = null;
+		//teleport teams to the shop
+		moveToShop();
+		
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 60);//2 min for each shop period
+		
+		//TODO calculate the next wave
+		this.waveNumber++;
+		//this.currentWave = new Wave(waveNumber, map.getArenaLocations(), numberOfMobs(waveNumber));
+		
+	}
+	
+	/**
+	 * Calculates the number of mobs per wave
+	 * @param waveNumber
+	 * @return
+	 */
+	private int numberOfMobs(){
+		//avg the number of players still in
+		int sum =0;
+		for(Team t : teams){
+			sum += t.getPlayerList().size();
+		}
+		
+		int avg = sum/teams.size();
+		
+		return avg + (int)(waveNumber*1.5);
 	}
 }
