@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Plugin class.<br />
  * Creates everything and all things and everything.
  * @author Skyler
+ * @author Stephanie
  *
  */
 public class TeamSurvivalPlugin extends JavaPlugin {

@@ -82,7 +82,7 @@ public class GameSession {
 		}
 		
 		state = State.STARTINGPERIOD;
-		; //TODO
+		
 	}
 	
 	/**
@@ -118,6 +118,11 @@ public class GameSession {
 		teams.add(team);
 	}
 	
+	/**
+	 * Removes a team from the game session
+	 * @param team the team to kick
+	 * @return true if the team was successfully removed
+	 */
 	public boolean removeTeam(Team team){
 		if(!teams.contains(team)){
 			return false;
@@ -185,7 +190,7 @@ public class GameSession {
 	/**
 	 * Looks for the provided player, returning their wrapper
 	 * @param player
-	 * @return
+	 * @return The survival player of the given player, or null if not found
 	 */
 	public SurvivalPlayer getPlayer(OfflinePlayer player) {
 		if (teams.isEmpty()) {
@@ -204,15 +209,29 @@ public class GameSession {
 	/**
 	 * Returns summary information about this session.
 	 * @param verbose Should this also give extensive information?
-	 * @return
+	 * @return a string with the name of the session, it's current state, and 
+	 * the name of the map it is running. On verbose mode it also includes a 
+	 * list of teams in the session as well as the current number of teams and 
+	 * the max number of teams.  
 	 */
 	public String getInfo(boolean verbose) {
-		return "NOT IMPLEMENTED";
+		String str = "Session Name    Map Name    Session State"; 
+		str += ChatFormat.SESSION.wrap(this.name);
+		str += "    " + this.map.getName();
+		str += "    " + this.state + "\n";
+		
+		if(verbose){
+			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
+			str += "\n";
+			for(Team t : teams){
+				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
+			}
+		}
+		return str;
 	}
 	
 	/**
 	 * Get the name associated with this session
-	 * @return
 	 */
 	public String getName() {
 		return name;

@@ -14,7 +14,6 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
 public class JoinTeamCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		// TODO Auto-generated method stub
 		return onJoinCommand(sender, args);
 	}
 	
