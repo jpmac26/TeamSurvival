@@ -132,6 +132,25 @@ public class GameSession implements Listener, Tickable {
 		
 		state = State.STARTINGPERIOD;
 		
+		//calculate offset based on number of teams
+		int offset = (int) Math.ceil(Math.sqrt(teams.size()));
+		int i = 0;
+		
+		//offset gives how many rows/columns we have
+		//we have 12000 blocks (from pregenerated map) in either direction to give teams //very magic number
+		int distBetween = 12000 / offset;
+		int xoffset, yoffset;
+		for (Team t : teams) {
+			//offset = (column * distance) + 1/2 distance 
+			xoffset = (distBetween / 2) + ((i % offset) * distBetween);
+			yoffset = (distBetween / 2) + ((i / offset) * distBetween);
+			xoffset -= 6000; //adjust to left
+			yoffset -= 6000; //adjust to left
+			
+			Location loc = map.getStartingLocation().clone().add(xoffset, 0, yoffset);
+			t.moveTo(loc);
+		}
+		
 	}
 	
 	/**
