@@ -93,15 +93,11 @@ public class GameSession implements Listener, Tickable {
 	 */
 	private Map map;
 	
-	public Map getMap() {
-		return map;
-	}
-
 	/**
 	 * The shop instance that's unique to this session
 	 */
 	private Shop sessionShop;
-	
+
 	public GameSession(String name, Map map) {
 		this.name = name;
 		this.map = map;
@@ -111,6 +107,121 @@ public class GameSession implements Listener, Tickable {
 		//this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
 	
+	/**
+	 * @return The current state of the session
+	 */
+	public State getState() {
+		return state;
+	}
+
+	public Map getMap() {
+		return map;
+	}
+
+	/**
+	 * Tries to look up a team
+	 * @param name The name to look up
+	 * @return The team with the given name, null if it cannot be found
+	 */
+	public Team getTeam(String name) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t : teams){
+			if(t.getName().equals(name)){
+				return t;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Tries to look up a team
+	 * @param player the player to look up
+	 * @return The team the player is on, null if the player is not on a team.
+	 */
+	public Team getTeam(SurvivalPlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t : teams){
+			if(t.hasPlayer(player)){
+				return t;
+			}
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Tries to look up a team
+	 * @param player the player to look up
+	 * @return The team the player is on, null if the player is not on a team.
+	 */
+	public Team getTeam(OfflinePlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t: teams){
+			if(t.hasPlayer(player) != null){
+				return t;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Looks for the provided player, returning their wrapper
+	 * @param player
+	 * @return The survival player of the given player, or null if not found
+	 */
+	public SurvivalPlayer getPlayer(OfflinePlayer player) {
+		if (teams.isEmpty()) {
+			return null;
+		}
+		
+		for(Team t : teams){
+			SurvivalPlayer tmp=t.hasPlayer(player);
+			if(tmp != null){
+				return tmp;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the name associated with this session
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Returns summary information about this session.
+	 * @param verbose Should this also give extensive information?
+	 * @return a string with the name of the session, it's current state, and 
+	 * the name of the map it is running. On verbose mode it also includes a 
+	 * list of teams in the session as well as the current number of teams and 
+	 * the max number of teams.  
+	 */
+	public String getInfo(boolean verbose) {
+		String str = "Session Name: "+ChatFormat.SESSION.wrap(this.name)+"\n"; 
+		str += "Map Name: "+ ChatFormat.IMPORTANT.wrap(this.map.getName())+"\n";
+		str += "Session State: "+ChatFormat.IMPORTANT.wrap(this.state + "\n");
+		
+		if(verbose){
+			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
+			str += "\n";
+			for(Team t : teams){
+				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
+			}
+		}
+		return str;
+	}
+
 	/**
 	 * Starts the game, dealing with the teams and scores, etc
 	 */
@@ -132,9 +243,11 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		//teleport teams
+		moveToStart(4);//TODO only 4 blocks apart for testing
 		
-		moveToStart(4);//only 4 blocks apart for testing
-		
+		//start the timer
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1*60);//TODO 15 min to start
+		//generate waves
 		
 		state = State.STARTINGPERIOD;
 		
@@ -148,13 +261,6 @@ public class GameSession implements Listener, Tickable {
 		HandlerList.unregisterAll(sessionShop);
 		sessionShop = null;
 		state = State.FINISHED;
-	}
-	
-	/**
-	 * @return The current state of the session
-	 */
-	public State getState() {
-		return state;
 	}
 	
 	/**
@@ -188,115 +294,6 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	
-	/**
-	 * Tries to look up a team
-	 * @param name The name to look up
-	 * @return The team with the given name, null if it cannot be found
-	 */
-	public Team getTeam(String name) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t : teams){
-			if(t.getName().equals(name)){
-				return t;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Tries to look up a team
-	 * @param player the player to look up
-	 * @return The team the player is on, null if the player is not on a team.
-	 */
-	public Team getTeam(SurvivalPlayer player) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t : teams){
-			if(t.hasPlayer(player)){
-				return t;
-			}
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Tries to look up a team
-	 * @param player the player to look up
-	 * @return The team the player is on, null if the player is not on a team.
-	 */
-	public Team getTeam(OfflinePlayer player) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t: teams){
-			if(t.hasPlayer(player) != null){
-				return t;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Looks for the provided player, returning their wrapper
-	 * @param player
-	 * @return The survival player of the given player, or null if not found
-	 */
-	public SurvivalPlayer getPlayer(OfflinePlayer player) {
-		if (teams.isEmpty()) {
-			return null;
-		}
-		
-		for(Team t : teams){
-			SurvivalPlayer tmp=t.hasPlayer(player);
-			if(tmp != null){
-				return tmp;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns summary information about this session.
-	 * @param verbose Should this also give extensive information?
-	 * @return a string with the name of the session, it's current state, and 
-	 * the name of the map it is running. On verbose mode it also includes a 
-	 * list of teams in the session as well as the current number of teams and 
-	 * the max number of teams.  
-	 */
-	public String getInfo(boolean verbose) {
-		String str = "Session Name: "+ChatFormat.SESSION.wrap(this.name)+"\n"; 
-		str += "Map Name: "+ ChatFormat.IMPORTANT.wrap(this.map.getName())+"\n";
-		str += "Session State: "+ChatFormat.IMPORTANT.wrap(this.state + "\n");
-		
-		if(verbose){
-			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
-			str += "\n";
-			for(Team t : teams){
-				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
-			}
-		}
-		return str;
-	}
-	
-	/**
-	 * Get the name associated with this session
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public String toString() {
-		return "GameSession[" + getName() + "]";
-	}
-	
 	public Collection<Team> getTeams(){
 		return teams;
 	}
@@ -324,7 +321,8 @@ public class GameSession implements Listener, Tickable {
 			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
 			break;
 		case PUSHTOARENA:
-			moveToArena(); //TODO
+			moveToArena(); 
+			//TODO start wave
 			break;
 		case SHOPOVER:
 			moveToArena();
@@ -333,8 +331,13 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	@Override
+	public String toString() {
+		return "GameSession[" + getName() + "]";
+	}
+
+	@Override
 	public boolean equals(Object o) {
-		return o.toString().equals(toString());
+		return o.toString().equalsIgnoreCase(toString());
 	}
 	
 	private void moveToArena() {
@@ -366,6 +369,5 @@ public class GameSession implements Listener, Tickable {
 			}
 			start.add(distanceBetween, 0, 0);
 		}
-		
 	}
 }
