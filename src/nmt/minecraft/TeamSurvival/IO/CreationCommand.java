@@ -21,52 +21,61 @@ public class CreationCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
 			//print usage
-			sender.sendMessage(ChatFormat.ERROR.wrap("/tsc [session|team] {args}"));
-			return false;
+			// It already does this -sm
+			//sender.sendMessage(ChatFormat.ERROR.wrap("/tsc [session|team] {args}"));
+			return false; // <- when you return false
 		}
-		boolean tmp;
+		
 		if (args[0].equalsIgnoreCase("open")) {
-			tmp = onOpenCommand(sender, args);
-			if(tmp){
+
+			if(onOpenCommand(sender, args)){
 				sender.sendMessage(ChatFormat.IMPORTANT.wrap("Sucessfully opened session: "+args[1]));
-			}else{
+				return true;
+			} else {
 				sender.sendMessage(ChatFormat.IMPORTANT.wrap("unable to open session"));
-				return false;
+				return true;
 			}
 			
 		}
 		
 		if (args[0].equalsIgnoreCase("close")) {
-			tmp = onCloseCommand(sender, args);
-			if(tmp){
+			if(onCloseCommand(sender, args)){
 				sender.sendMessage(ChatFormat.IMPORTANT.wrap("Sucessfully closed open session."));
-			}else{
+				return true;
+			} else {
 				sender.sendMessage(ChatFormat.IMPORTANT.wrap("unable to close session"));
-				return false;
+				return true;
 			}
 		}
 		
 		if (args[0].equalsIgnoreCase("setShop")) {
 			onSetShopCommand(sender, args);
+			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("addArena")) {
 			onAddArenaCommand(sender, args);
+			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("setStartingLocation")) {
 			onSetStartingLocationCommand(sender, args);
+			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("setShopButton")) {
 			onSetShopButtonCommand(sender, args);
+			return true;
 		}
 		
 		if(args[0].equalsIgnoreCase("info")){
 			sender.sendMessage(Creator.getInfo());
+			return true;
 		}
 		
-		return true;
+		return false; //return false cause we didn't find an argument
+		
+		//NOTE: I made all the things return so that it would stop parsing as soon as it got a match!
 	}
 
 	private boolean onSetStartingLocationCommand(CommandSender sender, String[] args) {
