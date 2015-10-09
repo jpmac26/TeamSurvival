@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -100,13 +101,17 @@ public class GameSession implements Listener, Tickable {
 	private Shop sessionShop;
 	
 	private Wave currentWave;
+	
+	private int waveNumber;
 
 	public GameSession(String name, Map map) {
 		this.name = name;
 		this.map = map;
 		this.state = State.PREGAME;
 		this.teams = new LinkedList<Team>();
-		//TODO fix this in case I accidently leave it in
+		this.currentWave = null;
+		this.waveNumber = 0;
+		//TODO fix this in case I accidently leave it commented out
 		//this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
 	
@@ -326,6 +331,7 @@ public class GameSession implements Listener, Tickable {
 		case PUSHTOARENA:
 			moveToArena(); 
 			//TODO start wave
+			this.currentWave.start();
 			break;
 		case SHOPOVER:
 			moveToArena();
@@ -374,12 +380,32 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
+	private void moveToShop(){
+		for(Team t : teams){
+			t.moveTo(map.getShopLocation());
+		}
+	}
+	
+	@EventHandler
+	public void onWaveEnd(){//TODO catch the event from mobs
+		this.currentWave = null;
+		//teleport teams to the shop
+		moveToShop();
+		
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 60);//2 min for each shop period
+		
+		//TODO calculate the next wave
+		this.waveNumber++;
+		//this.currentWave = new Wave(waveNumber, map.getArenaLocations(), numberOfMobs(waveNumber));
+		
+	}
+	
 	/**
 	 * Calculates the number of mobs per wave
 	 * @param waveNumber
 	 * @return
 	 */
-	private int numberOfMobs(int waveNumber){
+	private int numberOfMobs(){
 		//avg the number of players still in
 		int sum =0;
 		for(Team t : teams){
