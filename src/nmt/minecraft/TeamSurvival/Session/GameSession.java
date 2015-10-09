@@ -131,6 +131,11 @@ public class GameSession implements Listener, Tickable {
 					ChatFormat.ERROR.wrap("Unable to start session, as it's already been started!"));
 		}
 		
+		//teleport teams
+		
+		moveToStart(4);//only 4 blocks apart for testing
+		
+		
 		state = State.STARTINGPERIOD;
 		
 	}
@@ -142,6 +147,7 @@ public class GameSession implements Listener, Tickable {
 	public void stop() {
 		HandlerList.unregisterAll(sessionShop);
 		sessionShop = null;
+		state = State.FINISHED;
 	}
 	
 	/**
@@ -335,6 +341,30 @@ public class GameSession implements Listener, Tickable {
 		Iterator<Location> arenaIt = map.getArenaLocations().iterator();
 		for (Team team : teams) {
 			team.moveTo(arenaIt.next());
+		}
+		
+	}
+	
+	
+	private void moveToStart(int distanceBetween){
+		int side = (int) Math.floor(Math.sqrt(this.teams.size()));
+		//TODO figure out some way to not teleport them into the ground
+		
+		Location start = map.getStartingLocation().clone();
+		Iterator<Team> iterate = teams.iterator();
+		for(int i =0; i<side; i++){
+			for(int j=0; j<side; j++){
+				if(iterate.hasNext()){
+					Team tmp = iterate.next();
+					tmp.moveTo(start);
+					TeamSurvivalPlugin.plugin.getLogger().info("Team: "
+							+ tmp.getName()+ "\t starting at:"+start.getBlockX()+", "+start.getBlockY()+", "+ start.getBlockZ());
+				}else{
+					return;
+				}
+				start.add(distanceBetween, 0, 0);
+			}
+			start.add(distanceBetween, 0, 0);
 		}
 		
 	}

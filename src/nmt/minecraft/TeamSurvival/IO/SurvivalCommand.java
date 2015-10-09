@@ -26,9 +26,9 @@ public class SurvivalCommand implements CommandExecutor {
 	 */
 	private static final String[] teamSurvivalCommandList = {"session", "team"};
 
-	private static final String[] sessionCommandList = {"list", "create", "info", "remove"};
+	private static final String[] sessionCommandList = {"list", "create", "info", "remove", "start", "stop"};
 	
-	private static final String[] teamCommandList = {"list", "create", "info", "disband"};
+	private static final String[] teamCommandList = {"list", "create", "info", "dispand"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -216,7 +216,7 @@ public class SurvivalCommand implements CommandExecutor {
 			return;
 		}
 		
-		sender.sendMessage("There are currently " + ChatColor.GREEN + teams.size() + ChatColor.RESET + " sessions:");
+		sender.sendMessage("There are currently " + ChatColor.GREEN + teams.size() + ChatColor.RESET + " teams:");
 		
 		for (Team s : teams) {
 			sender.sendMessage(ChatFormat.TEAM.wrap(s.getName()));
