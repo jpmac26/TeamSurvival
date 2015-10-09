@@ -11,6 +11,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
@@ -97,6 +98,8 @@ public class GameSession implements Listener, Tickable {
 	 * The shop instance that's unique to this session
 	 */
 	private Shop sessionShop;
+	
+	private Wave currentWave;
 
 	public GameSession(String name, Map map) {
 		this.name = name;
@@ -369,5 +372,22 @@ public class GameSession implements Listener, Tickable {
 			}
 			start.add(distanceBetween, 0, 0);
 		}
+	}
+	
+	/**
+	 * Calculates the number of mobs per wave
+	 * @param waveNumber
+	 * @return
+	 */
+	private int numberOfMobs(int waveNumber){
+		//avg the number of players still in
+		int sum =0;
+		for(Team t : teams){
+			sum += t.getPlayerList().size();
+		}
+		
+		int avg = sum/teams.size();
+		
+		return avg + (int)(waveNumber*1.5);
 	}
 }
