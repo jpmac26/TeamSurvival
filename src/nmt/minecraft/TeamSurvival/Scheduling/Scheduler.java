@@ -62,8 +62,8 @@ public final class Scheduler {
 	 * @param reminder
 	 */
 	private void notify(Reminder reminder) {
-		reminder.getOwner().tick(reminder.getKey());
 		map.remove(reminder.getOwner());
+		reminder.getOwner().tick(reminder.getKey());
 	}
 	
 	/**
