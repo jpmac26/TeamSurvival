@@ -151,14 +151,32 @@ public class Map {
 		
 		try {
 			config.load(file);
-			tmp.startingLocation = ((LocationState)config.get("startingLocation")).getLocation();
-			tmp.shopButtonLocation = ((LocationState)config.get("shopButtonLocation")).getLocation();
-			tmp.shopLocation = ((LocationState)config.get("shopLocation")).getLocation();
+			LocationState tmpLoc = (LocationState)config.get("startingLocation");
+			if(tmpLoc != null){
+				tmp.startingLocation = tmpLoc.getLocation();
+			}else{
+				tmp.startingLocation = null;
+			}
+			
+			tmpLoc =(LocationState)config.get("shopButtonLocation");
+			if(tmpLoc != null){
+				tmp.shopButtonLocation = tmpLoc.getLocation();
+			}else{
+				tmp.shopButtonLocation = null;
+			}
+			
+			tmpLoc = (LocationState)config.get("shopLocation");
+			if(tmpLoc != null){
+				tmp.shopLocation = tmpLoc.getLocation();
+			}else{
+				tmp.shopLocation = null;
+			}
+			
 			
 			//get the arena locations
 			//TODO really not sure if this will work
 			@SuppressWarnings("unchecked")
-			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations");
+			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations", new LinkedList<LocationState>());
 			
 			for(LocationState l : arenas){
 				tmp.arenaLocations.add(l.getLocation());

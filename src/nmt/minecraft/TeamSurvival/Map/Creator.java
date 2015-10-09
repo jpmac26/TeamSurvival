@@ -97,10 +97,12 @@ public final class Creator {
 	}
 	
 	private static String getLocation(Location location){
-		String loc = "";
-		loc += location.getBlockX()+", ";
+		if(location == null){
+			return ChatFormat.ERROR.wrap("no location");
+		}
+		String loc = location.getBlockX()+", ";
 		loc += location.getBlockY()+", ";
-		loc += location.getBlockZ()+", ";
+		loc += location.getBlockZ();
 		return loc;
 	}
 
@@ -126,14 +128,14 @@ public final class Creator {
 			return "There is no open session";
 		}
 		Map cur = Creator.current;
-		String str = cur.getName()+"\n";
+		String str = ChatFormat.SESSION.wrap(cur.getName())+"\n";
 		str += "starting location: "+ getLocation(cur.getStartingLocation())+"\n";
 		str += "shop location: "+ getLocation(cur.getShopLocation())+"\n";
 		str += "shop button location: "+ getLocation(cur.getShopButtonLocation())+ "\n";
 		str += "max teams: " + cur.getMaxTeams()+"\n";
 		str += "arena locations: \n";
 		for(Location arena : cur.getArenaLocations()){
-			str += getLocation(arena);
+			str += getLocation(arena)+"\n";
 		}
 		
 		return str;
