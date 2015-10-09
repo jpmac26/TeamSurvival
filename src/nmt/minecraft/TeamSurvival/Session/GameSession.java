@@ -1,8 +1,11 @@
 package nmt.minecraft.TeamSurvival.Session;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -12,6 +15,7 @@ import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
 import nmt.minecraft.TeamSurvival.Player.Team;
+import nmt.minecraft.TeamSurvival.Scheduling.Scheduler;
 import nmt.minecraft.TeamSurvival.Scheduling.Tickable;
 import nmt.minecraft.TeamSurvival.Shop.Shop;
 
@@ -34,11 +38,43 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	/**
+	 * Defines standard messages that GameSessions will send out
+	 * @author Skyler
+	 *
+	 */
+	public static enum Messages {
+		ONEMINUTE(ChatColor.GOLD + "One minute until waves begin!" + ChatColor.RESET),
+		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET);
+		 
+		private String message;
+		
+		private Messages(String msg) {
+			this.message = msg;
+		}
+		
+		@Override
+		public String toString() {
+			return message;
+		}
+		
+		/**
+		 * Returns the stirng equivalent of this predefined message.<br />
+		 * For convenience, consider using {@link #toString()} instead
+		 * @return
+		 */
+		public String getString() {
+			return message;
+		}
+	}
+	
+	/**
 	 * Holds the different types of time-based reminders we'd need
 	 * @author Skyler
 	 * @see {@link GameSession#tick(Object)}
 	 */
 	private enum Reminders {
+		ONEMINUTE,
+		THIRTYSECONDS,
 		PUSHTOARENA,
 		SHOPOVER;
 	}
@@ -269,11 +305,23 @@ public class GameSession implements Listener, Tickable {
 		Reminders reminder = (Reminders) reference;
 		
 		switch (reminder) {
+		case ONEMINUTE:
+			for (Team team : teams) {
+				team.sendTeamMessage(Messages.ONEMINUTE.toString());
+			}
+			Scheduler.getScheduler().schedule(this, Reminders.THIRTYSECONDS, 30);
+			break;
+		case THIRTYSECONDS:
+			for (Team team : teams) {
+				team.sendTeamMessage(Messages.THIRTYSECONDS.toString());
+			}
+			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
+			break;
 		case PUSHTOARENA:
-			; //TODO
+			moveToArena(); //TODO
 			break;
 		case SHOPOVER:
-			; //TODO
+			moveToArena();
 			break;
 		}
 	}
@@ -281,5 +329,13 @@ public class GameSession implements Listener, Tickable {
 	@Override
 	public boolean equals(Object o) {
 		return o.toString().equals(toString());
+	}
+	
+	private void moveToArena() {
+		Iterator<Location> arenaIt = map.getArenaLocations().iterator();
+		for (Team team : teams) {
+			team.moveTo(arenaIt.next());
+		}
+		
 	}
 }
