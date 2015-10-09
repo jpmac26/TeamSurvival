@@ -7,6 +7,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
@@ -156,41 +157,53 @@ public class Wave {
 	 * Tells the wave to check  if it needs to spawn more mobs.<br />
 	 * It will also check if the wave is complete or has been force-stopped.
 	 */
-	//@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onEntityDeath(LivingEntity deadEntity) {
-		TeamSurvivalPlugin.plugin.getLogger().info("EntityDeathEvent called.\r\n");
-		if(started == true && forceStop == false && isComplete() == false) {
-			for(LivingEntity ent : Entities) {
-				if(deadEntity == ent && ent.isDead() == true) {
-					ent.remove();
-					
-					if (Mobs.size() > 0) {
-						TeamSurvivalPlugin.plugin.getLogger().info("Spawning new mob to replace dead one. Remaining: " + ((Integer)Mobs.size()).toString() + ".\r\n");
-						Random rn = new Random();
-						int RandPoint = rn.nextInt(MobSpawnPoints.size());
-						spawnRandomMob(MobSpawnPoints.get(RandPoint));
-					}
-					
-					//In case the stop() method doesn't quite clear the wave, we will do it here too
-					if(forceStop == true) {
-						clearWave();
-					}
-					
-					if(isComplete() == true) {
-						Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+	public void onEntityDeath(EntityDeathEvent event) {
+		try {
+			if(started == true && forceStop == false && isComplete() == false) {
+				for(int x = 0; x < Entities.size(); x++) {
+					LivingEntity ent = Entities.get(x);
+					if(event.getEntity() == ent && ent.isDead() == true) {
+						//Remove entity drops so we don't clutter up the battlefield
+						event.getDrops().clear();
+						
+						//Spawn a new mob to replace the one that just died
+						if (Mobs.size() > 0) {
+							TeamSurvivalPlugin.plugin.getLogger().info("Spawning new mob to replace dead one. Remaining: " + ((Integer)(Mobs.size() - 1)).toString() + ".\r\n");
+							Random rn = new Random();
+							int RandPoint = rn.nextInt(MobSpawnPoints.size());
+							spawnRandomMob(MobSpawnPoints.get(RandPoint));
+						}
+						
+						//In case the stop() method doesn't quite clear the wave, we will do it here too
+						if(forceStop == true) {
+							clearWave();
+						}
+						
+						if(isComplete() == true) {
+							Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+						}
+						
+						break;
 					}
 				}
 			}
+		} catch (Exception e) {
+			TeamSurvivalPlugin.plugin.getLogger().info("Error: " + e + "\r\n");
+			e.printStackTrace();
 		}
 	}
 	
 	private void clearWave() {
+		Mobs.clear();
 		for(LivingEntity ent : Entities) {
-			if(ent.getPassenger() != null) ent.getPassenger().remove();
+			if(ent.getPassenger() != null) {
+				ent.getPassenger().getLocation().setY(0);
+				ent.getPassenger().remove();
+			}
+			ent.getLocation().setY(0);
 			ent.remove();
 		}
 		Entities.clear();
-		Mobs.clear();
 	}
 	
 	/**

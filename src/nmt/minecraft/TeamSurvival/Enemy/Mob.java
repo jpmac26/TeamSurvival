@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
  * The information about equipment and health is stored here so that random-per-mob
- * spawns are doable
+ * spawns are do-able
  * @author Herobrine
  * @author Franz Chavez
  * @author James Pelster

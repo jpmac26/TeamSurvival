@@ -9,3 +9,6 @@ commands:
   stopWaves:
       usage: /stopWaves
       description: stops all waves currently active.
+  killAllMonsters:
+      usage: /killAllMonsters
+      description: kills all hostile mobs which could be confused as Wave mobs.
