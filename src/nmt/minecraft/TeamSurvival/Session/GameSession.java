@@ -5,12 +5,14 @@ import java.util.LinkedList;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
 import nmt.minecraft.TeamSurvival.Player.Team;
+import nmt.minecraft.TeamSurvival.Scheduling.Tickable;
 import nmt.minecraft.TeamSurvival.Shop.Shop;
 
 /**
@@ -20,7 +22,8 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  * @author Stephanie
  *
  */
-public class GameSession {
+public class GameSession implements Listener, Tickable {
+	
 	
 	public enum State {
 		PREGAME,
@@ -28,6 +31,16 @@ public class GameSession {
 		INWAVE,
 		INSHOP,
 		FINISHED;
+	}
+	
+	/**
+	 * Holds the different types of time-based reminders we'd need
+	 * @author Skyler
+	 * @see {@link GameSession#tick(Object)}
+	 */
+	private enum Reminders {
+		PUSHTOARENA,
+		SHOPOVER;
 	}
 	
 	private Collection<Team> teams;
@@ -237,7 +250,36 @@ public class GameSession {
 		return name;
 	}
 	
+	@Override
+	public String toString() {
+		return "GameSession[" + getName() + "]";
+	}
+	
 	public Collection<Team> getTeams(){
 		return teams;
+	}
+	
+	@Override
+	public void tick(Object reference) {
+		if (!(reference instanceof Reminders)) {
+			//what the heck is this?
+			return; //error
+		}
+		
+		Reminders reminder = (Reminders) reference;
+		
+		switch (reminder) {
+		case PUSHTOARENA:
+			; //TODO
+			break;
+		case SHOPOVER:
+			; //TODO
+			break;
+		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return o.toString().equals(toString());
 	}
 }
