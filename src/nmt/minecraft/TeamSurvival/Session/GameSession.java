@@ -107,7 +107,8 @@ public class GameSession implements Listener, Tickable {
 		this.map = map;
 		this.state = State.PREGAME;
 		this.teams = new LinkedList<Team>();
-		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
+		//TODO fix this in case I accidently leave it in
+		//this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
 	
 	/**
@@ -264,10 +265,9 @@ public class GameSession implements Listener, Tickable {
 	 * the max number of teams.  
 	 */
 	public String getInfo(boolean verbose) {
-		String str = "Session Name    Map Name    Session State"; 
-		str += ChatFormat.SESSION.wrap(this.name);
-		str += "    " + this.map.getName();
-		str += "    " + this.state + "\n";
+		String str = "Session Name: "+ChatFormat.SESSION.wrap(this.name)+"\n"; 
+		str += "Map Name: "+ ChatFormat.IMPORTANT.wrap(this.map.getName())+"\n";
+		str += "Session State: "+ChatFormat.IMPORTANT.wrap(this.state + "\n");
 		
 		if(verbose){
 			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();

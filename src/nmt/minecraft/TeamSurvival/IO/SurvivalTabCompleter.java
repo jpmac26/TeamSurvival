@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
+import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
@@ -29,9 +30,24 @@ public class SurvivalTabCompleter implements TabCompleter{
 		switch(args[0]){
 		case "session":
 			if(args.length == 2){
+				// /teamsurvival session [command]
 				return getBeginList(args[1], SurvivalCommand.getSessioncommandlist());
-			}else if(args.length == 3 && (!args[1].equals("list"))){//list does not take a session argument 
+			}else if(args.length == 3 && (!args[1].equals("list"))){//list does not take a session argument
+				//teamsurvival session [command] [sessionName]
 				return getBeginList(args[2], getSessionList());
+			}else if(args.length == 4){
+				switch(args[1]){
+				// /teamsurvival session create [sessionName] [mapName]
+				case "create":
+					return getBeginList(args[3], Map.listConfigs());
+					
+				// /teamsurvival session info [session] verbose
+				case "info":
+					List<String> list = new LinkedList<String>();
+					list.add("verbose");
+					list.add("");
+					return list;
+				}
 			}
 			break;
 		case "team":

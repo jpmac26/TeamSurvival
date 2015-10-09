@@ -26,28 +26,29 @@ public class SurvivalCommand implements CommandExecutor {
 	 */
 	private static final String[] teamSurvivalCommandList = {"session", "team"};
 
-	private static final String[] sessionCommandList = {"list", "create", "info", "dispatch"};
+	private static final String[] sessionCommandList = {"list", "create", "info", "remove"};
 	
-	private static final String[] teamCommandList = {"list", "create", "info", "dispatch"};
+	private static final String[] teamCommandList = {"list", "create", "info", "disband"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		if (args.length == 0) {
 			//print usage
-			sender.sendMessage("/ts [session|team] {args}");
-			return true;
+			//sender.sendMessage("/ts [session|team] {args}");
+			return false;
 		}
 		
 		if (args[0].equalsIgnoreCase("session")) {
-			return onSessionCommand(sender, args);
+			onSessionCommand(sender, args);
+			
 		}
 		
 		if (args[0].equalsIgnoreCase("team")) {
-			return onTeamCommand(sender, args);
+			onTeamCommand(sender, args);
 		}
 		
-		return false;
+		return true;
 	}
 	
 	protected static List<String> getTeamsurvivalcommandlist() {
@@ -67,6 +68,8 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param sender
 	 * @param args
 	 * @return 
+	 * TODO: don't let them create a session using the same map as another session
+	 * 
 	 */
 	private boolean onTeamCommand(CommandSender sender, String[] args) {
 		//[list | create | info | disband] ?
@@ -107,7 +110,7 @@ public class SurvivalCommand implements CommandExecutor {
 			return false;
 		}
 		
-		if(session.getMap().getMaxTeams() >= session.getTeams().size()){
+		if(session.getMap().getMaxTeams() <= session.getTeams().size()){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Cannot create another team, max limit reached"));
 			return false;
 		}
@@ -243,7 +246,7 @@ public class SurvivalCommand implements CommandExecutor {
 		}
 		
 		if (args[1].equalsIgnoreCase("create")) {
-			return onSessionCreateCommand(sender, args);
+			onSessionCreateCommand(sender, args);
 		}
 		
 		if (args[1].equalsIgnoreCase("start")) {
@@ -296,40 +299,40 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param sender
 	 * @param args
 	 */
-	private boolean onSessionCreateCommand(CommandSender sender, String[] args) {
+	private void onSessionCreateCommand(CommandSender sender, String[] args) {
 		// /ts session create [sessionName] [mapName]
 		if(args.length != 4){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
 					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival session create [sessionName] [mapName]"));
-			return false;
+			return;
 		}
 		
 		if(TeamSurvivalManager.getSession(args[2])!=null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There already exists an active session with that name"));
-			return false;
+			return;
 		}
 		
 		//check for map matching the given name
 		if(!Map.listConfigs().contains(args[3])){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find config for the given map"));
-			return false;
+			return;
 		}
 		
 		Map tmpMap = Map.loadConfig(args[3]);
 		if(tmpMap == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not load the config file for the map"));
-			return false;
+			return;
 		}
 		
 		GameSession session = new GameSession(args[2], tmpMap);
 		
 		if(!TeamSurvivalManager.register(session)){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not register the session with the TSManager"));
-			return false;
+			return;
 		}
 		
 		sender.sendMessage(ChatFormat.SESSION.wrap("Session successfully created"));
-		return true;
+		return;
 		
 		
 	}
@@ -418,7 +421,8 @@ public class SurvivalCommand implements CommandExecutor {
 	 * @param args
 	 */
 	private boolean onSessionInfoCommand(CommandSender sender, String[] args) {
-		if (args.length < 2 || args.length > 4) {
+		// /teamsurvival session info [session] [verbose]
+		if (args.length < 3 || args.length > 4) {
 			sender.sendMessage("/ts session info " + ChatFormat.SESSION.wrap("[sessionName] {verbose}"));
 			return false;
 		}

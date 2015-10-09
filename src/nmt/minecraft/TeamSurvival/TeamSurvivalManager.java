@@ -81,7 +81,7 @@ public class TeamSurvivalManager {
 	 * @return true if the session was found and unregistered
 	 */
 	public static boolean unregister(GameSession session) {
-		if (session.getState() != GameSession.State.FINISHED) {
+		if (session.getState() != GameSession.State.FINISHED && session.getState() != GameSession.State.PREGAME) {
 			TeamSurvivalPlugin.plugin.getLogger().warning("ERROR! Session: " + session.getName() + " is not finished! Please wait!");
 			return false;
 		}

@@ -174,7 +174,6 @@ public class Map {
 			
 			
 			//get the arena locations
-			//TODO really not sure if this will work
 			@SuppressWarnings("unchecked")
 			Collection<LocationState> arenas = (Collection<LocationState>) config.getList("arenaLocations", new LinkedList<LocationState>());
 			
@@ -198,7 +197,6 @@ public class Map {
 		File file = new File(TeamSurvivalPlugin.plugin.getDataFolder(), this.name+".yml");
 		YamlConfiguration config = new YamlConfiguration();
 		
-		//TODO I have no idea if this works
 		config.set("name", this.name);
 		config.set("startingLocation", this.startingLocation);
 		config.set("shopLocation", this.shopLocation);
