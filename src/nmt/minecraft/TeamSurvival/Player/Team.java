@@ -5,9 +5,17 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import nmt.minecraft.TeamSurvival.TeamLossEvent;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 /**
  * A group of players.<br />
@@ -189,6 +197,23 @@ public class Team {
 		}
 	}
 	
+	/**
+	 * This private method checks to see if the team is dead.
+	 * @return True if the team is dead.
+	 */
+	private boolean isTeamDead() {
+		for (SurvivalPlayer s : this.players) {
+			if (s.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+				return false;
+			}
+		}
+		//All players are in spectator mode, team is dead
+		return true;
+	}
+	
+	/**
+	 * This comparison method compares by team names.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(! (o instanceof Team)){
@@ -198,7 +223,41 @@ public class Team {
 		return this.name.equals(((Team)o).name);
 	}
 	
+	/**
+	 * Returns the arena location.
+	 * @return The location of the arena.
+	 */
 	public Location getArenaLocation() {
 		return arenaLocation;
+	}
+	
+	/**
+	 * This event handler checks to see if the Team is still alive<br>
+	 * whenever a player dies.
+	 * @param e The damage event
+	 */
+	@EventHandler
+	public void entityDamagedEvent(EntityDamageEvent e) {
+		//Check to see if the damage is actually valid
+		if (e.isCancelled()) return;
+		
+		//Check to see if the entity being damaged is a player
+		if (e.getEntity() instanceof Player) {
+			//Check to see if the damage received is lethal
+			double damage = e.getDamage();
+			Player victim = (Player) e.getEntity();
+			
+			if (damage >= victim.getHealth() && this.hasPlayer((OfflinePlayer) victim) != null) {
+				//Damage is lethal, prevent them from dying
+				e.setCancelled(true);
+				victim.setGameMode(GameMode.SPECTATOR);
+				//Check to see if the team is dead
+				if(this.isTeamDead()) {
+					//Team is dead
+					TeamLossEvent teamEvent = new TeamLossEvent(this);
+					Bukkit.getServer().getPluginManager().callEvent(teamEvent);
+				}
+			}
+		}
 	}
 }
