@@ -322,6 +322,8 @@ public class GameSession implements Listener, Tickable {
 			return false;
 		}
 		
+		HandlerList.unregisterAll(team);
+		
 		map.addArenaLocation(team.getArenaLocation());
 		return teams.remove(team);
 	}
