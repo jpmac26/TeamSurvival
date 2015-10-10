@@ -160,15 +160,12 @@ public class Wave {
 	public void onEntityDeath(EntityDeathEvent event) {
 		try {
 			if(started == true && forceStop == false && isComplete() == false) {
-				for(int x = 0; x < Entities.size(); x++) {
-					LivingEntity ent = Entities.get(x);
-					if(event.getEntity() == ent && ent.isDead() == true) {
+				if(Entities.contains(event.getEntity())){
 						//Remove entity drops so we don't clutter up the battlefield
 						event.getDrops().clear();
-						
 						//Spawn a new mob to replace the one that just died
 						if (Mobs.size() > 0) {
-							TeamSurvivalPlugin.plugin.getLogger().info("Spawning new mob to replace dead one. Remaining: " + ((Integer)(Mobs.size() - 1)).toString() + ".\r\n");
+							TeamSurvivalPlugin.plugin.getLogger().info("Spawning new mob to replace dead one.\n Remaining: " + ((Integer)(Mobs.size() - 1)).toString() + ".\r\n");
 							Random rn = new Random();
 							int RandPoint = rn.nextInt(MobSpawnPoints.size());
 							spawnRandomMob(MobSpawnPoints.get(RandPoint));
@@ -183,10 +180,10 @@ public class Wave {
 							Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
 						}
 						
-						break;
+						//break;
 					}
 				}
-			}
+			//}
 		} catch (Exception e) {
 			TeamSurvivalPlugin.plugin.getLogger().info("Error: " + e + "\r\n");
 			e.printStackTrace();
@@ -212,11 +209,6 @@ public class Wave {
 	 * @return
 	 */
 	public boolean isComplete() {
-		boolean allDead = true;
-		for(LivingEntity ent : Entities) {
-			if(ent.isDead()) allDead = false;
-		}
-		//Optional check: make sure the size() of the "Mobs" list is zero
-		return allDead;
+		return Entities.isEmpty();
 	}
 }
