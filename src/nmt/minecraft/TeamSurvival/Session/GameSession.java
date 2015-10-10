@@ -288,7 +288,12 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
+		team.setArenaLocation(map.getNextArena());
+		
 		//Add teams
+		if (teams.isEmpty()) {
+			teams.set(team, new Wave(1, team.getArenaLocation(), numberOfMobs()))
+		}
 	}
 	
 	/**
