@@ -32,7 +32,7 @@ commands:
         aliases: join
     teamsurvivalcreator:
         permission: teamsurvival.creator.*
-        usage: /tsc [open|close|setshop|addarena] {args}
+        usage: /tsc [open|close|setShop|setStartingLocation|addArena|setShopButton|info] {args}
         description: Container commmand for arena creation commands
         aliases: tsc
     
