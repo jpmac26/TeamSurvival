@@ -18,14 +18,14 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  * @author James Pelster
  */
 public class Wave {
-	private String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
-	private int MobVals[] = {0,4,3,2,7,7,8,6};
-	private List<Mob> Mobs;
-	private List<LivingEntity> Entities;
-	private int maxSpawned;
-	private boolean forceStop = false;
-	private boolean started = false;
-	private List<Location> MobSpawnPoints = new ArrayList<Location>();
+	public String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
+	public int MobVals[] = {0,4,3,2,7,7,8,6};
+	public List<Mob> Mobs;
+	public List<LivingEntity> Entities;
+	public int maxSpawned, waveN;
+	public boolean forceStop = false;
+	public boolean started = false;
+	public List<Location> MobSpawnPoints = new ArrayList<Location>();
 	
 	/**
 	 * Creates a wave with the given types of mobs.
@@ -39,6 +39,7 @@ public class Wave {
 			Mobs = new ArrayList<Mob>();
 			Entities = new ArrayList<LivingEntity>();
 			maxSpawned = 40;
+			waveN = WaveNumber;
 			MobSpawnPoints = spawnPoints;
 			Random rn = new Random();
 			int MobPool = (WaveNumber-1)*2;
@@ -210,5 +211,15 @@ public class Wave {
 	 */
 	public boolean isComplete() {
 		return Entities.isEmpty();
+	}
+	/**
+	 * Returns a clone of the wave. 
+	 * @param needs the list of the locations of the new 
+	 */
+	public Wave clone(List<Location> m){
+		Wave NW = new Wave (this.waveN, m, this.Mobs.size() ,this.maxSpawned);
+		NW.Mobs = this.Mobs;
+		
+		return NW;
 	}
 }
