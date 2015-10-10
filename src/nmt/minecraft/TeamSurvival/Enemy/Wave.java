@@ -1,6 +1,7 @@
 package nmt.minecraft.TeamSurvival.Enemy;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -101,8 +102,8 @@ public class Wave implements Listener {
 	 * Sets up a basic wave with no specifications, for construction in a factory method (see {@link #clone})
 	 */
 	private Wave() {
-		Mobs = new ArrayList<Mob>();
-		Entities = new ArrayList<LivingEntity>();
+		Mobs = new LinkedList<Mob>();
+		Entities = new LinkedList<LivingEntity>();
 		started = false;
 		Bukkit.getPluginManager().registerEvents(this, TeamSurvivalPlugin.plugin);
 	}
@@ -228,7 +229,9 @@ public class Wave implements Listener {
 
 		NW.maxSpawned = maxSpawned;
 		NW.waveN = this.waveN;
-		NW.Mobs = this.Mobs;
+		for (Mob mob : Mobs) {
+			NW.Mobs.add(mob);
+		}
 		
 		NW.MobSpawnPoints = m;
 		

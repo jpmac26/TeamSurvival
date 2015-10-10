@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -260,6 +261,9 @@ public class GameSession implements Listener, Tickable {
 					ChatFormat.ERROR.wrap("Unable to start session, as it's already been started!"));
 			return false;
 		}
+		
+		Bukkit.getPluginManager().registerEvents(this, 
+				TeamSurvivalPlugin.plugin);
 		
 		waveNumber = 1;
 		
