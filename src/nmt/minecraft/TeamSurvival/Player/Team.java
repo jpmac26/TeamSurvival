@@ -180,5 +180,12 @@ public class Team {
 		}
 	}
 	
-	
+	@Override
+	public boolean equals(Object o){
+		if(! (o instanceof Team)){
+			return false;
+		}
+		
+		return this.name.equals(((Team)o).name);
+	}
 }
