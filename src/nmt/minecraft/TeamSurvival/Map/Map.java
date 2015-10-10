@@ -18,6 +18,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * This Class represents a single map within Team Survival.<br />
  * Each map will contain a Shop Location and a Collection of Locations<br>
  * for players to spawn in.
+ * TODO Check for valid on load
  * @author William
  * @author Stephanie
  */
@@ -107,16 +108,16 @@ public class Map {
 		return this.arenaLocations.size();
 	}
 	
+	/**
+	 * returns the next arena and removes it from the list
+	 * @return the next arena location or null if there are no more locations
+	 */
 	public Location getNextArena(){
 		if(this.arenaLocations.isEmpty()){
 			return null;
 		}
 		
 		return this.arenaLocations.remove(0);
-	}
-	
-	public void addArenaTo(Location arena){
-		this.arenaLocations.add(arena);
 	}
 	
 	/**

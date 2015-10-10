@@ -386,7 +386,10 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
-	
+	/**
+	 * moves to the teams to separated starting locations
+	 * @param distanceBetween is the distance to seperate the teams by
+	 */
 	private void moveToStart(int distanceBetween){
 		int side = (int) Math.floor(Math.sqrt(this.teams.size()));
 		
@@ -409,12 +412,19 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
+	/**
+	 * Moves teams to the shop location
+	 */
 	private void moveToShop(){
 		for(Team t : teams){
 			t.moveTo(map.getShopLocation());
 		}
 	}
 	
+	/**
+	 * Handles what happens at the end of a wave
+	 * @param event 
+	 */
 	@EventHandler
 	public void onWaveEnd(WaveFinishEvent event){
 		//this.currentWave = null; //TODO
@@ -442,10 +452,7 @@ public class GameSession implements Listener, Tickable {
 		//teleport teams to the shop
 		moveToShop();
 		
-		
-		
 		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 60);//2 min for each shop period
-		
 		
 		//this.currentWave = new Wave(waveNumber, map.getArenaLocations(), numberOfMobs(waveNumber));
 		
@@ -453,8 +460,7 @@ public class GameSession implements Listener, Tickable {
 	
 	/**
 	 * Calculates the number of mobs per wave
-	 * @param waveNumber
-	 * @return
+	 * @return number of mobs to spawn for the waveNumber
 	 */
 	private int numberOfMobs(){
 		//avg the number of players still in
