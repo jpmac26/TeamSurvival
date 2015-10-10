@@ -257,6 +257,7 @@ public class Team implements Listener {
 				//Damage is lethal, prevent them from dying
 				e.setCancelled(true);
 				victim.setGameMode(GameMode.SPECTATOR);
+				
 				//Check to see if the team is dead
 				if(this.isTeamDead()) {
 					//Team is dead
