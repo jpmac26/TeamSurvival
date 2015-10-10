@@ -2,6 +2,8 @@ package nmt.minecraft.TeamSurvival.Player;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -21,6 +23,14 @@ public class Team {
 	 */
 	private HashSet<SurvivalPlayer> players;
 	
+	public List<String> getPlayerList() {
+		List<String> list = new LinkedList<String>();
+		for(SurvivalPlayer player : players){
+			list.add(player.getPlayer().getDisplayName());
+		}
+		return list;
+	}
+
 	/**
 	 * This team's name
 	 */

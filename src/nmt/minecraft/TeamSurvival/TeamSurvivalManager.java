@@ -13,6 +13,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  * Manager class for all sessions.<br />
  * Static class that gives access to global information
  * @author Skyler
+ * @author Stephanie
  * @note Classified as a session job
  */
 public class TeamSurvivalManager {
@@ -20,7 +21,7 @@ public class TeamSurvivalManager {
 	private static Collection<GameSession> sessions = new HashSet<GameSession>();
 	
 	/**
-	 * Looks up a player using an ofline player.
+	 * Looks up a player using an offline player.
 	 * @param player
 	 * @return
 	 */
@@ -61,20 +62,46 @@ public class TeamSurvivalManager {
 	
 	/**
 	 * Registers a game session, if it's not already registered
-	 * @param session
+	 * @param session The game session to add.
 	 * @return true if the session was added
 	 */
 	public static boolean register(GameSession session) {
-		return false;
+		boolean check = sessions.add(session);
+		if (check) {
+			System.out.println("Successfully added session: " + session.getName());
+		} else {
+			System.out.println("WARNING! Session: " + session.getName() + " was not added!");
+		}
+		return check;
 	}
 	
 	/**
 	 * Attempts to unregister a game session
-	 * @param session 
+	 * @param session The game session to remove.
 	 * @return true if the session was found and unregistered
 	 */
 	public static boolean unregister(GameSession session) {
+		if (session.getState() != GameSession.State.FINISHED && session.getState() != GameSession.State.PREGAME) {
+			TeamSurvivalPlugin.plugin.getLogger().warning("ERROR! Session: " + session.getName() + " is not finished! Please wait!");
+			return false;
+		}
+		
+		if (sessions.remove(session)) {
+			TeamSurvivalPlugin.plugin.getLogger().info("Successfully removed session: " + session.getName());
+			return true;
+		}
+		
+		TeamSurvivalPlugin.plugin.getLogger().warning("WARNING! Session: " + session.getName() + " was not added!");
 		return false;
+	}
+	
+	public static GameSession getSession(String sessionName){
+		for(GameSession s : TeamSurvivalManager.getSessions()){
+			if(s.getName().equalsIgnoreCase(sessionName)){
+				return s;
+			}
+		}
+		return null;
 	}
 	
 }
