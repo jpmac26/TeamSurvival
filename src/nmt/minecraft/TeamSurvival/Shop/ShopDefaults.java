@@ -36,21 +36,11 @@ infinity bow enchantment - 200
 	POWER(EnchantedBook.POWER.getEnchantedBook(), 75),
 	INFINITY(EnchantedBook.INFINITY.getEnchantedBook(), 200),
 	POTIONHEALTH((new Potion(PotionType.INSTANT_HEAL, 1)).toItemStack(1), 50),
-	POTIONHEALTH4((new Potion(PotionType.INSTANT_HEAL, 4)).toItemStack(1), 200),
+	POTIONHEALTH2((new Potion(PotionType.INSTANT_HEAL, 2)).toItemStack(1), 100),
 	POTIONREGEN((new Potion(PotionType.REGEN, 1)).toItemStack(1), 100),
 	POTIONREGEN2((new Potion(PotionType.REGEN, 2)).toItemStack(1), 200),
 	POTIONSWIFT((new Potion(PotionType.SPEED, 1)).toItemStack(1), 50),
 	POTIONSTRENGTH((new Potion(PotionType.STRENGTH, 1)).toItemStack(1), 350);
-	
-	/*
-	 * 
-		
-		health - 50(lvl1) 200(lvl 4) 
-regen - 100(lvl1) 200(lvl 2)
-swiftness - 50
-strength - lvl1 350
-
-	 */
 	
 	private ItemStack item;
 	

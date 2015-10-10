@@ -75,7 +75,7 @@ public class SurvivalCommand implements CommandExecutor {
 		//[list | create | info | disband] ?
 		if(args.length <2){
 			//print usage, cause we're no longer handled by onCommand!
-			sender.sendMessage(ChatFormat.ERROR.wrap("/tsc team [list|create|info|disband] {args}"));
+			sender.sendMessage(ChatFormat.ERROR.wrap("/ts team [list|create|info|disband] {args}"));
 			return;
 		}
 		

@@ -109,6 +109,7 @@ public class GameSession implements Listener, Tickable {
 		this.map = map;
 		this.state = State.PREGAME;
 		this.teams = new LinkedList<Team>();
+		System.out.println("Shop Location: " + map.getShopButtonLocation());
 		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
 	
