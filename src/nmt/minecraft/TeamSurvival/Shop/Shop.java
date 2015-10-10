@@ -78,7 +78,7 @@ public class Shop implements Listener {
 			return;
 		}
 		
-		if (!e.getInventory().getName().equals(e.getWhoClicked().getUniqueId())) {
+		if (!e.getInventory().getName().equals("TSSHOP-" + e.getWhoClicked().getName())) {
 			//wrong inventory; not a inventory that we spawned
 			return;
 		}

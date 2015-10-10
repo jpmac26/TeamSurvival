@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -309,8 +310,13 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
-		if (teams.size() >= map.getArenaLocations().size()) {
-			TeamSurvivalPlugin.plugin.getLogger().warning("Unable to add class: session is full!");
+		if (teams.size() >= map.getMaxTeams()) {
+			TeamSurvivalPlugin.plugin.getLogger().warning("Unable to add team: session is full!");
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player.isOp()) {
+					player.sendMessage(ChatFormat.ERROR.wrap("Cannot add team: Session already full!"));
+				}
+			}
 			return;
 		}
 		
