@@ -1,14 +1,3 @@
 name: TeamSurvival
 main: nmt.minecraft.TeamSurvival.TeamSurvivalPlugin
 version: 0.0.1
-
-commands:
-  startTestWave:
-    usage: /startTestWave wave_number
-    description: starts a test wave.
-  stopWaves:
-      usage: /stopWaves
-      description: stops all waves currently active.
-  killAllMonsters:
-      usage: /killAllMonsters
-      description: kills all hostile mobs which could be confused as Wave mobs.
