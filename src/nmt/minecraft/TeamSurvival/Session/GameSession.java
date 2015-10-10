@@ -415,6 +415,6 @@ public class GameSession implements Listener, Tickable {
 		
 		int avg = sum/teams.size();
 		
-		return avg + (int)(waveNumber*1.5);
+		return avg + (int)(waveNumber*(avg+5));
 	}
 }
