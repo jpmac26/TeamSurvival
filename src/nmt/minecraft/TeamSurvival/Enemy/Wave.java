@@ -147,7 +147,7 @@ public class Wave implements Listener {
 	 */
 	public void start() {
 		started = true;
-		while(started == true && Entities.size() < maxSpawned & Mobs.size() > 0) {
+		while(started == true && Entities.size() < maxSpawned && Mobs.size() > 0) {
 			Random rn = new Random();
 			int RandPoint = rn.nextInt(MobSpawnPoints.size());
 			spawnRandomMob(MobSpawnPoints.get(RandPoint));
@@ -228,6 +228,8 @@ public class Wave implements Listener {
 		NW.maxSpawned = maxSpawned;
 		NW.waveN = this.waveN;
 		NW.Mobs = this.Mobs;
+		
+		NW.MobSpawnPoints = m;
 		
 		return NW;
 	}

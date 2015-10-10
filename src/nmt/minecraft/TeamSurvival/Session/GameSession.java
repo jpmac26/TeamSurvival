@@ -47,7 +47,9 @@ public class GameSession implements Listener, Tickable {
 	 *
 	 */
 	public static enum Messages {
+		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin" + ChatColor.RESET),
 		ONEMINUTE(ChatColor.GOLD + "One minute until waves begin!" + ChatColor.RESET),
+		SHOPINFO(ChatColor.GOLD + "You have 2 minutes to use the shop."),
 		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET),
 		WAVEWARNING(ChatColor.YELLOW + "Wave beginning in 10 seconds!" + ChatColor.RESET),
 		WAVESTART(ChatColor.DARK_RED + "The wave has begun!" + ChatColor.RESET);
@@ -268,10 +270,14 @@ public class GameSession implements Listener, Tickable {
 		moveToStart(4);//TODO only 4 blocks apart for testing
 		
 		//start the timer
-		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1*60);//TODO 15 min to start
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1);//TODO 15 min to start
 		//generate waves
 		
 		state = State.STARTINGPERIOD;
+		
+		for (Team team : teams) {
+			team.sendTeamMessage(Messages.STARTINFO.toString());
+		}
 		return true;
 	}
 	
@@ -356,6 +362,7 @@ public class GameSession implements Listener, Tickable {
 			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
 			break;
 		case PUSHTOARENA:
+			state = State.INWAVE;
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
 			for (Team t : teams) {
@@ -363,6 +370,7 @@ public class GameSession implements Listener, Tickable {
 			}
 			break;
 		case SHOPOVER:
+			state = State.INWAVE;
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
 			for (Team t : teams) {
@@ -465,8 +473,13 @@ public class GameSession implements Listener, Tickable {
 			for (Team t : teams) {
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
+			return;
 		}
 		
+		for (Team team : teams) {
+			team.sendTeamMessage(Messages.SHOPINFO.toString());
+		}
+		state = State.INSHOP;
 		
 		//teleport teams to the shop
 		moveToShop();
