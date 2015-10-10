@@ -261,7 +261,7 @@ public class Team implements Listener {
 				if(this.isTeamDead()) {
 					//Team is dead
 					TeamLossEvent teamEvent = new TeamLossEvent(this);
-					Bukkit.getServer().getPluginManager().callEvent(teamEvent);
+					Bukkit.getPluginManager().callEvent(teamEvent);
 				}
 			}
 		}
