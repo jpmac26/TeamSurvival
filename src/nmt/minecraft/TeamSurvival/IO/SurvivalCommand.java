@@ -231,7 +231,7 @@ public class SurvivalCommand implements CommandExecutor {
 		//[list | create | start | stop | remove | info] ?
 		//this is what EDFs has, and it feels pretty similar in terms of 'sessions'
 		if (args.length < 2) {
-			sender.sendMessage(ChatFormat.ERROR.wrap("/ts [list|create|start|stop|remove|info] {args}"));
+			sender.sendMessage(ChatFormat.ERROR.wrap("/ts session [list|create|start|stop|remove|info] {args}"));
 			return false;
 		}
 		
