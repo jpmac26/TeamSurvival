@@ -17,6 +17,8 @@ import org.bukkit.event.Listener;
 
 import nmt.minecraft.TeamSurvival.TeamLossEvent;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Enemy.BossWave;
+import nmt.minecraft.TeamSurvival.Enemy.SkeletonGroupMob;
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.Enemy.WaveFinishEvent;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
@@ -576,7 +578,18 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	private void fillBossWaves() {
+
+		if (!waves.isEmpty()) {
+			waves.clear();
+		}
 		
+		Wave wave = new BossWave(null, new SkeletonGroupMob());
+		List<Location> locs;
+		for (Team team : teams) {
+			locs = new LinkedList<Location>();
+			locs.add(team.getArenaLocation());
+			waves.add(wave.clone(locs));
+		}
 	}
 	
 	/**
