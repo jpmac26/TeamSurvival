@@ -3,13 +3,7 @@ package nmt.minecraft.TeamSurvival.Session;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
+import java.util.List;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
@@ -20,6 +14,13 @@ import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Scheduling.Scheduler;
 import nmt.minecraft.TeamSurvival.Scheduling.Tickable;
 import nmt.minecraft.TeamSurvival.Shop.Shop;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 /**
  * Holds a single game session.<br />
@@ -268,6 +269,7 @@ public class GameSession implements Listener, Tickable {
 		HandlerList.unregisterAll(sessionShop);
 		sessionShop = null;
 		state = State.FINISHED;
+		currentWave.stop();
 	}
 	
 	/**

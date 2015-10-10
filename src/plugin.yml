@@ -1,5 +1,6 @@
 name: TeamSurvival
 main: nmt.minecraft.TeamSurvival.TeamSurvivalPlugin
+<<<<<<< HEAD
 version: 0.1
 permissions:
     teamsurvival.*:
@@ -36,3 +37,6 @@ commands:
         description: Container commmand for arena creation commands
         aliases: tsc
     
+=======
+version: 0.0.1
+>>>>>>> fe39edbe3dc2163ab4756e6e6c1b183195cb3deb
