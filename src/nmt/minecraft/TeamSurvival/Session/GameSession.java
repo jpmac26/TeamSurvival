@@ -439,6 +439,8 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
+	
+	
 	/**
 	 * Handles what happens at the end of a wave
 	 * @param event 
@@ -457,7 +459,7 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		this.waveNumber++;
-		
+		//TODO TeamLossEvent
 		//TODO generate next waves
 		
 		//no more waves, but is this the end of our third one?
@@ -486,6 +488,24 @@ public class GameSession implements Listener, Tickable {
 	private void startNextWave(boolean fresh) {
 		for (Wave wave : waves) {
 			wave.start();
+		}
+	}
+	
+	/**
+	 * Generates one wave, and then clones it for all teams<br />
+	 * <b>This method will clear the waves list if it's not empty!</b>
+	 */
+	private void fillWaves() {
+		if (!waves.isEmpty()) {
+			waves.clear();
+		}
+		
+		Wave wave = new Wave(waveNumber, null, numberOfMobs());
+		List<Location> locs;
+		for (Team team : teams) {
+			locs = new LinkedList<Location>();
+			locs.add(team.getArenaLocation());
+			waves.add(wave.clone(locs));
 		}
 	}
 	
