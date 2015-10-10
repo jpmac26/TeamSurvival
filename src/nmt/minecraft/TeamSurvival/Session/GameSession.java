@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -47,7 +48,9 @@ public class GameSession implements Listener, Tickable {
 	 *
 	 */
 	public static enum Messages {
+		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin" + ChatColor.RESET),
 		ONEMINUTE(ChatColor.GOLD + "One minute until waves begin!" + ChatColor.RESET),
+		SHOPINFO(ChatColor.GOLD + "You have 2 minutes to use the shop."),
 		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET),
 		WAVEWARNING(ChatColor.YELLOW + "Wave beginning in 10 seconds!" + ChatColor.RESET),
 		WAVESTART(ChatColor.DARK_RED + "The wave has begun!" + ChatColor.RESET);
@@ -259,14 +262,26 @@ public class GameSession implements Listener, Tickable {
 			return false;
 		}
 		
+		Bukkit.getPluginManager().registerEvents(this, 
+				TeamSurvivalPlugin.plugin);
+		
+		waveNumber = 1;
+		
+		//generate waves
+		fillWaves();
+		
 		//teleport teams
 		moveToStart(4);//TODO only 4 blocks apart for testing
 		
 		//start the timer
-		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1*60);//TODO 15 min to start
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1);//TODO 15 min to start
 		//generate waves
 		
 		state = State.STARTINGPERIOD;
+		
+		for (Team team : teams) {
+			team.sendTeamMessage(Messages.STARTINFO.toString());
+		}
 		return true;
 	}
 	
@@ -276,6 +291,7 @@ public class GameSession implements Listener, Tickable {
 	 */
 	public void stop() {
 		HandlerList.unregisterAll(sessionShop);
+		Scheduler.getScheduler().unregister(this);
 		sessionShop = null;
 		state = State.FINISHED;
 		
@@ -303,14 +319,7 @@ public class GameSession implements Listener, Tickable {
 		lists.add(team.getArenaLocation());
 		
 		//Add teams
-		if (teams.isEmpty()) {
-			teams.add(team);
-			waves.add(new Wave(1, lists, numberOfMobs()));
-		} else {
-			Wave clone = waves.get(0);
-			teams.add(team);
-			waves.add(clone);
-		}
+		teams.add(team);
 	}
 	
 	/**
@@ -324,11 +333,9 @@ public class GameSession implements Listener, Tickable {
 			return false;
 		}
 		
-		if(!teams.contains(team)){
-			return false;
-		}
+		HandlerList.unregisterAll(team);
 		
-		waves.remove(teams.indexOf(team));
+		map.addArenaLocation(team.getArenaLocation());
 		return teams.remove(team);
 	}
 	
@@ -360,6 +367,7 @@ public class GameSession implements Listener, Tickable {
 			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
 			break;
 		case PUSHTOARENA:
+			state = State.INWAVE;
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
 			for (Team t : teams) {
@@ -367,9 +375,11 @@ public class GameSession implements Listener, Tickable {
 			}
 			break;
 		case SHOPOVER:
+			state = State.INWAVE;
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
 			for (Team t : teams) {
+				t.sendTeamMessage("WAVE "+this.waveNumber);
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			break;
@@ -409,7 +419,7 @@ public class GameSession implements Listener, Tickable {
 	 * @param distanceBetween is the distance to seperate the teams by
 	 */
 	private void moveToStart(int distanceBetween){
-		int side = (int) Math.floor(Math.sqrt(this.teams.size()));
+		int side = (int) Math.floor(Math.sqrt(this.teams.size())) + 1;
 		
 		Location start = map.getStartingLocation().clone();
 		Iterator<Team> iterate = teams.iterator();
@@ -439,6 +449,8 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
+	
+	
 	/**
 	 * Handles what happens at the end of a wave
 	 * @param event 
@@ -457,18 +469,23 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		this.waveNumber++;
-		
-		//TODO generate next waves
+		//TODO TeamLossEvent
+		fillWaves();
 		
 		//no more waves, but is this the end of our third one?
-		if (waveNumber % 3 != 0) {
+		if ((waveNumber-1) % 3 != 0) {
 
 			Scheduler.getScheduler().schedule(this, Reminders.WAVECONTINUE, 10);
 			for (Team t : teams) {
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
+			return;
 		}
 		
+		for (Team team : teams) {
+			team.sendTeamMessage(Messages.SHOPINFO.toString());
+		}
+		state = State.INSHOP;
 		
 		//teleport teams to the shop
 		moveToShop();
@@ -486,6 +503,24 @@ public class GameSession implements Listener, Tickable {
 	private void startNextWave(boolean fresh) {
 		for (Wave wave : waves) {
 			wave.start();
+		}
+	}
+	
+	/**
+	 * Generates one wave, and then clones it for all teams<br />
+	 * <b>This method will clear the waves list if it's not empty!</b>
+	 */
+	private void fillWaves() {
+		if (!waves.isEmpty()) {
+			waves.clear();
+		}
+		
+		Wave wave = new Wave(waveNumber, null, numberOfMobs());
+		List<Location> locs;
+		for (Team team : teams) {
+			locs = new LinkedList<Location>();
+			locs.add(team.getArenaLocation());
+			waves.add(wave.clone(locs));
 		}
 	}
 	

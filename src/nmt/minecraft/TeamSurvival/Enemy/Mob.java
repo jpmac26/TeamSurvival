@@ -59,7 +59,6 @@ public class Mob {
 			return GiveRandomStuff(spawnedEntity, 9);
 		} else if(type.equalsIgnoreCase("Creeper") & rn.nextInt(50) == 49) {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.CREEPER);
-			((Creeper)spawnedEntity).setPowered(true);
 			return GiveRandomStuff(spawnedEntity, 7);
 		} else {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.valueOf(type.toUpperCase()));
@@ -91,7 +90,7 @@ public class Mob {
 					weapon = ent.getEquipment().getItemInHand();
 					weapon.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
 					if(rn.nextInt(20) == 19) {
-						weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, 10);
+						weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
 					}
 					ent.getEquipment().setItemInHand(weapon);
 				}

@@ -28,7 +28,8 @@ public class Map {
 	private Location shopLocation; //This is the Location of the Shop within Team Survival
 	private Location shopButtonLocation; //Location of the Shop Button
 	private List<Location> arenaLocations;//This collection contains all the initial spawn locations for the Map.
-
+	private int maxTeams;
+	
 	protected Map(String name) {
 		super();
 		this.name=name;
@@ -105,7 +106,7 @@ public class Map {
 	}
 
 	public int getMaxTeams(){
-		return this.arenaLocations.size();
+		return this.maxTeams;
 	}
 	
 	/**
@@ -193,6 +194,7 @@ public class Map {
 				tmp.arenaLocations.add(l.getLocation());
 			}
 			
+			tmp.maxTeams = tmp.arenaLocations.size();
 			return tmp;
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {

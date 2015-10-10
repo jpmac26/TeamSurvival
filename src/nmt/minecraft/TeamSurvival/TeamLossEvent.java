@@ -1,9 +1,9 @@
 package nmt.minecraft.TeamSurvival;
 
-import nmt.minecraft.TeamSurvival.Player.Team;
-
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import nmt.minecraft.TeamSurvival.Player.Team;
 
 /**
  * This Event Class is called whenever a team has officially lost.
@@ -12,6 +12,17 @@ import org.bukkit.event.HandlerList;
  *
  */
 public class TeamLossEvent extends Event {
+
+	private static final HandlerList handlers = new HandlerList();
+	
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 	
 	/**
 	 * This variable contains a reference to the losing team.
@@ -32,11 +43,6 @@ public class TeamLossEvent extends Event {
 	 */
 	public Team getTeam() {
 		return this.losingTeam;
-	}
-	
-	@Override
-	public HandlerList getHandlers() {
-		return null;
 	}
 
 }

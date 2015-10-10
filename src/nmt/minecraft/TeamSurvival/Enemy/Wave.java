@@ -1,6 +1,7 @@
 package nmt.minecraft.TeamSurvival.Enemy;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -50,7 +51,7 @@ public class Wave implements Listener {
 			int MobDiffs[] = new int[3];
 			
 			while(MobPool >= 0 & UsedCount < 3) {
-				RandNum = rn.nextInt(7);
+				RandNum = rn.nextInt(7); //#magicNumber -> should be MobVals.size
 				MobDiffs[UsedCount] = MobVals[RandNum];
 				if(MobPool - MobDiffs[UsedCount] >= 0){
 					/* the mob can be added */
@@ -101,8 +102,8 @@ public class Wave implements Listener {
 	 * Sets up a basic wave with no specifications, for construction in a factory method (see {@link #clone})
 	 */
 	private Wave() {
-		Mobs = new ArrayList<Mob>();
-		Entities = new ArrayList<LivingEntity>();
+		Mobs = new LinkedList<Mob>();
+		Entities = new LinkedList<LivingEntity>();
 		started = false;
 		Bukkit.getPluginManager().registerEvents(this, TeamSurvivalPlugin.plugin);
 	}
@@ -147,7 +148,7 @@ public class Wave implements Listener {
 	 */
 	public void start() {
 		started = true;
-		while(started == true && Entities.size() < maxSpawned & Mobs.size() > 0) {
+		while(started == true && Entities.size() < maxSpawned && Mobs.size() > 0) {
 			Random rn = new Random();
 			int RandPoint = rn.nextInt(MobSpawnPoints.size());
 			spawnRandomMob(MobSpawnPoints.get(RandPoint));
@@ -173,6 +174,7 @@ public class Wave implements Listener {
 		try {
 			if(started == true) {
 				if(Entities.contains(event.getEntity())){
+						Entities.remove(event.getEntity());
 						//Remove entity drops so we don't clutter up the battlefield
 						event.getDrops().clear();
 						//Spawn a new mob to replace the one that just died
@@ -185,6 +187,7 @@ public class Wave implements Listener {
 						
 						if(isComplete() == true) {
 							Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+							HandlerList.unregisterAll(this);
 						}
 						
 						//break;
@@ -227,7 +230,11 @@ public class Wave implements Listener {
 
 		NW.maxSpawned = maxSpawned;
 		NW.waveN = this.waveN;
-		NW.Mobs = this.Mobs;
+		for (Mob mob : Mobs) {
+			NW.Mobs.add(mob);
+		}
+		
+		NW.MobSpawnPoints = m;
 		
 		return NW;
 	}

@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import nmt.minecraft.TeamSurvival.TeamLossEvent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -14,7 +12,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+
+import nmt.minecraft.TeamSurvival.TeamLossEvent;
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
 /**
  * A group of players.<br />
@@ -23,7 +26,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
  * @author Skyler
  * @author William
  */
-public class Team {
+public class Team implements Listener {
 	
 	/**
 	 * Collection of the players that are part of this team
@@ -57,6 +60,8 @@ public class Team {
 	public Team(String name, Collection<SurvivalPlayer> players) {
 		this.name = name;
 		this.players = new HashSet<SurvivalPlayer>(players);
+		Bukkit.getPluginManager().registerEvents(this, 
+				TeamSurvivalPlugin.plugin);
 	}
 	
 	public void setArenaLocation(Location arenaLocation) {
@@ -142,6 +147,8 @@ public class Team {
 		for (SurvivalPlayer p : this.players) {
 			p.lose();
 		}
+		
+		HandlerList.unregisterAll(this);
 		//Teleport all players
 		//this.moveTo(lobbyLocation);
 	}
@@ -255,7 +262,7 @@ public class Team {
 				if(this.isTeamDead()) {
 					//Team is dead
 					TeamLossEvent teamEvent = new TeamLossEvent(this);
-					Bukkit.getServer().getPluginManager().callEvent(teamEvent);
+					Bukkit.getPluginManager().callEvent(teamEvent);
 				}
 			}
 		}
