@@ -37,6 +37,11 @@ public class Team {
 	private String name;
 	
 	/**
+	 * the lcoation of the areana that this team belogns to
+	 */
+	private Location arenaLocation;
+	
+	/**
 	 * Main constructor for the Team Class.
 	 * @param name The name for the team.
 	 * @param players A collection of players that are associated with a team.
@@ -45,6 +50,10 @@ public class Team {
 	public Team(String name, Collection<SurvivalPlayer> players) {
 		this.name = name;
 		this.players = new HashSet<SurvivalPlayer>(players);
+	}
+	
+	public void setArenaLocation(Location arenaLocation) {
+		this.arenaLocation = arenaLocation;
 	}
 	
 	
@@ -187,5 +196,9 @@ public class Team {
 		}
 		
 		return this.name.equals(((Team)o).name);
+	}
+	
+	public Location getArenaLocation() {
+		return arenaLocation;
 	}
 }
