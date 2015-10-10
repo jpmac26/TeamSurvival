@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -146,6 +147,8 @@ public class Team implements Listener {
 		for (SurvivalPlayer p : this.players) {
 			p.lose();
 		}
+		
+		HandlerList.unregisterAll(this);
 		//Teleport all players
 		//this.moveTo(lobbyLocation);
 	}
