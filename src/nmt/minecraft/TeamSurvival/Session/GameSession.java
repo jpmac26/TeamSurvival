@@ -378,6 +378,7 @@ public class GameSession implements Listener, Tickable {
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
 			for (Team t : teams) {
+				t.sendTeamMessage("WAVE "+this.waveNumber);
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			break;
