@@ -19,6 +19,8 @@ permissions:
         default: op
     teamsurvival.team.join:
       default: true
+	teamsurvival.team.leave:
+	  default: true
 commands:
     teamsurvival:
         permission: teamsurvival.*
@@ -30,6 +32,11 @@ commands:
         ussage: /jointeam [teamname]
         description: Joins a TeamSurvival team
         aliases: join
+	leaveteam:
+        permission: teamsurvival.team.leave
+        ussage: /leaveteam
+        description: Leaves a TeamSurvival team
+        aliases: leave
     teamsurvivalcreator:
         permission: teamsurvival.creator.*
         usage: /tsc [open|close|setShop|setStartingLocation|addArena|setShopButton|info] {args}
