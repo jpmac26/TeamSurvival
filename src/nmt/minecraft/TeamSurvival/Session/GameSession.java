@@ -469,7 +469,6 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		//TODO Kill the related wave
-		//this will probably not work
 		int index = teams.indexOf(event.getTeam());
 		waves.get(index).stop();
 		waves.remove(index);
@@ -512,7 +511,6 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		this.waveNumber++;
-		//TODO TeamLossEvent
 		fillWaves();
 		
 		//no more waves, but is this the end of our third one?
