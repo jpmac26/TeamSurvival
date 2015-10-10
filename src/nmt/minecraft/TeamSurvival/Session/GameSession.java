@@ -259,6 +259,11 @@ public class GameSession implements Listener, Tickable {
 			return false;
 		}
 		
+		waveNumber = 1;
+		
+		//generate waves
+		fillWaves();
+		
 		//teleport teams
 		moveToStart(4);//TODO only 4 blocks apart for testing
 		
@@ -303,14 +308,7 @@ public class GameSession implements Listener, Tickable {
 		lists.add(team.getArenaLocation());
 		
 		//Add teams
-		if (teams.isEmpty()) {
-			teams.add(team);
-			waves.add(new Wave(1, lists, numberOfMobs()));
-		} else {
-			Wave clone = waves.get(0);
-			teams.add(team);
-			waves.add(clone);
-		}
+		teams.add(team);
 	}
 	
 	/**
@@ -324,11 +322,7 @@ public class GameSession implements Listener, Tickable {
 			return false;
 		}
 		
-		if(!teams.contains(team)){
-			return false;
-		}
-		
-		waves.remove(teams.indexOf(team));
+		map.addArenaLocation(team.getArenaLocation());
 		return teams.remove(team);
 	}
 	
@@ -409,7 +403,7 @@ public class GameSession implements Listener, Tickable {
 	 * @param distanceBetween is the distance to seperate the teams by
 	 */
 	private void moveToStart(int distanceBetween){
-		int side = (int) Math.floor(Math.sqrt(this.teams.size()));
+		int side = (int) Math.floor(Math.sqrt(this.teams.size())) + 1;
 		
 		Location start = map.getStartingLocation().clone();
 		Iterator<Team> iterate = teams.iterator();

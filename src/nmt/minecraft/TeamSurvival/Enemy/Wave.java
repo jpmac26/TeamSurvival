@@ -50,7 +50,7 @@ public class Wave implements Listener {
 			int MobDiffs[] = new int[3];
 			
 			while(MobPool >= 0 & UsedCount < 3) {
-				RandNum = rn.nextInt(7);
+				RandNum = rn.nextInt(7); //#magicNumber -> should be MobVals.size
 				MobDiffs[UsedCount] = MobVals[RandNum];
 				if(MobPool - MobDiffs[UsedCount] >= 0){
 					/* the mob can be added */
