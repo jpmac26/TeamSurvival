@@ -174,6 +174,7 @@ public class Wave implements Listener {
 		try {
 			if(started == true) {
 				if(Entities.contains(event.getEntity())){
+						Entities.remove(event.getEntity());
 						//Remove entity drops so we don't clutter up the battlefield
 						event.getDrops().clear();
 						//Spawn a new mob to replace the one that just died

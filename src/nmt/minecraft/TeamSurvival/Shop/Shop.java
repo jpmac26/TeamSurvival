@@ -63,7 +63,7 @@ public class Shop implements Listener {
 			e.setCancelled(true);
 			
 			//open inventory
-			Inventory inv = Bukkit.createInventory(e.getPlayer(), 45, e.getPlayer().getUniqueId().toString());
+			Inventory inv = Bukkit.createInventory(e.getPlayer(), 45, "TSSHOP-" + e.getPlayer().getName());
 			for (Entry<Integer, ShopItem> entry : items.entrySet()) {
 				inv.setItem(entry.getKey(), entry.getValue().getItem());
 			}

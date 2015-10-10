@@ -468,10 +468,10 @@ public class GameSession implements Listener, Tickable {
 		
 		this.waveNumber++;
 		//TODO TeamLossEvent
-		//TODO generate next waves
+		fillWaves();
 		
 		//no more waves, but is this the end of our third one?
-		if (waveNumber % 3 != 0) {
+		if ((waveNumber-1) % 3 != 0) {
 
 			Scheduler.getScheduler().schedule(this, Reminders.WAVECONTINUE, 10);
 			for (Team t : teams) {
