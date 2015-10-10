@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -35,6 +36,9 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
+	public static final int defaultWaveCount = 12;
+	
+	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
 	public enum State {
 		PREGAME,
@@ -512,8 +516,13 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		this.waveNumber++;
+		
+		if (waveNumber > GameSession.defaultWaveCount) { //TODO make a member that's set in constructor?
+			fillBossWaves();
+		} else {
+			fillWaves();
+		}
 		//TODO TeamLossEvent
-		fillWaves();
 		
 		//no more waves, but is this the end of our third one?
 		if ((waveNumber-1) % 3 != 0) {
@@ -565,6 +574,10 @@ public class GameSession implements Listener, Tickable {
 			locs.add(team.getArenaLocation());
 			waves.add(wave.clone(locs));
 		}
+	}
+	
+	private void fillBossWaves() {
+		
 	}
 	
 	/**

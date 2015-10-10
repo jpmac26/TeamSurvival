@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 
@@ -18,21 +17,21 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  */
 public class BossWave extends Wave {
 
-	private EntityType bossType;
+	private Mob bossMob;
 	
 	private Location spawnLocation;
 	
 	private Entity bossEntity;
 	
-	public BossWave(Location spawnLocation, EntityType bossType) {
+	public BossWave(Location spawnLocation, Mob bossMob) {
 		this.spawnLocation = spawnLocation;
-		this.bossType = bossType;
+		this.bossMob = bossMob;
 	}
 	
 	@Override
 	public void start() {
 		//spawn boss
-		bossEntity = spawnLocation.getWorld().spawnEntity(spawnLocation, bossType);
+		bossEntity = bossMob.SpawnEntity(spawnLocation);
 		
 		Bukkit.getPluginManager().registerEvents(this, 
 				TeamSurvivalPlugin.plugin);
@@ -56,7 +55,7 @@ public class BossWave extends Wave {
 	
 	@Override
 	public BossWave clone(List<Location> locations) {
-		BossWave wave = new BossWave(locations.get(0), bossType);
+		BossWave wave = new BossWave(locations.get(0), bossMob);
 		return wave;
 	}
 	
