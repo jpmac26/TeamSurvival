@@ -4,16 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Util.LocationState;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
-import nmt.minecraft.TeamSurvival.Util.LocationState;
 
 /**
  * This Class represents a single map within Team Survival.<br />

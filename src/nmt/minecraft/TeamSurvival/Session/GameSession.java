@@ -2,6 +2,8 @@ package nmt.minecraft.TeamSurvival.Session;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
@@ -289,10 +291,12 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		team.setArenaLocation(map.getNextArena());
+		List<Location> lists = new LinkedList<Location>();
+		lists.add(team.getArenaLocation());
 		
 		//Add teams
 		if (teams.isEmpty()) {
-			teams.set(team, new Wave(1, team.getArenaLocation(), numberOfMobs()))
+			teams.put(team, new Wave(1, lists, numberOfMobs()));
 		}
 	}
 	
