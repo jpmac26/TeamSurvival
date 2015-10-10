@@ -378,6 +378,7 @@ public class GameSession implements Listener, Tickable {
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
 			for (Team t : teams) {
+				t.sendTeamMessage(ChatFormat.INFO.wrap("WAVE "+this.waveNumber));
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			break;
@@ -464,12 +465,14 @@ public class GameSession implements Listener, Tickable {
 		
 		//TODO Kill the related wave
 		//this will probably not work
-		waves.remove(teams.indexOf(event.getTeam()));
+		int index = teams.indexOf(event.getTeam());
+		waves.get(index).stop();
+		waves.remove(index);
 		
 		teams.remove(event.getTeam());
 		
 		if(teams.size() == 1){
-			teams.get(0).sendTeamMessage("YOU WIN");
+			teams.get(0).win();
 			stop();
 		}
 	}
