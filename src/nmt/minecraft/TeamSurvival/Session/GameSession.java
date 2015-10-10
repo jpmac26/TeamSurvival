@@ -6,8 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
+import nmt.minecraft.TeamSurvival.Enemy.WaveFinishEvent;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 import nmt.minecraft.TeamSurvival.Map.Map;
 import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
@@ -15,13 +23,6 @@ import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Scheduling.Scheduler;
 import nmt.minecraft.TeamSurvival.Scheduling.Tickable;
 import nmt.minecraft.TeamSurvival.Shop.Shop;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 
 /**
  * Holds a single game session.<br />
@@ -350,7 +351,9 @@ public class GameSession implements Listener, Tickable {
 		case PUSHTOARENA:
 			moveToArena(); 
 			//TODO start wave
-			//this.currentWave.start();
+			for (Wave wave : teams.values()) {
+				wave.start();
+			}
 			break;
 		case SHOPOVER:
 			moveToArena();
@@ -407,7 +410,7 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	@EventHandler
-	public void onWaveEnd(){//TODO catch the event from mobs
+	public void onWaveEnd(WaveFinishEvent event){//TODO catch the event from mobs
 		//this.currentWave = null; //TODO
 		//teleport teams to the shop
 		moveToShop();
