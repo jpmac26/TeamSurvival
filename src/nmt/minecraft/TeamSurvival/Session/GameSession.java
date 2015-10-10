@@ -305,12 +305,24 @@ public class GameSession implements Listener, Tickable {
 	public void stop() {
 		HandlerList.unregisterAll(sessionShop);
 		Scheduler.getScheduler().unregister(this);
+		HandlerList.unregisterAll(this);
+		
+		if (!teams.isEmpty()) {
+			for (Team team : teams) {
+				HandlerList.unregisterAll(team);
+			}
+		}
+		
+		teams.clear();
+		
 		sessionShop = null;
 		state = State.FINISHED;
 		
 		for (Wave wave : waves) {
 			wave.stop();
 		}
+		
+		waves.clear();
 	}
 	
 	/**
@@ -424,6 +436,9 @@ public class GameSession implements Listener, Tickable {
 
 	@Override
 	public boolean equals(Object o) {
+		if (!(o instanceof GameSession)) {
+			return false;
+		}
 		return o.toString().equalsIgnoreCase(toString());
 	}
 	
