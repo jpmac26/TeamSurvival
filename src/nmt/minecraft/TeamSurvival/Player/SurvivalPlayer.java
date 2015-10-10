@@ -8,13 +8,16 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 
 /**
  * A wrapper class for someone playing the game.<br />
  * @author Skyler
  * @author William
  */
-public class SurvivalPlayer {
+public class SurvivalPlayer implements Listener {
 	
 	/**
 	 * The UUID of the player we're following
@@ -154,6 +157,15 @@ public class SurvivalPlayer {
 	 */
 	public Player getPlayer() {
 		return Bukkit.getPlayer(this.playerID);
+	}
+	
+	@EventHandler
+	public void onExpPickup(PlayerExpChangeEvent e) {
+		if (e.getPlayer().getUniqueId().equals(playerID)) {
+			int amount = e.getAmount();
+			e.setAmount(0);
+			e.getPlayer().setLevel(e.getPlayer().getLevel() + amount);
+		}
 	}
 	
 	
