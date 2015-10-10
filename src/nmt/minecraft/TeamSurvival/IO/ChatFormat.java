@@ -13,6 +13,8 @@ public enum ChatFormat {
 	WARNING(ChatColor.YELLOW),
 	SESSION(ChatColor.DARK_PURPLE),
 	TEAM(ChatColor.BLUE),
+	SUCCESS(ChatColor.GREEN),
+	INFO(ChatColor.GRAY),
 	IMPORTANT(ChatColor.DARK_GREEN, ChatColor.BOLD);
 	
 	private String format;

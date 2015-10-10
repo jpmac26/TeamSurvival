@@ -29,10 +29,10 @@ public class CreationCommand implements CommandExecutor{
 		if (args[0].equalsIgnoreCase("open")) {
 
 			if(onOpenCommand(sender, args)){
-				sender.sendMessage(ChatFormat.IMPORTANT.wrap("Sucessfully opened session: "+args[1]));
+				sender.sendMessage(ChatFormat.SUCCESS.wrap("Sucessfully opened session: "+args[1]));
 				return true;
 			} else {
-				sender.sendMessage(ChatFormat.IMPORTANT.wrap("unable to open session"));
+				sender.sendMessage(ChatFormat.ERROR.wrap("unable to open session"));
 				return true;
 			}
 			
@@ -40,10 +40,10 @@ public class CreationCommand implements CommandExecutor{
 		
 		if (args[0].equalsIgnoreCase("close")) {
 			if(onCloseCommand(sender, args)){
-				sender.sendMessage(ChatFormat.IMPORTANT.wrap("Sucessfully closed open session."));
+				sender.sendMessage(ChatFormat.SUCCESS.wrap("Sucessfully closed open session."));
 				return true;
 			} else {
-				sender.sendMessage(ChatFormat.IMPORTANT.wrap("unable to close session"));
+				sender.sendMessage(ChatFormat.ERROR.wrap("unable to close session"));
 				return true;
 			}
 		}
@@ -97,8 +97,7 @@ public class CreationCommand implements CommandExecutor{
 	private boolean onOpenCommand(CommandSender sender, String[] args) {
 		// /teamsurvivalcreator open [name]
 		if(args.length != 2){
-			sender.sendMessage(ChatFormat.ERROR.wrap("Wrong number of arguments") +
-					ChatFormat.IMPORTANT.wrap("\n usage: /teamsurvivalcreator open [name]"));
+			sender.sendMessage(ChatFormat.ERROR.wrap("/tsc open [name]"));
 			return false;
 		}
 		
