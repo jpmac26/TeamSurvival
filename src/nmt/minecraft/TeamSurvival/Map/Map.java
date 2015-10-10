@@ -223,4 +223,16 @@ public class Map {
 		
 		return false;
 	}
+	
+	/**
+	 * Checks to see if this map is valid to play on
+	 * @return true if it can be played as is
+	 */
+	public boolean isValid(){
+		if(startingLocation == null || shopLocation == null|| shopButtonLocation ==null || arenaLocations.isEmpty()){
+			return false;
+		}
+		
+		return true;
+	}
 }

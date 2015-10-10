@@ -327,6 +327,11 @@ public class SurvivalCommand implements CommandExecutor {
 			return;
 		}
 		
+		if(!tmpMap.isValid()){
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not load "+tmpMap.getName()+" Map is invalid"));
+			return;
+		}
+		
 		GameSession session = new GameSession(args[2], tmpMap);
 		
 		if(!TeamSurvivalManager.register(session)){
