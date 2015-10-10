@@ -85,12 +85,13 @@ public class TeamSurvivalManager {
 			TeamSurvivalPlugin.plugin.getLogger().warning("ERROR! Session: " + session.getName() + " is not finished! Please wait!");
 			return false;
 		}
-		boolean check = sessions.remove(session);
-		if (check) {
+		
+		if (sessions.remove(session)) {
 			TeamSurvivalPlugin.plugin.getLogger().info("Successfully removed session: " + session.getName());
-		} else {
-			TeamSurvivalPlugin.plugin.getLogger().warning("WARNING! Session: " + session.getName() + " was not added!");
+			return true;
 		}
+		
+		TeamSurvivalPlugin.plugin.getLogger().warning("WARNING! Session: " + session.getName() + " was not added!");
 		return false;
 	}
 	

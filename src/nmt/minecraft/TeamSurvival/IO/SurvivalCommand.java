@@ -82,12 +82,16 @@ public class SurvivalCommand implements CommandExecutor {
 		switch(args[1]) {
 		case "list":
 			onTeamList(sender, args);
+		break;
 		case "create":
 			onTeamCreate(sender, args);
+		break;
 		case "info":
 			onTeamInfo(sender, args);
+		break;
 		case "dispand":
 			onTeamDispand(sender, args);
+		break;
 		}
 	}
 
