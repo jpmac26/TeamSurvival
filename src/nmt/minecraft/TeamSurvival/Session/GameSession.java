@@ -379,7 +379,6 @@ public class GameSession implements Listener, Tickable {
 	
 	private void moveToStart(int distanceBetween){
 		int side = (int) Math.floor(Math.sqrt(this.teams.size()));
-		//TODO figure out some way to not teleport them into the ground
 		
 		Location start = map.getStartingLocation().clone();
 		Iterator<Team> iterate = teams.keySet().iterator();
@@ -387,7 +386,7 @@ public class GameSession implements Listener, Tickable {
 			for(int j=0; j<side; j++){
 				if(iterate.hasNext()){
 					Team tmp = iterate.next();
-					tmp.moveTo(start);
+					tmp.moveTo(start.getWorld().getHighestBlockAt(start).getLocation());
 					TeamSurvivalPlugin.plugin.getLogger().info("Team: "
 							+ tmp.getName()+ "\t starting at:"+start.getBlockX()+", "+start.getBlockY()+", "+ start.getBlockZ());
 				}else{
