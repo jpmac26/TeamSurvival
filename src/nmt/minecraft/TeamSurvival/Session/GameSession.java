@@ -48,7 +48,9 @@ public class GameSession implements Listener, Tickable {
 	 */
 	public static enum Messages {
 		ONEMINUTE(ChatColor.GOLD + "One minute until waves begin!" + ChatColor.RESET),
-		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET);
+		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET),
+		WAVEWARNING(ChatColor.YELLOW + "Wave beginning in 10 seconds!" + ChatColor.RESET),
+		WAVESTART(ChatColor.DARK_RED + "The wave has begun!" + ChatColor.RESET);
 		 
 		private String message;
 		
@@ -80,7 +82,9 @@ public class GameSession implements Listener, Tickable {
 		ONEMINUTE,
 		THIRTYSECONDS,
 		PUSHTOARENA,
-		SHOPOVER;
+		SHOPOVER,
+		STARTWAVE,
+		WAVECONTINUE;
 	}
 	
 	
@@ -357,14 +361,29 @@ public class GameSession implements Listener, Tickable {
 			break;
 		case PUSHTOARENA:
 			moveToArena();
-			for (Wave wave : waves) {
-				wave.start();
+			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
+			for (Team t : teams) {
+				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
-			//TODO START scheduler to start wave instead of at the same time
 			break;
 		case SHOPOVER:
 			moveToArena();
-			//TODO START scheduler to start wave instead of at the same time
+			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
+			for (Team t : teams) {
+				t.sendTeamMessage(Messages.WAVEWARNING.toString());
+			}
+			break;
+		case STARTWAVE:
+			startNextWave(true);
+			for (Team t : teams) {
+				t.sendTeamMessage(Messages.WAVESTART.toString());
+			}
+			break;
+		case WAVECONTINUE:
+			startNextWave(false);
+			for (Team t : teams) {
+				t.sendTeamMessage(Messages.WAVESTART.toString());
+			}			
 			break;
 		}
 	}
@@ -433,7 +452,11 @@ public class GameSession implements Listener, Tickable {
 		
 		//no more waves, but is this the end of our third one?
 		if (waveNumber % 3 != 0) {
-			startNextWave(false);
+
+			Scheduler.getScheduler().schedule(this, Reminders.WAVECONTINUE, 10);
+			for (Team t : teams) {
+				t.sendTeamMessage(Messages.WAVEWARNING.toString());
+			}
 		}
 		
 		
