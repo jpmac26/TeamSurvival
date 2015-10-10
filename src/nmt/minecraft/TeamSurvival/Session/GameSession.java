@@ -380,9 +380,8 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	private void moveToArena() {
-		Iterator<Location> arenaIt = map.getArenaLocations().iterator();
 		for (Team team : teams) {
-			team.moveTo(arenaIt.next());
+			team.moveTo(team.getArenaLocation());
 		}
 	}
 	
@@ -424,18 +423,17 @@ public class GameSession implements Listener, Tickable {
 		
 		waves.remove(event.getWave());
 		
-		this.waveNumber++;
-		
-		//TODO generate next waves
-		
 		if (!waves.isEmpty()) {
 			return;
 		}
 		
+		this.waveNumber++;
+		
+		//TODO generate next waves
+		
 		//no more waves, but is this the end of our third one?
 		if (waveNumber % 3 != 0) {
-			//not yet, do next wave
-			//TODO
+			startNextWave(false);
 		}
 		
 		
@@ -449,6 +447,16 @@ public class GameSession implements Listener, Tickable {
 		
 		//this.currentWave = new Wave(waveNumber, map.getArenaLocations(), numberOfMobs(waveNumber));
 		
+	}
+	
+	/**
+	 * Starts the next wave, assuming it's set up already.
+	 * @param fresh whether or not the players are returning to the arena.
+	 */
+	private void startNextWave(boolean fresh) {
+		for (Wave wave : waves) {
+			wave.start();
+		}
 	}
 	
 	/**
