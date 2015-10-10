@@ -185,6 +185,7 @@ public class Wave implements Listener {
 						
 						if(isComplete() == true) {
 							Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
+							HandlerList.unregisterAll(this);
 						}
 						
 						//break;
