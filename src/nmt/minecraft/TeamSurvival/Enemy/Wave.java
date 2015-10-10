@@ -7,6 +7,9 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
@@ -17,15 +20,15 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  * @author Franz Chavez
  * @author James Pelster
  */
-public class Wave {
-	public String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
-	public int MobVals[] = {0,4,3,2,7,7,8,6};
-	public List<Mob> Mobs;
-	public List<LivingEntity> Entities;
-	public int maxSpawned, waveN;
-	public boolean forceStop = false;
-	public boolean started = false;
-	public List<Location> MobSpawnPoints = new ArrayList<Location>();
+public class Wave implements Listener {
+	private String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
+	private int MobVals[] = {0,4,3,2,7,7,8,6};
+	private List<Mob> Mobs;
+	private List<LivingEntity> Entities;
+	private int maxSpawned, waveN;
+	private boolean forceStop;
+	private boolean started;
+	private List<Location> MobSpawnPoints = new ArrayList<Location>();
 	
 	/**
 	 * Creates a wave with the given types of mobs.
@@ -35,10 +38,9 @@ public class Wave {
 	 * @note See wave implementation in google doc file
 	 */
 	public Wave(int WaveNumber, List<Location> spawnPoints, int TotalMobCount) {
+		this();
 		try {
-			Mobs = new ArrayList<Mob>();
-			Entities = new ArrayList<LivingEntity>();
-			maxSpawned = 40;
+			maxSpawned = 40; //#magicNumber
 			waveN = WaveNumber;
 			MobSpawnPoints = spawnPoints;
 			Random rn = new Random();
@@ -74,8 +76,7 @@ public class Wave {
 	 * @note See wave implementation in google doc file
 	 */
 	public Wave(int WaveNumber, List<Location> spawnPoints, int TotalMobCount, int MaxToSpawn) {
-		Mobs = new ArrayList<Mob>();
-		Entities = new ArrayList<LivingEntity>();
+		this();
 		maxSpawned = MaxToSpawn;
 		MobSpawnPoints = spawnPoints;
 		Random rn = new Random();
@@ -95,6 +96,17 @@ public class Wave {
 			}
 		}
 		SetupMobs(MobsUsed, TotalMobCount, MobDiffs, WaveNumber);
+	}
+	
+	/**
+	 * Sets up a basic wave with no specifications, for construction in a factory method (see {@link #clone})
+	 */
+	private Wave() {
+		Mobs = new ArrayList<Mob>();
+		Entities = new ArrayList<LivingEntity>();
+		forceStop = false;
+		started = false;
+		Bukkit.getPluginManager().registerEvents(this, TeamSurvivalPlugin.plugin);
 	}
 	
 	/**
@@ -152,12 +164,14 @@ public class Wave {
 		forceStop = true;
 		started = false;
 		clearWave();
+		HandlerList.unregisterAll(this);;
 	}
 	
 	/**
 	 * Tells the wave to check  if it needs to spawn more mobs.<br />
 	 * It will also check if the wave is complete or has been force-stopped.
 	 */
+	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		try {
 			if(started == true && forceStop == false && isComplete() == false) {
@@ -217,7 +231,10 @@ public class Wave {
 	 * @param needs the list of the locations of the new 
 	 */
 	public Wave clone(List<Location> m){
-		Wave NW = new Wave (this.waveN, m, this.Mobs.size() ,this.maxSpawned);
+		Wave NW = new Wave();
+
+		NW.maxSpawned = maxSpawned;
+		NW.waveN = this.waveN;
 		NW.Mobs = this.Mobs;
 		
 		return NW;
