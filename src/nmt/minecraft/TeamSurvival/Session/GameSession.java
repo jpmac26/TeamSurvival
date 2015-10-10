@@ -231,7 +231,7 @@ public class GameSession implements Listener, Tickable {
 	/**
 	 * Starts the game, dealing with the teams and scores, etc
 	 */
-	public void start() {
+	public boolean start() {
 		/*
 		 * Teleport teams to their positions
 		 * create waves for each player
@@ -240,12 +240,13 @@ public class GameSession implements Listener, Tickable {
 		if (teams.size() == 0) {
 			TeamSurvivalPlugin.plugin.getLogger().warning(
 					ChatFormat.ERROR.wrap("Unable to start session, as there are no teams!"));
-			return;
+			return false;
 		}
 		
 		if (state != State.PREGAME) {
 			TeamSurvivalPlugin.plugin.getLogger().warning(
 					ChatFormat.ERROR.wrap("Unable to start session, as it's already been started!"));
+			return false;
 		}
 		
 		//teleport teams
@@ -256,7 +257,7 @@ public class GameSession implements Listener, Tickable {
 		//generate waves
 		
 		state = State.STARTINGPERIOD;
-		
+		return true;
 	}
 	
 	/**

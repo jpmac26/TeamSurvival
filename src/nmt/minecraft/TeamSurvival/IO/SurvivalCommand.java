@@ -214,7 +214,7 @@ public class SurvivalCommand implements CommandExecutor {
 		Collection<Team> teams = session.getTeams();
 		
 		if (teams.isEmpty()) {
-			sender.sendMessage(ChatFormat.IMPORTANT.wrap("There are no sessions"));
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("There are no teams"));
 			return;
 		}
 		
@@ -360,7 +360,11 @@ public class SurvivalCommand implements CommandExecutor {
 		}
 		
 		sender.sendMessage(ChatFormat.SESSION.wrap("Starting session..."));
-		session.start();
+		if(session.start()){
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Session Started."));
+		}else{
+			sender.sendMessage(ChatFormat.ERROR.wrap("Could not open session."));
+		}
 		
 		return true;
 	}

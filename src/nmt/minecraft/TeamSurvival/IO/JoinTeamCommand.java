@@ -29,7 +29,7 @@ public class JoinTeamCommand implements CommandExecutor{
 			return true; //The command was usedp roperly, but by wrong people! We don't want to print usage!
 		} else if(args.length != 2 ){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments."));
-			//sender.sendMessage(ChatFormat.IMPORTANT.wrap("usage: /jointeam [session] [team]"));
+			sender.sendMessage(ChatFormat.IMPORTANT.wrap("usage: /jointeam [session] [team]"));
 			return false; //returning false already prints out usage from the plugin.yml -sm
 		} else if(onTeam((OfflinePlayer)sender)) {
 			//make sure the player is not already on a team
