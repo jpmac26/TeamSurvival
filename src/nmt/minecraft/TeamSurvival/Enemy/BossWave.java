@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
@@ -17,11 +18,12 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  */
 public class BossWave extends Wave {
 
+	/*GROSS static defaults!*/
+	private static final int bossCount = 5;
+	
 	private Mob bossMob;
 	
 	private Location spawnLocation;
-	
-	private Entity bossEntity;
 	
 	public BossWave(Location spawnLocation, Mob bossMob) {
 		this.spawnLocation = spawnLocation;
@@ -30,8 +32,10 @@ public class BossWave extends Wave {
 	
 	@Override
 	public void start() {
-		//spawn boss
-		bossEntity = bossMob.SpawnEntity(spawnLocation);
+		//spawn bosses
+		for (int i = 1; i < BossWave.bossCount; i++) {
+			Entities.add(bossMob.SpawnEntity(spawnLocation));
+		}
 		
 		Bukkit.getPluginManager().registerEvents(this, 
 				TeamSurvivalPlugin.plugin);
@@ -39,17 +43,24 @@ public class BossWave extends Wave {
 	
 	@Override
 	public void stop() {
-		if (bossEntity != null && !bossEntity.isDead()) {
-			bossEntity.remove();
+		if (!Entities.isEmpty())
+		for (Entity e : Entities){
+			e.remove();
 		}
+		
+		HandlerList.unregisterAll(this);
 	}
 	
 	@EventHandler
 	@Override
 	public void onEntityDeath(EntityDeathEvent e) {
-		if (e.getEntity().equals(bossEntity)) {
+		if (Entities.contains(e.getEntity())) {
+			Entities.remove(e.getEntity());
+		}
+		
+		if (Entities.isEmpty()) {
+			stop();
 			Bukkit.getPluginManager().callEvent(new WaveFinishEvent(this));
-			return;
 		}
 	}
 	
@@ -61,10 +72,7 @@ public class BossWave extends Wave {
 	
 	@Override
 	public boolean isComplete() {
-		return (bossEntity != null && bossEntity.isDead());
-		//is null? - > false
-		//is not null, but isn't dead? -> false
-		//isn't null, and is dead? -> true
+		return (Entities.isEmpty());
 	}
 
 }

@@ -505,8 +505,26 @@ public class GameSession implements Listener, Tickable {
 	 */
 	@EventHandler
 	public void onWaveEnd(WaveFinishEvent event){
-		//this.currentWave = null; //TODO
+		
 		if (!waves.contains(event.getWave())) {
+			return;
+		}
+
+		
+		if (event.getWave() instanceof BossWave) {
+			//a team just finished the boss wave!
+			int index = waves.indexOf(event.getWave());
+			
+			Team team = teams.get(index);
+			
+			for (Team t : teams) {
+				if (!t.equals(team)) {
+					t.lose();
+				}
+			}
+			
+			team.win();
+			stop();
 			return;
 		}
 		

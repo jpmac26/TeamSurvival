@@ -25,7 +25,7 @@ public class Wave implements Listener {
 	private String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
 	private int MobVals[] = {0,4,3,2,7,7,8,6};
 	private List<Mob> Mobs;
-	private List<LivingEntity> Entities;
+	protected List<LivingEntity> Entities;
 	private int maxSpawned, waveN;
 	private boolean started;
 	private List<Location> MobSpawnPoints = new ArrayList<Location>();
