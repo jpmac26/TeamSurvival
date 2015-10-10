@@ -65,7 +65,7 @@ public class Shop implements Listener {
 			//open inventory
 			Inventory inv = Bukkit.createInventory(e.getPlayer(), 45, "TSSHOP-" + e.getPlayer().getName());
 			for (Entry<Integer, ShopItem> entry : items.entrySet()) {
-				inv.setItem(entry.getKey(), entry.getValue().getItem());
+				inv.setItem(entry.getKey(), entry.getValue().getFancyItem());
 			}
 			
 			e.getPlayer().openInventory(inv);
