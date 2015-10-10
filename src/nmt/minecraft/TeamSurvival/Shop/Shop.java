@@ -40,10 +40,10 @@ public class Shop implements Listener {
 		this.buttonLocation = buttonLocation.getBlock().getLocation();
 		
 		if (items == null) {
-			items = new HashMap<Integer, ShopItem>();
+			this.items = new HashMap<Integer, ShopItem>();
 			int index = 0;
 			for (ShopDefaults def : ShopDefaults.values()) {
-				items.put(index, def.getShopItem());
+				this.items.put(index, def.getShopItem());
 				index ++;
 			}
 		} else {

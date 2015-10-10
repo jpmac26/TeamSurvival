@@ -13,7 +13,7 @@ public final class Scheduler {
 	
 	private static Scheduler scheduler;
 	
-	private Map<Tickable, Object> map;
+	private Map<Tickable, Reminder> map;
 	
 	private class Reminder extends BukkitRunnable {
 		
@@ -54,7 +54,7 @@ public final class Scheduler {
 	}
 	
 	private Scheduler() {
-		map = new HashMap<Tickable, Object>();
+		map = new HashMap<Tickable, Reminder>();
 	}
 	
 	/**
@@ -95,6 +95,20 @@ public final class Scheduler {
 		return exists;
 		
 		
+	}
+	
+	/**
+	 * Attempts to unregister the tickable instance.
+	 * @param tickable
+	 * @return Whether or not this was successful, including whther there was something waiting
+	 */
+	public boolean unregister(Tickable tickable) {
+		if (map.containsKey(tickable)) {
+			map.get(tickable).cancel();
+			return map.remove(tickable) != null;
+		}
+		
+		return false;
 	}
 	
 	
