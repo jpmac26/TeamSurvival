@@ -101,7 +101,7 @@ public class Wave implements Listener {
 	/**
 	 * Sets up a basic wave with no specifications, for construction in a factory method (see {@link #clone})
 	 */
-	private Wave() {
+	protected Wave() {
 		Mobs = new LinkedList<Mob>();
 		Entities = new LinkedList<LivingEntity>();
 		started = false;
