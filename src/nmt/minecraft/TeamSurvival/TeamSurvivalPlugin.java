@@ -1,10 +1,8 @@
 package nmt.minecraft.TeamSurvival;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.IO.CreationCommand;
 import nmt.minecraft.TeamSurvival.IO.CreationTabCompleter;
 import nmt.minecraft.TeamSurvival.IO.JoinTeamCommand;
@@ -14,12 +12,6 @@ import nmt.minecraft.TeamSurvival.IO.SurvivalTabCompleter;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 import nmt.minecraft.TeamSurvival.Util.LocationState;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.java.JavaPlugin;
-
 /**
  * Plugin class.<br />
  * Creates everything and all things and everything.
@@ -27,10 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Stephanie
  *
  */
-public class TeamSurvivalPlugin extends JavaPlugin implements Listener {
+public class TeamSurvivalPlugin extends JavaPlugin {
 	
 	public static JavaPlugin plugin;
-	private List<Wave> Waves = new ArrayList<Wave>();
 	
 	@Override
 	public void onEnable() {
@@ -64,12 +55,5 @@ public class TeamSurvivalPlugin extends JavaPlugin implements Listener {
 	@Override
 	public void onLoad() {
 		TeamSurvivalPlugin.plugin = this;
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	private void triggerWaveNewSpawnCheck(EntityDeathEvent event) {
-		for(Wave foundWave : Waves) {
-			foundWave.onEntityDeath(event);
-		}	
 	}
 }

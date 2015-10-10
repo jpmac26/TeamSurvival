@@ -297,6 +297,9 @@ public class GameSession implements Listener, Tickable {
 		//Add teams
 		if (teams.isEmpty()) {
 			teams.put(team, new Wave(1, lists, numberOfMobs()));
+		} else {
+			Wave clone = teams.get(teams.keySet().toArray()[0]).clone(lists);
+			teams.put(team, clone);
 		}
 	}
 	
