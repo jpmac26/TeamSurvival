@@ -291,6 +291,7 @@ public class GameSession implements Listener, Tickable {
 	 */
 	public void stop() {
 		HandlerList.unregisterAll(sessionShop);
+		Scheduler.getScheduler().unregister(this);
 		sessionShop = null;
 		state = State.FINISHED;
 		
