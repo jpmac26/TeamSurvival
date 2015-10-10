@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import nmt.minecraft.TeamSurvival.TeamLossEvent;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.Enemy.WaveFinishEvent;
@@ -448,6 +449,25 @@ public class GameSession implements Listener, Tickable {
 			t.moveTo(map.getShopLocation());
 		}
 	}
+	
+	@EventHandler
+	public void onTeamLose(TeamLossEvent event){
+		if(!teams.contains(event.getTeam())){
+			return;
+		}
+		
+		//TODO Kill the related wave
+		//this will probably not work
+		waves.remove(teams.indexOf(event.getTeam()));
+		
+		teams.remove(event.getTeam());
+		
+		if(teams.size() == 1){
+			teams.get(0).sendTeamMessage("YOU WIN");
+			stop();
+		}
+	}
+	
 	
 	
 	
