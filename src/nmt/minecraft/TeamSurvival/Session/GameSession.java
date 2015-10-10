@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -86,7 +85,10 @@ public class GameSession implements Listener, Tickable {
 	
 	
 	
-	private TreeMap<Team, Wave> teams;
+	//private TreeMap<Team, Wave> teams;
+	private List<Team> teams;
+	
+	private List<Wave> waves;
 	
 	private State state;
 	
@@ -111,7 +113,8 @@ public class GameSession implements Listener, Tickable {
 		this.name = name;
 		this.map = map;
 		this.state = State.PREGAME;
-		this.teams = new TreeMap<Team, Wave>();
+		this.teams = new LinkedList<Team>();
+		this.waves = new LinkedList<Wave>();
 		System.out.println("Shop Location: " + map.getShopButtonLocation());
 		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
@@ -137,7 +140,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t : teams.keySet()){
+		for(Team t : teams){
 			if(t.getName().equals(name)){
 				return t;
 			}
@@ -155,7 +158,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t : teams.keySet()){
+		for(Team t : teams){
 			if(t.hasPlayer(player)){
 				return t;
 			}
@@ -174,7 +177,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t: teams.keySet()){
+		for(Team t: teams){
 			if(t.hasPlayer(player) != null){
 				return t;
 			}
@@ -192,7 +195,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t : teams.keySet()){
+		for(Team t : teams){
 			SurvivalPlayer tmp=t.hasPlayer(player);
 			if(tmp != null){
 				return tmp;
@@ -224,7 +227,7 @@ public class GameSession implements Listener, Tickable {
 		if(verbose){
 			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
 			str += "\n";
-			for(Team t : teams.keySet()){
+			for(Team t : teams){
 				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
 			}
 		}
@@ -272,7 +275,7 @@ public class GameSession implements Listener, Tickable {
 		sessionShop = null;
 		state = State.FINISHED;
 		
-		for (Wave wave : teams.values()) {
+		for (Wave wave : waves) {
 			wave.stop();
 		}
 	}
@@ -282,7 +285,7 @@ public class GameSession implements Listener, Tickable {
 	 * @param team
 	 */
 	public void addTeam(Team team) {
-		if (teams.keySet().contains(team)) {
+		if (teams.contains(team)) {
 			return;
 		}
 		
@@ -297,10 +300,12 @@ public class GameSession implements Listener, Tickable {
 		
 		//Add teams
 		if (teams.isEmpty()) {
-			teams.put(team, new Wave(1, lists, numberOfMobs()));
+			teams.add(team);
+			waves.add(new Wave(1, lists, numberOfMobs()));
 		} else {
-			Wave clone = teams.get(teams.keySet().toArray()[0]).clone(lists);
-			teams.put(team, clone);
+			Wave clone = waves.get(0);
+			teams.add(team);
+			waves.add(clone);
 		}
 	}
 	
@@ -310,20 +315,22 @@ public class GameSession implements Listener, Tickable {
 	 * @return true if the team was successfully removed
 	 */
 	public boolean removeTeam(Team team){
-		if(!teams.keySet().contains(team)){
+		if (state != State.PREGAME && state != State.FINISHED) {
+			System.out.println("Cannot remove team while the session is not PREGAME or FINISHED");
 			return false;
 		}
 		
-		if (this.teams.remove(team) == null) {
+		if(!teams.contains(team)){
 			return false;
-		} else {
-			return true;
 		}
+		
+		waves.remove(teams.indexOf(team));
+		return teams.remove(team);
 	}
 	
 	
 	public Collection<Team> getTeams(){
-		return teams.keySet();
+		return teams;
 	}
 	
 	@Override
@@ -337,26 +344,27 @@ public class GameSession implements Listener, Tickable {
 		
 		switch (reminder) {
 		case ONEMINUTE:
-			for (Team team : teams.keySet()) {
+			for (Team team : teams) {
 				team.sendTeamMessage(Messages.ONEMINUTE.toString());
 			}
 			Scheduler.getScheduler().schedule(this, Reminders.THIRTYSECONDS, 30);
 			break;
 		case THIRTYSECONDS:
-			for (Team team : teams.keySet()) {
+			for (Team team : teams) {
 				team.sendTeamMessage(Messages.THIRTYSECONDS.toString());
 			}
 			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
 			break;
 		case PUSHTOARENA:
-			moveToArena(); 
-			//TODO start wave
-			for (Wave wave : teams.values()) {
+			moveToArena();
+			for (Wave wave : waves) {
 				wave.start();
 			}
+			//TODO START scheduler to start wave instead of at the same time
 			break;
 		case SHOPOVER:
 			moveToArena();
+			//TODO START scheduler to start wave instead of at the same time
 			break;
 		}
 	}
@@ -373,10 +381,9 @@ public class GameSession implements Listener, Tickable {
 	
 	private void moveToArena() {
 		Iterator<Location> arenaIt = map.getArenaLocations().iterator();
-		for (Team team : teams.keySet()) {
+		for (Team team : teams) {
 			team.moveTo(arenaIt.next());
 		}
-		
 	}
 	
 	
@@ -385,7 +392,7 @@ public class GameSession implements Listener, Tickable {
 		//TODO figure out some way to not teleport them into the ground
 		
 		Location start = map.getStartingLocation().clone();
-		Iterator<Team> iterate = teams.keySet().iterator();
+		Iterator<Team> iterate = teams.iterator();
 		for(int i =0; i<side; i++){
 			for(int j=0; j<side; j++){
 				if(iterate.hasNext()){
@@ -404,21 +411,43 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	private void moveToShop(){
-		for(Team t : teams.keySet()){
+		for(Team t : teams){
 			t.moveTo(map.getShopLocation());
 		}
 	}
 	
 	@EventHandler
-	public void onWaveEnd(WaveFinishEvent event){//TODO catch the event from mobs
+	public void onWaveEnd(WaveFinishEvent event){
 		//this.currentWave = null; //TODO
+		if (!waves.contains(event.getWave())) {
+			return;
+		}
+		
+		waves.remove(event.getWave());
+		
+		this.waveNumber++;
+		
+		//TODO generate next waves
+		
+		if (!waves.isEmpty()) {
+			return;
+		}
+		
+		//no more waves, but is this the end of our third one?
+		if (waveNumber % 3 != 0) {
+			//not yet, do next wave
+			//TODO
+		}
+		
+		
 		//teleport teams to the shop
 		moveToShop();
 		
+		
+		
 		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 60);//2 min for each shop period
 		
-		//TODO calculate the next wave
-		this.waveNumber++;
+		
 		//this.currentWave = new Wave(waveNumber, map.getArenaLocations(), numberOfMobs(waveNumber));
 		
 	}
@@ -431,7 +460,7 @@ public class GameSession implements Listener, Tickable {
 	private int numberOfMobs(){
 		//avg the number of players still in
 		int sum =0;
-		for(Team t : teams.keySet()){
+		for(Team t : teams){
 			sum += t.getPlayerList().size();
 		}
 		
