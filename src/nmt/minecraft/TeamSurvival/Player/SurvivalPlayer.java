@@ -3,6 +3,7 @@ package nmt.minecraft.TeamSurvival.Player;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -61,6 +62,7 @@ public class SurvivalPlayer {
 		//Only teleport the player if they are actively in the game.
 		if (p != null) {
 			p.teleport(this.preGameLocation);
+			p.setGameMode(GameMode.SURVIVAL);
 		}
 	}
 	

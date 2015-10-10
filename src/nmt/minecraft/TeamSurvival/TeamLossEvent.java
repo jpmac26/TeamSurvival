@@ -13,8 +13,15 @@ import org.bukkit.event.HandlerList;
  */
 public class TeamLossEvent extends Event {
 	
+	/**
+	 * This variable contains a reference to the losing team.
+	 */
 	private Team losingTeam;
 	
+	/**
+	 * The constructor for this event requires the reference to the team that lost.
+	 * @param losingTeam
+	 */
 	public TeamLossEvent(Team losingTeam) {
 		this.losingTeam = losingTeam;
 	}

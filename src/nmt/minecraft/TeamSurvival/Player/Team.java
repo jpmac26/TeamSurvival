@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -251,6 +250,7 @@ public class Team {
 				//Damage is lethal, prevent them from dying
 				e.setCancelled(true);
 				victim.setGameMode(GameMode.SPECTATOR);
+				
 				//Check to see if the team is dead
 				if(this.isTeamDead()) {
 					//Team is dead
