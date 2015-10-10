@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -28,8 +27,8 @@ public class Map {
 	private Location startingLocation;
 	private Location shopLocation; //This is the Location of the Shop within Team Survival
 	private Location shopButtonLocation; //Location of the Shop Button
-	private Collection<Location> arenaLocations;//This collection contains all the initial spawn locations for the Map.
-	
+	private List<Location> arenaLocations;//This collection contains all the initial spawn locations for the Map.
+
 	protected Map(String name) {
 		super();
 		this.name=name;
@@ -108,6 +107,19 @@ public class Map {
 	public int getMaxTeams(){
 		return this.arenaLocations.size();
 	}
+	
+	public Location getNextArena(){
+		if(this.arenaLocations.isEmpty()){
+			return null;
+		}
+		
+		return this.arenaLocations.remove(0);
+	}
+	
+	public void addArenaTo(Location arena){
+		this.arenaLocations.add(arena);
+	}
+	
 	/**
 	 * This static method prints out all the yml configuration files<br />
 	 * that could possibly be loaded into a map.
