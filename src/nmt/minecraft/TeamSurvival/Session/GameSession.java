@@ -515,6 +515,8 @@ public class GameSession implements Listener, Tickable {
 			//a team just finished the boss wave!
 			int index = waves.indexOf(event.getWave());
 			
+			waves.remove(event.getWave());
+			
 			Team team = teams.get(index);
 			
 			for (Team t : teams) {

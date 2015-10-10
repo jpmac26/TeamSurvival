@@ -43,7 +43,10 @@ public class BossWave extends Wave {
 	
 	@Override
 	public void stop() {
-		if (!Entities.isEmpty())
+		if (Entities.isEmpty()) {
+			return;
+		}
+		
 		for (Entity e : Entities){
 			e.remove();
 		}
