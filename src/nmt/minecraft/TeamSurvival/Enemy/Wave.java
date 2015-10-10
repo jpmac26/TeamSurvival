@@ -23,7 +23,6 @@ public class Wave {
 	public List<Mob> Mobs;
 	public List<LivingEntity> Entities;
 	public int maxSpawned, waveN;
-	public boolean forceStop = false;
 	public boolean started = false;
 	public List<Location> MobSpawnPoints = new ArrayList<Location>();
 	
@@ -137,7 +136,7 @@ public class Wave {
 	 */
 	public void start() {
 		started = true;
-		while(started == true && forceStop == false && Entities.size() < maxSpawned & Mobs.size() > 0) {
+		while(started == true && Entities.size() < maxSpawned & Mobs.size() > 0) {
 			Random rn = new Random();
 			int RandPoint = rn.nextInt(MobSpawnPoints.size());
 			spawnRandomMob(MobSpawnPoints.get(RandPoint));
@@ -149,7 +148,6 @@ public class Wave {
 	 * Entities should be cleared, and the wave should handle de-registration.
 	 */
 	public void stop() {
-		forceStop = true;
 		started = false;
 		clearWave();
 	}
@@ -160,7 +158,7 @@ public class Wave {
 	 */
 	public void onEntityDeath(EntityDeathEvent event) {
 		try {
-			if(started == true && forceStop == false && isComplete() == false) {
+			if(started == true) {
 				if(Entities.contains(event.getEntity())){
 						//Remove entity drops so we don't clutter up the battlefield
 						event.getDrops().clear();
@@ -170,11 +168,6 @@ public class Wave {
 							Random rn = new Random();
 							int RandPoint = rn.nextInt(MobSpawnPoints.size());
 							spawnRandomMob(MobSpawnPoints.get(RandPoint));
-						}
-						
-						//In case the stop() method doesn't quite clear the wave, we will do it here too
-						if(forceStop == true) {
-							clearWave();
 						}
 						
 						if(isComplete() == true) {
