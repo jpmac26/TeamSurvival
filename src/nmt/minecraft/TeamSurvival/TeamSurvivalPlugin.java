@@ -7,6 +7,7 @@ import nmt.minecraft.TeamSurvival.IO.CreationCommand;
 import nmt.minecraft.TeamSurvival.IO.CreationTabCompleter;
 import nmt.minecraft.TeamSurvival.IO.JoinTeamCommand;
 import nmt.minecraft.TeamSurvival.IO.JoinTeamTabCompleter;
+import nmt.minecraft.TeamSurvival.IO.LeaveTeamCommand;
 import nmt.minecraft.TeamSurvival.IO.SurvivalCommand;
 import nmt.minecraft.TeamSurvival.IO.SurvivalTabCompleter;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
@@ -25,6 +26,7 @@ public class TeamSurvivalPlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		this.getCommand("leaveteam").setExecutor(new LeaveTeamCommand());
 		this.getCommand("jointeam").setExecutor(new JoinTeamCommand());
 		this.getCommand("jointeam").setTabCompleter(new JoinTeamTabCompleter());
 		this.getCommand("teamsurvival").setExecutor(new SurvivalCommand());

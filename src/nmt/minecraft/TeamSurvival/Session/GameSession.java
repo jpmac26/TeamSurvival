@@ -473,7 +473,6 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		//TODO Kill the related wave
-		//this will probably not work
 		int index = teams.indexOf(event.getTeam());
 		waves.get(index).stop();
 		waves.remove(index);
