@@ -252,11 +252,6 @@ public class GameSession implements Listener, Tickable {
 		 * create waves for each player
 		 * start the wave
 		 */
-		if (teams.size() == 0) {
-			TeamSurvivalPlugin.plugin.getLogger().warning(
-					ChatFormat.ERROR.wrap("Unable to start session, as there are no teams!"));
-			return false;
-		}
 		
 		if (state != State.PREGAME) {
 			TeamSurvivalPlugin.plugin.getLogger().warning(
@@ -264,10 +259,20 @@ public class GameSession implements Listener, Tickable {
 			return false;
 		}
 		
+		purgeTeams();
+		
+		if (teams.size() == 0) {
+			TeamSurvivalPlugin.plugin.getLogger().warning(
+					ChatFormat.ERROR.wrap("Unable to start session, as there are no teams!"));
+			return false;
+		}
+		
 		Bukkit.getPluginManager().registerEvents(this, 
 				TeamSurvivalPlugin.plugin);
 		
 		waveNumber = 1;
+		
+		//check for empty teams
 		
 		//generate waves
 		fillWaves();
@@ -477,8 +482,17 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
-	
-	
+	/**
+	 * Eliminates empty teams from the team list
+	 */
+	private void purgeTeams() {
+		Iterator<Team> it = teams.iterator();
+		while (it.hasNext()) {
+			if (it.next().getPlayerList().isEmpty()) {
+				it.remove();
+			}
+		}
+	}	
 	
 	/**
 	 * Handles what happens at the end of a wave
