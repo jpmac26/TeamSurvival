@@ -395,7 +395,8 @@ public class GameSession implements Listener, Tickable {
 				}
 				start.add(distanceBetween, 0, 0);
 			}
-			start.add(distanceBetween, 0, 0);
+			start.setX(map.getStartingLocation().getX());
+			start.add(0, 0, distanceBetween);
 		}
 	}
 	
