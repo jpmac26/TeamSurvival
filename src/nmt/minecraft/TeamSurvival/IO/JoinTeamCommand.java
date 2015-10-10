@@ -26,34 +26,34 @@ public class JoinTeamCommand implements CommandExecutor{
 	private boolean onJoinCommand(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player) || !(sender instanceof OfflinePlayer)) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Only players can use this command!"));
-			return false;
-		}else if(args.length != 2){
+			return true; //The command was usedp roperly, but by wrong people! We don't want to print usage!
+		} else if(args.length != 2 ){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments."));
-			sender.sendMessage(ChatFormat.IMPORTANT.wrap("usage: /jointeam [session] [team]"));
-			return false;
-		}else if(onTeam((OfflinePlayer)sender)){
+			//sender.sendMessage(ChatFormat.IMPORTANT.wrap("usage: /jointeam [session] [team]"));
+			return false; //returning false already prints out usage from the plugin.yml -sm
+		} else if(onTeam((OfflinePlayer)sender)) {
 			//make sure the player is not already on a team
 			sender.sendMessage(ChatFormat.ERROR.wrap("You are already registered to a team!"));
-			return false;
+			return true; //properly got the command, just some other error. Return true.
 		}
 		
 		//find the team they want to join
 		GameSession session = TeamSurvivalManager.getSession(args[0]);
-		if(session == null){
+		if(session == null) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate session "+args[0]));
-			return false;
+			return true;
 		}
 		Team team = session.getTeam(args[1]);
-		if(team == null){
+		if(team == null) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate team "+args[1]+" in session "+args[0]));
-			return false;
+			return true;
 		}
 		
 		//add them to the team
 		SurvivalPlayer player = new SurvivalPlayer((OfflinePlayer)sender);
-		if(!team.addPlayer(player)){
+		if(!team.addPlayer(player)) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not add you to the team"));
-			return false;
+			return true;
 		}
 		
 		sender.sendMessage(ChatFormat.TEAM.wrap("You have been added to "+team.getName()));

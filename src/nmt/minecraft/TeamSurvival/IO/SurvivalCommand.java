@@ -41,14 +41,15 @@ public class SurvivalCommand implements CommandExecutor {
 		
 		if (args[0].equalsIgnoreCase("session")) {
 			onSessionCommand(sender, args);
-			
+			return true;
 		}
 		
 		if (args[0].equalsIgnoreCase("team")) {
 			onTeamCommand(sender, args);
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	protected static List<String> getTeamsurvivalcommandlist() {
@@ -67,58 +68,57 @@ public class SurvivalCommand implements CommandExecutor {
 	 * Handles the admin 'team' command
 	 * @param sender
 	 * @param args
-	 * @return 
 	 * TODO: don't let them create a session using the same map as another session
 	 * 
 	 */
-	private boolean onTeamCommand(CommandSender sender, String[] args) {
+	private void onTeamCommand(CommandSender sender, String[] args) {
 		//[list | create | info | disband] ?
 		if(args.length <2){
-			return false;
-		}
-		switch(args[1]){
-		case "list":
-			onTeamList(sender, args);
-			return true;
-		case "create":
-			return onTeamCreate(sender, args);
-		case "info":
-			return onTeamInfo(sender, args);
-		case "dispand":
-			return onTeamDispand(sender, args);
+			//print usage, cause we're no longer handled by onCommand!
+			sender.sendMessage(ChatFormat.ERROR.wrap("/tsc team [list|create|info|disband] {args}"));
+			return;
 		}
 		
-		return false;
+		switch(args[1]) {
+		case "list":
+			onTeamList(sender, args);
+		case "create":
+			onTeamCreate(sender, args);
+		case "info":
+			onTeamInfo(sender, args);
+		case "dispand":
+			onTeamDispand(sender, args);
+		}
 	}
 
-	private boolean onTeamCreate(CommandSender sender, String[] args) {
+	private void onTeamCreate(CommandSender sender, String[] args) {
 		// /ts team create [sessionName] [teamName]
 		if(args.length != 4){
-			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
-					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival team create [sessionName] [teamName]"));
-			return false;
+			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! \n")
+					+ ChatFormat.ERROR.wrap("usage: /teamsurvival team create [sessionName] [teamName]"));
+			return;
 		}
 		
 		GameSession session = TeamSurvivalManager.getSession(args[2]);
 		if(session == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session."));
-			return false;
+			return;
 		}
 		
 		if(session.getState() != GameSession.State.PREGAME){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Session is already running."));
-			return false;
+			return;
 		}
 		
 		if(session.getMap().getMaxTeams() <= session.getTeams().size()){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Cannot create another team, max limit reached"));
-			return false;
+			return;
 		}
 		
 		Team team = session.getTeam(args[3]);
 		if(team != null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There is already a team with that name in that session"));
-			return false;
+			return;
 		}
 		
 		LinkedList<SurvivalPlayer> players = new LinkedList<SurvivalPlayer>();
@@ -126,26 +126,26 @@ public class SurvivalCommand implements CommandExecutor {
 		Team theTeam = new Team(args[3], players);
 		session.addTeam(theTeam);
 		sender.sendMessage(ChatFormat.IMPORTANT.wrap("Regisered new team "+args[3]+" with session ")+ChatFormat.SESSION.wrap(args[2]));
-		return true;
 	}
 
-	private boolean onTeamInfo(CommandSender sender, String[] args) {
+	private void onTeamInfo(CommandSender sender, String[] args) {
 		// /ts team info [sessionName] [teamName]
 		if(args.length != 4){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments")+
 					ChatFormat.IMPORTANT.wrap("usage: /teamsurvival info [session] [team]"));
+			return;
 		}
 		
 		GameSession session = TeamSurvivalManager.getSession(args[2]);
 		if(session == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session."));
-			return false;
+			return;
 		}
 		
 		Team team = session.getTeam(args[3]);
 		if(team == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find a team with that name in the session"));
-			return false;
+			return;
 		}
 		
 		sender.sendMessage("Session: "+ChatFormat.SESSION.wrap(session.getName())+ " Team: "+ ChatFormat.TEAM.wrap(team.getName()));
@@ -159,41 +159,39 @@ public class SurvivalCommand implements CommandExecutor {
 			}
 		}
 		
-		return true;
 	}
 
-	private boolean onTeamDispand(CommandSender sender, String[] args) {
+	private void onTeamDispand(CommandSender sender, String[] args) {
 		// /ts team dispand [sessionName] [teamName]
 		if(args.length != 4){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
 					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival team dispand [sessionName] [teamName]"));
-			return false;
+			return;
 		}
 		
 		GameSession session = TeamSurvivalManager.getSession(args[2]);
 		if(session == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find session."));
-			return false;
+			return;
 		}
 		
 		if(session.getState() != GameSession.State.PREGAME){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Session is already running."));
-			return false;
+			return;
 		}
 		
 		Team team = session.getTeam(args[3]);
 		if(team == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not find a team with that name in the session"));
-			return false;
+			return;
 		}
 		
 		if(!session.removeTeam(team)){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not remove team"));
-			return false;
+			return;
 		}
 		
 		sender.sendMessage(ChatFormat.IMPORTANT.wrap(args[3]+" has been removed from the session"));
-		return true;
 	}
 
 	private void onTeamList(CommandSender sender, String[] args) {
