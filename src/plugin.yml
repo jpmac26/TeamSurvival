@@ -15,7 +15,8 @@ permissions:
             teamsurvival.creator.open: true
             teamsurvival.creator.close: true
             teamsurvival.creator.setshop: true
-            teamsurvival.creator.addarena: true
+            teamsurvival.creator.addarena: true 
+            teamsurvival.creator.addbossarena: true
         default: op
     teamsurvival.team.join:
       default: true
