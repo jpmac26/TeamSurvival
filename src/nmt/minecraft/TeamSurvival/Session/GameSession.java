@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -103,9 +105,9 @@ public class GameSession implements Listener, Tickable {
 	
 	
 	//private TreeMap<Team, Wave> teams;
-	private List<Team> teams;
+	private TreeMap<Team, Wave> teams;
 	
-	private List<Wave> waves;
+	//private List<Wave> waves;
 	
 	private State state;
 	
@@ -130,8 +132,7 @@ public class GameSession implements Listener, Tickable {
 		this.name = name;
 		this.map = map;
 		this.state = State.PREGAME;
-		this.teams = new LinkedList<Team>();
-		this.waves = new LinkedList<Wave>();
+		this.teams = new TreeMap<Team, Wave>();
 		System.out.println("Shop Location: " + map.getShopButtonLocation());
 		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
@@ -157,7 +158,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t : teams){
+		for(Team t : teams.keySet()){
 			if(t.getName().equals(name)){
 				return t;
 			}
@@ -175,7 +176,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t : teams){
+		for(Team t : teams.keySet()){
 			if(t.hasPlayer(player)){
 				return t;
 			}
@@ -194,7 +195,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t: teams){
+		for(Team t: teams.keySet()){
 			if(t.hasPlayer(player) != null){
 				return t;
 			}
@@ -212,7 +213,7 @@ public class GameSession implements Listener, Tickable {
 			return null;
 		}
 		
-		for(Team t : teams){
+		for(Team t : teams.keySet()){
 			SurvivalPlayer tmp=t.hasPlayer(player);
 			if(tmp != null){
 				return tmp;
@@ -244,7 +245,7 @@ public class GameSession implements Listener, Tickable {
 		if(verbose){
 			str += "Team size: "+this.teams.size() + "/" + this.map.getMaxTeams();
 			str += "\n";
-			for(Team t : teams){
+			for(Team t : teams.keySet()){
 				str += ChatFormat.TEAM.wrap(t.getName()) + "   ";
 			}
 		}
@@ -294,7 +295,7 @@ public class GameSession implements Listener, Tickable {
 		
 		state = State.STARTINGPERIOD;
 		
-		for (Team team : teams) {
+		for (Team team : teams.keySet()) {
 			team.sendTeamMessage(Messages.STARTINFO.toString());
 		}
 		return true;
@@ -310,21 +311,19 @@ public class GameSession implements Listener, Tickable {
 		HandlerList.unregisterAll(this);
 		
 		if (!teams.isEmpty()) {
-			for (Team team : teams) {
+			for (Team team : teams.keySet()) {
 				HandlerList.unregisterAll(team);
 			}
 		}
 		
-		teams.clear();
-		
 		sessionShop = null;
 		state = State.FINISHED;
 		
-		for (Wave wave : waves) {
+		for (Wave wave : teams.values()) {
 			wave.stop();
 		}
 		
-		waves.clear();
+		teams.clear();
 	}
 	
 	/**
@@ -332,7 +331,7 @@ public class GameSession implements Listener, Tickable {
 	 * @param team
 	 */
 	public void addTeam(Team team) {
-		if (teams.contains(team)) {
+		if (teams.containsKey(team)) {
 			return;
 		}
 		
@@ -350,7 +349,7 @@ public class GameSession implements Listener, Tickable {
 		team.setBossLocation(map.getNextBoss());
 		
 		//Add teams
-		teams.add(team);
+		teams.put(team, null);
 	}
 	
 	/**
@@ -368,12 +367,14 @@ public class GameSession implements Listener, Tickable {
 		
 		map.addArenaLocation(team.getArenaLocation());
 		map.addBossLocation(team.getBossLocation());
-		return teams.remove(team);
+		
+		teams.get(team).stop();
+		return teams.remove(team) != null;
 	}
 	
 	
 	public Collection<Team> getTeams(){
-		return teams;
+		return teams.keySet();
 	}
 	
 	@Override
@@ -387,13 +388,13 @@ public class GameSession implements Listener, Tickable {
 		
 		switch (reminder) {
 		case ONEMINUTE:
-			for (Team team : teams) {
+			for (Team team : teams.keySet()) {
 				team.sendTeamMessage(Messages.ONEMINUTE.toString());
 			}
 			Scheduler.getScheduler().schedule(this, Reminders.THIRTYSECONDS, 30);
 			break;
 		case THIRTYSECONDS:
-			for (Team team : teams) {
+			for (Team team : teams.keySet()) {
 				team.sendTeamMessage(Messages.THIRTYSECONDS.toString());
 			}
 			Scheduler.getScheduler().schedule(this, Reminders.PUSHTOARENA, 30);
@@ -402,7 +403,7 @@ public class GameSession implements Listener, Tickable {
 			state = State.INWAVE;
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
-			for (Team t : teams) {
+			for (Team t : teams.keySet()) {
 				t.sendTeamMessage(ChatFormat.INFO.wrap("WAVE "+this.waveNumber));
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
@@ -411,20 +412,20 @@ public class GameSession implements Listener, Tickable {
 			state = State.INWAVE;
 			moveToArena();
 			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
-			for (Team t : teams) {
+			for (Team t : teams.keySet()) {
 				t.sendTeamMessage("WAVE "+this.waveNumber);
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			break;
 		case STARTWAVE:
 			startNextWave(true);
-			for (Team t : teams) {
+			for (Team t : teams.keySet()) {
 				t.sendTeamMessage(Messages.WAVESTART.toString());
 			}
 			break;
 		case WAVECONTINUE:
 			startNextWave(false);
-			for (Team t : teams) {
+			for (Team t : teams.keySet()) {
 				t.sendTeamMessage("WAVE "+this.waveNumber);
 				t.sendTeamMessage(Messages.WAVESTART.toString());
 			}			
@@ -446,15 +447,15 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	private void moveToArena() {
-		if (waves.get(0) instanceof BossWave) {
-			for (Team t : teams) {
+		if (teams.values().iterator().next() instanceof BossWave) {
+			for (Team t : teams.keySet()) {
 				t.moveTo(t.getBossLocation());
 				t.sendTeamMessage(Messages.BOSSWARNING.getString());
 			}
 			return;
 		}
 		
-		for (Team team : teams) {
+		for (Team team : teams.keySet()) {
 			team.moveTo(team.getArenaLocation());
 		}
 	}
@@ -467,7 +468,7 @@ public class GameSession implements Listener, Tickable {
 		int side = (int) Math.floor(Math.sqrt(this.teams.size())) + 1;
 		
 		Location start = map.getStartingLocation().clone();
-		Iterator<Team> iterate = teams.iterator();
+		Iterator<Team> iterate = teams.keySet().iterator();
 		for(int i =0; i<side; i++){
 			for(int j=0; j<side; j++){
 				if(iterate.hasNext()){
@@ -489,28 +490,27 @@ public class GameSession implements Listener, Tickable {
 	 * Moves teams to the shop location
 	 */
 	private void moveToShop(){
-		for(Team t : teams){
+		for(Team t : teams.keySet()){
 			t.moveTo(map.getShopLocation());
 		}
 	}
 	
 	@EventHandler
 	public void onTeamLose(TeamLossEvent event){
-		if(!teams.contains(event.getTeam())){
+		if(!teams.containsKey(event.getTeam())){
 			return;
 		}
 		
 		//TODO Kill the related wave
-		int index = teams.indexOf(event.getTeam());
-		waves.get(index).stop();
-		waves.remove(index);
+		
+		teams.get(event.getTeam()).stop();
 		
 		teams.remove(event.getTeam());
 		
 		HandlerList.unregisterAll(event.getTeam());
 		
 		if(teams.size() == 1){
-			teams.get(0).win();
+			teams.keySet().iterator().next().win();
 			stop();
 		}
 	}
@@ -519,10 +519,12 @@ public class GameSession implements Listener, Tickable {
 	 * Eliminates empty teams from the team list
 	 */
 	private void purgeTeams() {
-		Iterator<Team> it = teams.iterator();
+		Iterator<Team> it = teams.keySet().iterator();
+		Team team;
 		while (it.hasNext()) {
-			if (it.next().getPlayerList().isEmpty()) {
-				it.remove();
+			team = it.next();
+			if (team.getPlayerList().isEmpty()) {
+				teams.remove(team);
 			}
 		}
 	}	
@@ -534,37 +536,41 @@ public class GameSession implements Listener, Tickable {
 	@EventHandler
 	public void onWaveEnd(WaveFinishEvent event){
 		
-		if (!waves.contains(event.getWave())) {
+		if (!teams.values().contains(event.getWave())) {
 			return;
 		}
 
+		Team key = null;
+		for (Team team : teams.keySet()) {
+			if (teams.get(team).equals(event.getWave())) {
+				key = team;
+				break;
+			}
+		}
 		
 		if (event.getWave() instanceof BossWave) {
 			//a team just finished the boss wave!
-			int index = waves.indexOf(event.getWave());
+						
+			teams.put(key, null);
 			
-			waves.remove(event.getWave());
-			
-			Team team = teams.get(index);
-			
-			for (Team t : teams) {
-				if (!t.equals(team)) {
+			for (Team t : teams.keySet()) {
+				if (!t.equals(key)) {
 					t.lose();
 				}
 			}
 			
-			team.win();
+			key.win();
 			stop();
 			return;
 		}
 		
-		waves.remove(event.getWave());
+		teams.put(key, null);
 		
-		if (!waves.isEmpty()) {
+		if (!teams.values().isEmpty()) {
 			return;
 		}
 		
-		for (Team team : teams)
+		for (Team team : teams.keySet())
 		for (SurvivalPlayer player : team.getPlayers()){
 			if (player.getPlayer() == null) {
 				continue;
@@ -588,19 +594,19 @@ public class GameSession implements Listener, Tickable {
 		if ((waveNumber-1) % 3 != 0) {
 
 			Scheduler.getScheduler().schedule(this, Reminders.WAVECONTINUE, 10);
-			for (Team t : teams) {
+			for (Team t : teams.keySet()) {
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			
-			if (waves.get(0) instanceof BossWave)
-			for (Team t : teams) {
+			if (teams.values().iterator().next() instanceof BossWave)
+			for (Team t : teams.keySet()) {
 				t.moveTo(t.getBossLocation());
 				t.sendTeamMessage(Messages.BOSSWARNING.getString());
 			}
 			return;
 		}
 		
-		for (Team team : teams) {
+		for (Team team : teams.keySet()) {
 			team.sendTeamMessage(Messages.SHOPINFO.toString());
 		}
 		state = State.INSHOP;
@@ -619,41 +625,41 @@ public class GameSession implements Listener, Tickable {
 	 * @param fresh whether or not the players are returning to the arena.
 	 */
 	private void startNextWave(boolean fresh) {
-		for (Wave wave : waves) {
+		for (Wave wave : teams.values()) {
 			wave.start();
 		}
 	}
 	
 	/**
 	 * Generates one wave, and then clones it for all teams<br />
-	 * <b>This method will clear the waves list if it's not empty!</b>
+	 * <b>This method will clear the teams map if it's not empty!</b>
 	 */
 	private void fillWaves() {
-		if (!waves.isEmpty()) {
-			waves.clear();
+		if (!teams.isEmpty()) {
+			teams.clear();
 		}
 		
 		Wave wave = new Wave(waveNumber, null, numberOfMobs());
 		List<Location> locs;
-		for (Team team : teams) {
+		for (Team team : teams.keySet()) {
 			locs = new LinkedList<Location>();
 			locs.add(team.getArenaLocation());
-			waves.add(wave.clone(locs));
+			teams.put(team, wave.clone(locs));
 		}
 	}
 	
 	private void fillBossWaves() {
 
-		if (!waves.isEmpty()) {
-			waves.clear();
+		if (!teams.isEmpty()) {
+			teams.clear();
 		}
 		
 		Wave wave = new BossWave(null, new SkeletonGroupMob());
 		List<Location> locs;
-		for (Team team : teams) {
+		for (Team team : teams.keySet()) {
 			locs = new LinkedList<Location>();
 			locs.add(team.getBossLocation());
-			waves.add(wave.clone(locs));
+			teams.put(team, wave.clone(locs));
 		}
 	}
 	
@@ -664,7 +670,7 @@ public class GameSession implements Listener, Tickable {
 	private int numberOfMobs(){
 		//avg the number of players still in
 		int sum =0;
-		for(Team t : teams){
+		for(Team t : teams.keySet()){
 			sum += t.getPlayerList().size();
 		}
 		
@@ -679,26 +685,36 @@ public class GameSession implements Listener, Tickable {
 	 * incase entities do what entities do and become rogue.
 	 */
 	public void clearWave() {
-		if (waves.isEmpty()) {
+		if (areWavesNull()) {
 			return;
 		}
 		
-		Iterator<Wave> it = waves.iterator();
 		Wave wave = null;
-		while (it.hasNext()) {
-			wave = it.next();
-			if (!it.hasNext()) {
-				//this is the last wave. Save it and throw an event
-				break;
+		
+		for (Entry<Team, Wave> entry : teams.entrySet()) {
+			if (entry.getValue() != null) {
+				wave = entry.getValue();
+				entry.getValue().stop();
+				teams.put(entry.getKey(), null);
 			}
-			
-			//not last wave, so remove it
-			wave.stop();
-			it.remove();
 		}
 		
 		//wave will hold last wave
 		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(wave));
 		
+	}
+	
+	/**
+	 * Goes through the team map and checks whetehr all the waves are null
+	 * @return
+	 */
+	private boolean areWavesNull() {
+		for (Entry<Team, Wave> entry : teams.entrySet()) {
+			if (entry.getValue() == null) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
