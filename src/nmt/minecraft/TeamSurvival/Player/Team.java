@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -34,14 +35,6 @@ public class Team implements Listener {
 	 * Collection of the players that are part of this team
 	 */
 	private HashSet<SurvivalPlayer> players;
-	
-	public List<String> getPlayerList() {
-		List<String> list = new LinkedList<String>();
-		for(SurvivalPlayer player : players){
-			list.add(player.getPlayer().getDisplayName());
-		}
-		return list;
-	}
 
 	/**
 	 * This team's name
@@ -292,5 +285,17 @@ public class Team implements Listener {
 				}
 			}
 		}
+	}
+	
+	public List<String> getPlayerList() {
+		List<String> list = new LinkedList<String>();
+		for(SurvivalPlayer player : players){
+			list.add(player.getPlayer().getDisplayName());
+		}
+		return list;
+	}
+	
+	public Set<SurvivalPlayer> getPlayers() {
+		return players;
 	}
 }

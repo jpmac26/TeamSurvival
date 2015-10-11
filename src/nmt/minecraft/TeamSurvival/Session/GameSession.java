@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
@@ -552,6 +553,15 @@ public class GameSession implements Listener, Tickable {
 		
 		if (!waves.isEmpty()) {
 			return;
+		}
+		
+		for (Team team : teams)
+		for (SurvivalPlayer player : team.getPlayers()){
+			if (player.getPlayer() == null) {
+				continue;
+			}
+			
+			player.getPlayer().setGameMode(GameMode.SURVIVAL);
 		}
 		
 		this.waveNumber++;
