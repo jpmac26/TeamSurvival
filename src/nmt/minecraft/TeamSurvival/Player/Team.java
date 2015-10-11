@@ -90,6 +90,10 @@ public class Team implements Listener {
 	 */
 	public boolean addPlayer(SurvivalPlayer player) {
 		player.setPreGameLocation(player.getPlayer().getLocation());
+		if (player.getPlayer() != null) {
+			player.getPlayer().setLevel(0);
+			player.getPlayer().getActivePotionEffects().clear();
+		}
 		return this.players.add(player);
 	}
 	
