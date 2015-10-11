@@ -345,8 +345,7 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		team.setArenaLocation(map.getNextArena());
-		List<Location> lists = new LinkedList<Location>();
-		lists.add(team.getArenaLocation());
+		team.setBossLocation(map.getNextBoss());
 		
 		//Add teams
 		teams.add(team);
@@ -366,6 +365,7 @@ public class GameSession implements Listener, Tickable {
 		HandlerList.unregisterAll(team);
 		
 		map.addArenaLocation(team.getArenaLocation());
+		map.addBossLocation(team.getBossLocation());
 		return teams.remove(team);
 	}
 	
@@ -495,6 +495,8 @@ public class GameSession implements Listener, Tickable {
 		waves.remove(index);
 		
 		teams.remove(event.getTeam());
+		
+		HandlerList.unregisterAll(event.getTeam());
 		
 		if(teams.size() == 1){
 			teams.get(0).win();
