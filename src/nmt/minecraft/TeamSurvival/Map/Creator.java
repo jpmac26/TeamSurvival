@@ -156,7 +156,7 @@ public final class Creator {
 		}
 		
 		str += "boss locations: \n";
-		for(Location boss : cur.getArenaLocations()){
+		for(Location boss : cur.getBossLocations()){
 			str += getLocation(boss) + "\n";
 		}
 		
