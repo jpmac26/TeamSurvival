@@ -11,6 +11,7 @@ permissions:
             teamsurvival.session.start: true
             teamsurvival.session.info: true
             teamsurvival.session.stop: true
+            teamsurvival.session.advance: true
             teamsurvival.creator.new: true
             teamsurvival.creator.open: true
             teamsurvival.creator.close: true
