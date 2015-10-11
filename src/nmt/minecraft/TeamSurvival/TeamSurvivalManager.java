@@ -104,4 +104,20 @@ public class TeamSurvivalManager {
 		return null;
 	}
 	
+	/**
+	 * Fetches the session that the team is in.<br />
+	 * If the team is not found in any session, returns null
+	 * @param team
+	 * @return
+	 */
+	public static GameSession getSession(Team team) {
+		for (GameSession s : TeamSurvivalManager.getSessions()) {
+			if (s.getTeams().contains(team)) {
+				return s;
+			}
+		}
+		
+		return null;
+	}
+	
 }
