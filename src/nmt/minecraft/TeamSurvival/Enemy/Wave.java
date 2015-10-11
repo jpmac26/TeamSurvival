@@ -62,7 +62,7 @@ public class Wave implements Listener {
 					UsedCount++;
 				}
 			}
-			SetupMobs(MobsUsed, TotalMobCount, MobDiffs, WaveNumber);
+			SetupMobs(MobsUsed, TotalMobCount, WaveNumber);
 		}
 		catch (Exception e) {
 			TeamSurvivalPlugin.plugin.getLogger().info("Error: " + e + "\r\n");
@@ -98,7 +98,7 @@ public class Wave implements Listener {
 				UsedCount++;
 			}
 		}
-		SetupMobs(MobsUsed, TotalMobCount, MobDiffs, WaveNumber);
+		SetupMobs(MobsUsed, TotalMobCount, WaveNumber);
 	}
 	
 	/**
@@ -114,22 +114,15 @@ public class Wave implements Listener {
 	
 	/**
 	 * Gets the list of mobs in the wave and produces the random equipment
-	 * @param MobsUsed is the array of 3 types of mobs
-	 * @param MobCount is the number of mobs in the wave
+	 * @param mobsUsed is the array of 3 types of mobs
+	 * @param mobCount is the number of mobs in the wave
 	 * @return 
 	 * @note calls another function 
 	 */
-	private void SetupMobs(String MobsUsed[], int MobCount, int MobDiffs[], int waveNum){
-		while(MobCount > 0){
-			if(MobCount == 0)break;
-			Mobs.add(new Mob(MobsUsed[0], waveNum));
-			MobCount--;
-			if(MobCount == 0)break;
-			Mobs.add(new Mob(MobsUsed[1], waveNum));
-			MobCount--;
-			if(MobCount == 0)break;
-			Mobs.add(new Mob(MobsUsed[2], waveNum));
-			MobCount--;
+	private void SetupMobs(String[] mobsUsed, int mobCount, int waveNum){
+		while(mobCount > 0){
+			Mobs.add(new Mob(mobsUsed[mobCount%mobsUsed.length], waveNum));
+			mobCount--;
 		}
 	}
 	
@@ -139,9 +132,7 @@ public class Wave implements Listener {
 	 * @return
 	 */
 	public void spawnRandomMob(Location location) {
-		int RandNum = rGen.nextInt(Mobs.size());
-		Entities.add(Mobs.get(RandNum).SpawnEntity(location));
-		Mobs.remove(RandNum);
+		Entities.add(Mobs.remove(rGen.nextInt(Mobs.size())).SpawnEntity(location));
 	}
 	
 	/**

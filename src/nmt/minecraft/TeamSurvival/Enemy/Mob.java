@@ -31,10 +31,10 @@ public class Mob {
 	private static final int goldWave=4;
 	private static final int leatherWave=3;
 	
-	private static final int diamondChance=15;//1 out of 15 chance for diamond
-	private static final int ironChance=10;
-	private static final int goldChance=4;
-	private static final int leatherChance=2;//about 1/2 mobs have leather armor
+	private final int diamondChance=10;//10% chance for diamond
+	private final int ironChance=20;
+	private final int goldChance=25; //
+	private final int leatherChance=50;//50% of mobs have leather armor
 	
 	/**
 	 * Keep track of what type of entity to spawn
@@ -70,6 +70,7 @@ public class Mob {
 	 */
 	public Mob(String type, int waveNumber){
 		this();
+		this.waveNumber = waveNumber;
 		this.type = type;
 		this.generateEquipment();
 		this.generateEnchantments();
@@ -180,29 +181,29 @@ public class Mob {
 	
 	private level genEquipLevel(){
 		//*
-		int rNumber = rGen.nextInt();
+		int rNumber = rGen.nextInt(100);
 		switch(waveNumber){
 		case diamondWave:
-			if(rNumber%diamondChance == 0 && waveNumber >= diamondWave){
+			if(rNumber < diamondChance && waveNumber >= diamondWave){
 				return level.DIAMOND;
 			}else{
-				rNumber = rGen.nextInt(); //may need to get rid of this
+				rNumber = rGen.nextInt(100); //may need to get rid of this
 			}
 			//purposefully missing the break;
 		case ironWave:
-			if(rNumber%ironChance == 0 && waveNumber >= ironWave){
+			if(rNumber < ironChance && waveNumber >= ironWave){
 				return level.IRON;
 			}else{
-				rNumber=rGen.nextInt();
+				rNumber=rGen.nextInt(100);
 			}
 		case goldWave:
-			if(rNumber%goldChance == 0 && waveNumber >= goldWave){
+			if(rNumber < goldChance && waveNumber >= goldWave){
 				return level.GOLD;
 			}else{
 				rNumber=rGen.nextInt();
 			}
 		case leatherWave:
-			if(rNumber%leatherChance == 0 && waveNumber >= leatherWave){
+			if(rNumber < leatherChance && waveNumber >= leatherWave){
 				return level.LEATHER;
 			}
 		default:
