@@ -423,6 +423,7 @@ public class GameSession implements Listener, Tickable {
 		case WAVECONTINUE:
 			startNextWave(false);
 			for (Team t : teams) {
+				t.sendTeamMessage("WAVE "+this.waveNumber);
 				t.sendTeamMessage(Messages.WAVESTART.toString());
 			}			
 			break;
