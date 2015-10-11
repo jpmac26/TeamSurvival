@@ -234,8 +234,11 @@ public class Map {
 			tmp.maxTeams = tmp.arenaLocations.size();
 			return tmp;
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

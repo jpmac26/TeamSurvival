@@ -17,7 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import nmt.minecraft.TeamSurvival.TeamLossEvent;
+import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
  * A group of players.<br />
@@ -52,6 +54,11 @@ public class Team implements Listener {
 	private Location arenaLocation;
 	
 	/**
+	 * The location where the team will go to fight the boss
+	 */
+	private Location bossLocation;
+	
+	/**
 	 * Main constructor for the Team Class.
 	 * @param name The name for the team.
 	 * @param players A collection of players that are associated with a team.
@@ -66,6 +73,10 @@ public class Team implements Listener {
 	
 	public void setArenaLocation(Location arenaLocation) {
 		this.arenaLocation = arenaLocation;
+	}
+	
+	public void setBossLocation(Location bossLocation) {
+		this.bossLocation = bossLocation;
 	}
 	
 	
@@ -238,6 +249,15 @@ public class Team implements Listener {
 	}
 	
 	/**
+	 * Returns whre the boss location is.<br />
+	 * This is the location where the team will go to figh the boss and where the boss will spawn from.
+	 * @return
+	 */
+	public Location getBossLocation() {
+		return bossLocation;
+	}
+	
+	/**
 	 * This event handler checks to see if the Team is still alive<br>
 	 * whenever a player dies.
 	 * @param e The damage event
@@ -256,6 +276,11 @@ public class Team implements Listener {
 			if (damage >= victim.getHealth() && this.hasPlayer((OfflinePlayer) victim) != null) {
 				//Damage is lethal, prevent them from dying
 				e.setCancelled(true);
+				
+				if (TeamSurvivalManager.getSession(this).getState() != GameSession.State.INWAVE) {
+					return;
+				}
+				
 				victim.setGameMode(GameMode.SPECTATOR);
 				
 				//Check to see if the team is dead
