@@ -26,7 +26,7 @@ public class SurvivalCommand implements CommandExecutor {
 	 */
 	private static final String[] teamSurvivalCommandList = {"session", "team"};
 
-	private static final String[] sessionCommandList = {"list", "create", "info", "remove", "start", "stop"};
+	private static final String[] sessionCommandList = {"list", "create", "info", "remove", "start", "stop", "advance"};
 	
 	private static final String[] teamCommandList = {"list", "create", "info", "dispand"};
 	
@@ -263,6 +263,11 @@ public class SurvivalCommand implements CommandExecutor {
 		if (args[1].equalsIgnoreCase("remove")) {
 			return onSessionRemoveCommand(sender, args);
 		}
+		
+		if (args[1].equalsIgnoreCase("advance")) {
+			return onSessionAdvanceCommand(sender, args);
+		}
+		
 		return false;
 	}
 
@@ -462,6 +467,32 @@ public class SurvivalCommand implements CommandExecutor {
 		}
 		
 		sender.sendMessage(gameSession.getInfo(verbose));
+		return true;
+	}
+	
+	/**
+	 * Advanced the session
+	 * @param sender
+	 * @param args
+	 * @return
+	 * @see {@link nmt.minecraft.TeamSurvival.Session.GameSession#clearWave() GameSession.clearWave()}
+	 */
+	private boolean onSessionAdvanceCommand(CommandSender sender, String[] args) {
+		//ts session advance [session]
+		if (args.length != 3) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("/ts session advance ") + ChatFormat.SESSION.wrap("[sessionName]"));
+			return false;
+		}
+		
+		GameSession session = TeamSurvivalManager.getSession(args[2]);
+		if (session == null) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("Unable to find session: " + args[2]));
+			return false;
+		}
+		
+		session.clearWave();
+		sender.sendMessage(ChatFormat.SUCCESS.wrap("Advancing to the next wave..."));
+		
 		return true;
 	}
 }

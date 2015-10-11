@@ -28,12 +28,14 @@ public class Map {
 	private Location shopLocation; //This is the Location of the Shop within Team Survival
 	private Location shopButtonLocation; //Location of the Shop Button
 	private List<Location> arenaLocations;//This collection contains all the initial spawn locations for the Map.
+	private List<Location> bossLocations;
 	private int maxTeams;
 	
 	protected Map(String name) {
 		super();
 		this.name=name;
 		this.arenaLocations = new LinkedList<Location>();
+		this.bossLocations = new LinkedList<Location>();
 		//create new config file
 		this.saveConfig();
 	}
@@ -41,6 +43,7 @@ public class Map {
 	private Map(){
 		super();
 		this.arenaLocations = new LinkedList<Location>();
+		this.bossLocations = new LinkedList<Location>();
 	}
 	
 	/**
@@ -75,6 +78,24 @@ public class Map {
 	 */
 	public boolean addArenaLocation(Collection<Location> locations) {
 		return this.arenaLocations.addAll(locations);
+	}
+	
+	/**
+	 * Adds a single boss arena location to this Map's boss locations.
+	 * @param location the location to add
+	 * @return true if the location was sucessfully added
+	 */
+	public boolean addBossLocation(Location location){
+		return this.bossLocations.add(location);
+	}
+	
+	/**
+	 * This method adds all given locations to this maps boss locations
+	 * @param locations the locations to add to the boss locations
+	 * @return true if all locations were added sucessfully
+	 */
+	public boolean addBossLocations(Collection<Location> locations){
+		return this.bossLocations.addAll(locations);
 	}
 	
 	/**
@@ -119,6 +140,14 @@ public class Map {
 		}
 		
 		return this.arenaLocations.remove(0);
+	}
+	
+	public Location getNextBoss(){
+		if(this.bossLocations.isEmpty()){
+			return null;
+		}
+		
+		return this.bossLocations.remove(0);
 	}
 	
 	/**
@@ -194,11 +223,22 @@ public class Map {
 				tmp.arenaLocations.add(l.getLocation());
 			}
 			
+			//get the arena locations
+			@SuppressWarnings("unchecked")
+			Collection<LocationState> bossArenas = (Collection<LocationState>) config.getList("bossLocations", new LinkedList<LocationState>());
+			
+			for(LocationState l : bossArenas){
+				tmp.bossLocations.add(l.getLocation());
+			}
+			
 			tmp.maxTeams = tmp.arenaLocations.size();
 			return tmp;
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -216,6 +256,7 @@ public class Map {
 		config.set("shopLocation", this.shopLocation);
 		config.set("shopButtonLocation", this.shopButtonLocation);
 		config.set("arenaLocations", this.arenaLocations);
+		config.set("bossLocations", this.bossLocations);
 		
 		try {
 			config.save(file);
@@ -231,10 +272,16 @@ public class Map {
 	 * @return true if it can be played as is
 	 */
 	public boolean isValid(){
-		if(startingLocation == null || shopLocation == null|| shopButtonLocation ==null || arenaLocations.isEmpty()){
+		if(startingLocation == null || shopLocation == null|| 
+				shopButtonLocation ==null || arenaLocations.isEmpty() ||
+				arenaLocations.size() != bossLocations.size()){
 			return false;
 		}
 		
 		return true;
+	}
+
+	public List<Location> getBossLocations() {
+		return this.bossLocations;
 	}
 }

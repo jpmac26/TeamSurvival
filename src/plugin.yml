@@ -11,13 +11,17 @@ permissions:
             teamsurvival.session.start: true
             teamsurvival.session.info: true
             teamsurvival.session.stop: true
+            teamsurvival.session.advance: true
             teamsurvival.creator.new: true
             teamsurvival.creator.open: true
             teamsurvival.creator.close: true
             teamsurvival.creator.setshop: true
-            teamsurvival.creator.addarena: true
+            teamsurvival.creator.addarena: true 
+            teamsurvival.creator.addbossarena: true
         default: op
     teamsurvival.team.join:
+      default: true
+    teamsurvival.team.leave:
       default: true
 commands:
     teamsurvival:
@@ -30,6 +34,11 @@ commands:
         ussage: /jointeam [teamname]
         description: Joins a TeamSurvival team
         aliases: join
+    leaveteam:
+        permission: teamsurvival.team.leave
+        ussage: /leaveteam
+        description: Leaves a TeamSurvival team
+        aliases: leave
     teamsurvivalcreator:
         permission: teamsurvival.creator.*
         usage: /tsc [open|close|setShop|setStartingLocation|addArena|setShopButton|info] {args}

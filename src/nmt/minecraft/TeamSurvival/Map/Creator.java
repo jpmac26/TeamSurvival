@@ -63,6 +63,22 @@ public final class Creator {
 		return true;
 	}
 	
+	public static boolean addBossArena(CommandSender sender){
+		if(Creator.current == null){
+			sender.sendMessage(ChatFormat.ERROR.wrap("There is no open session"));
+			return false;
+		}
+		
+		if(sender instanceof Player){
+			Creator.current.addBossLocation(((Player)sender).getLocation());
+			sender.sendMessage(ChatFormat.SESSION.wrap("Added arena at: "+Creator.getLocation(((Player)sender).getLocation())));
+		}else{
+			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
+		}
+		
+		return true;
+	}
+	
 	public static boolean setShopLocation(CommandSender sender){
 		if(Creator.current == null){
 			sender.sendMessage(ChatFormat.ERROR.wrap("There is no open session"));
@@ -129,13 +145,26 @@ public final class Creator {
 		}
 		Map cur = Creator.current;
 		String str = ChatFormat.SESSION.wrap(cur.getName())+"\n";
+		
+		str += "valid: ";
+		if(Creator.current.isValid()){
+			str += ChatFormat.INFO.wrap("YES\n");
+		}else{
+			str += ChatFormat.ERROR.wrap("NO\n");
+		}
 		str += "starting location: "+ getLocation(cur.getStartingLocation())+"\n";
 		str += "shop location: "+ getLocation(cur.getShopLocation())+"\n";
 		str += "shop button location: "+ getLocation(cur.getShopButtonLocation())+ "\n";
 		str += "max teams: " + cur.getMaxTeams()+"\n";
+		
 		str += "arena locations: \n";
 		for(Location arena : cur.getArenaLocations()){
 			str += getLocation(arena)+"\n";
+		}
+		
+		str += "boss locations: \n";
+		for(Location boss : cur.getBossLocations()){
+			str += getLocation(boss) + "\n";
 		}
 		
 		return str;

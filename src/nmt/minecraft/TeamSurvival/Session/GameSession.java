@@ -7,8 +7,10 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -16,6 +18,8 @@ import org.bukkit.event.Listener;
 
 import nmt.minecraft.TeamSurvival.TeamLossEvent;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Enemy.BossWave;
+import nmt.minecraft.TeamSurvival.Enemy.SkeletonGroupMob;
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.Enemy.WaveFinishEvent;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
@@ -35,6 +39,9 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
+	public static final int defaultWaveCount = 12;
+	
+	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
 	public enum State {
 		PREGAME,
@@ -299,12 +306,24 @@ public class GameSession implements Listener, Tickable {
 	public void stop() {
 		HandlerList.unregisterAll(sessionShop);
 		Scheduler.getScheduler().unregister(this);
+		HandlerList.unregisterAll(this);
+		
+		if (!teams.isEmpty()) {
+			for (Team team : teams) {
+				HandlerList.unregisterAll(team);
+			}
+		}
+		
+		teams.clear();
+		
 		sessionShop = null;
 		state = State.FINISHED;
 		
 		for (Wave wave : waves) {
 			wave.stop();
 		}
+		
+		waves.clear();
 	}
 	
 	/**
@@ -327,8 +346,7 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		team.setArenaLocation(map.getNextArena());
-		List<Location> lists = new LinkedList<Location>();
-		lists.add(team.getArenaLocation());
+		team.setBossLocation(map.getNextBoss());
 		
 		//Add teams
 		teams.add(team);
@@ -348,6 +366,7 @@ public class GameSession implements Listener, Tickable {
 		HandlerList.unregisterAll(team);
 		
 		map.addArenaLocation(team.getArenaLocation());
+		map.addBossLocation(team.getBossLocation());
 		return teams.remove(team);
 	}
 	
@@ -405,6 +424,7 @@ public class GameSession implements Listener, Tickable {
 		case WAVECONTINUE:
 			startNextWave(false);
 			for (Team t : teams) {
+				t.sendTeamMessage("WAVE "+this.waveNumber);
 				t.sendTeamMessage(Messages.WAVESTART.toString());
 			}			
 			break;
@@ -418,6 +438,9 @@ public class GameSession implements Listener, Tickable {
 
 	@Override
 	public boolean equals(Object o) {
+		if (!(o instanceof GameSession)) {
+			return false;
+		}
 		return o.toString().equalsIgnoreCase(toString());
 	}
 	
@@ -469,12 +492,13 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		//TODO Kill the related wave
-		//this will probably not work
 		int index = teams.indexOf(event.getTeam());
 		waves.get(index).stop();
 		waves.remove(index);
 		
 		teams.remove(event.getTeam());
+		
+		HandlerList.unregisterAll(event.getTeam());
 		
 		if(teams.size() == 1){
 			teams.get(0).win();
@@ -500,8 +524,28 @@ public class GameSession implements Listener, Tickable {
 	 */
 	@EventHandler
 	public void onWaveEnd(WaveFinishEvent event){
-		//this.currentWave = null; //TODO
+		
 		if (!waves.contains(event.getWave())) {
+			return;
+		}
+
+		
+		if (event.getWave() instanceof BossWave) {
+			//a team just finished the boss wave!
+			int index = waves.indexOf(event.getWave());
+			
+			waves.remove(event.getWave());
+			
+			Team team = teams.get(index);
+			
+			for (Team t : teams) {
+				if (!t.equals(team)) {
+					t.lose();
+				}
+			}
+			
+			team.win();
+			stop();
 			return;
 		}
 		
@@ -511,9 +555,24 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
+		for (Team team : teams)
+		for (SurvivalPlayer player : team.getPlayers()){
+			if (player.getPlayer() == null) {
+				continue;
+			}
+			
+			player.getPlayer().setGameMode(GameMode.SURVIVAL);
+			player.getPlayer().teleport(team.getArenaLocation());
+		}
+		
 		this.waveNumber++;
+		
+		if (waveNumber > GameSession.defaultWaveCount) { //TODO make a member that's set in constructor?
+			fillBossWaves();
+		} else {
+			fillWaves();
+		}
 		//TODO TeamLossEvent
-		fillWaves();
 		
 		//no more waves, but is this the end of our third one?
 		if ((waveNumber-1) % 3 != 0) {
@@ -567,6 +626,21 @@ public class GameSession implements Listener, Tickable {
 		}
 	}
 	
+	private void fillBossWaves() {
+
+		if (!waves.isEmpty()) {
+			waves.clear();
+		}
+		
+		Wave wave = new BossWave(null, new SkeletonGroupMob());
+		List<Location> locs;
+		for (Team team : teams) {
+			locs = new LinkedList<Location>();
+			locs.add(team.getArenaLocation());
+			waves.add(wave.clone(locs));
+		}
+	}
+	
 	/**
 	 * Calculates the number of mobs per wave
 	 * @return number of mobs to spawn for the waveNumber
@@ -581,5 +655,34 @@ public class GameSession implements Listener, Tickable {
 		int avg = sum/teams.size();
 		
 		return avg + (int)(waveNumber*(avg+5));
+	}
+	
+	/**
+	 * Clears the current wave, trying to eliminate the mess. Then advances to the next wave.<br />
+	 * This method is not meant to be called casually. It's instead provided as an emergency method
+	 * incase entities do what entities do and become rogue.
+	 */
+	public void clearWave() {
+		if (waves.isEmpty()) {
+			return;
+		}
+		
+		Iterator<Wave> it = waves.iterator();
+		Wave wave = null;
+		while (it.hasNext()) {
+			wave = it.next();
+			if (!it.hasNext()) {
+				//this is the last wave. Save it and throw an event
+				break;
+			}
+			
+			//not last wave, so remove it
+			wave.stop();
+			it.remove();
+		}
+		
+		//wave will hold last wave
+		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(wave));
+		
 	}
 }
