@@ -47,6 +47,9 @@ public class JoinTeamCommand implements CommandExecutor{
 		if(team == null) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate team "+args[1]+" in session "+args[0]));
 			return true;
+		}else if(team.getPlayerList().size() >=4){
+			sender.sendMessage(ChatFormat.ERROR.wrap("This team already has the maximum number of players"));
+			return true;
 		}
 		
 		//add them to the team
