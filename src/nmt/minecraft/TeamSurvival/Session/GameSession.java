@@ -562,6 +562,7 @@ public class GameSession implements Listener, Tickable {
 			}
 			
 			player.getPlayer().setGameMode(GameMode.SURVIVAL);
+			player.getPlayer().teleport(team.getArenaLocation());
 		}
 		
 		this.waveNumber++;

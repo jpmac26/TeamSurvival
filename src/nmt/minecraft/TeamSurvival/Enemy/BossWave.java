@@ -57,6 +57,10 @@ public class BossWave extends Wave {
 	@EventHandler
 	@Override
 	public void onEntityDeath(EntityDeathEvent e) {
+		if (Entities.isEmpty()) {
+			return;
+		}
+		
 		if (Entities.contains(e.getEntity())) {
 			Entities.remove(e.getEntity());
 		}
