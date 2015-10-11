@@ -39,7 +39,7 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
-	public static final int defaultWaveCount = 12;
+	public static final int defaultWaveCount = 2;
 	
 	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
@@ -62,7 +62,8 @@ public class GameSession implements Listener, Tickable {
 		SHOPINFO(ChatColor.GOLD + "You have 2 minutes to use the shop."),
 		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET),
 		WAVEWARNING(ChatColor.YELLOW + "Wave beginning in 10 seconds!" + ChatColor.RESET),
-		WAVESTART(ChatColor.DARK_RED + "The wave has begun!" + ChatColor.RESET);
+		WAVESTART(ChatColor.DARK_RED + "The wave has begun!" + ChatColor.RESET),
+		BOSSWARNING(ChatColor.DARK_RED + "Boss Wave" + ChatColor.RESET);
 		 
 		private String message;
 		
@@ -445,6 +446,14 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	private void moveToArena() {
+		if (waves.get(0) instanceof BossWave) {
+			for (Team t : teams) {
+				t.moveTo(t.getBossLocation());
+				t.sendTeamMessage(Messages.BOSSWARNING.getString());
+			}
+			return;
+		}
+		
 		for (Team team : teams) {
 			team.moveTo(team.getArenaLocation());
 		}
@@ -581,6 +590,12 @@ public class GameSession implements Listener, Tickable {
 			for (Team t : teams) {
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
+			
+			if (waves.get(0) instanceof BossWave)
+			for (Team t : teams) {
+				t.moveTo(t.getBossLocation());
+				t.sendTeamMessage(Messages.BOSSWARNING.getString());
+			}
 			return;
 		}
 		
@@ -636,7 +651,7 @@ public class GameSession implements Listener, Tickable {
 		List<Location> locs;
 		for (Team team : teams) {
 			locs = new LinkedList<Location>();
-			locs.add(team.getArenaLocation());
+			locs.add(team.getBossLocation());
 			waves.add(wave.clone(locs));
 		}
 	}
