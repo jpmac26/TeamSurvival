@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -16,6 +17,8 @@ import org.bukkit.event.Listener;
 
 import nmt.minecraft.TeamSurvival.TeamLossEvent;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Enemy.BossWave;
+import nmt.minecraft.TeamSurvival.Enemy.SkeletonGroupMob;
 import nmt.minecraft.TeamSurvival.Enemy.Wave;
 import nmt.minecraft.TeamSurvival.Enemy.WaveFinishEvent;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
@@ -35,6 +38,9 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
+	public static final int defaultWaveCount = 12;
+	
+	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
 	public enum State {
 		PREGAME,
@@ -499,8 +505,28 @@ public class GameSession implements Listener, Tickable {
 	 */
 	@EventHandler
 	public void onWaveEnd(WaveFinishEvent event){
-		//this.currentWave = null; //TODO
+		
 		if (!waves.contains(event.getWave())) {
+			return;
+		}
+
+		
+		if (event.getWave() instanceof BossWave) {
+			//a team just finished the boss wave!
+			int index = waves.indexOf(event.getWave());
+			
+			waves.remove(event.getWave());
+			
+			Team team = teams.get(index);
+			
+			for (Team t : teams) {
+				if (!t.equals(team)) {
+					t.lose();
+				}
+			}
+			
+			team.win();
+			stop();
 			return;
 		}
 		
@@ -511,7 +537,13 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		this.waveNumber++;
-		fillWaves();
+		
+		if (waveNumber > GameSession.defaultWaveCount) { //TODO make a member that's set in constructor?
+			fillBossWaves();
+		} else {
+			fillWaves();
+		}
+		//TODO TeamLossEvent
 		
 		//no more waves, but is this the end of our third one?
 		if ((waveNumber-1) % 3 != 0) {
@@ -557,6 +589,21 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		Wave wave = new Wave(waveNumber, null, numberOfMobs());
+		List<Location> locs;
+		for (Team team : teams) {
+			locs = new LinkedList<Location>();
+			locs.add(team.getArenaLocation());
+			waves.add(wave.clone(locs));
+		}
+	}
+	
+	private void fillBossWaves() {
+
+		if (!waves.isEmpty()) {
+			waves.clear();
+		}
+		
+		Wave wave = new BossWave(null, new SkeletonGroupMob());
 		List<Location> locs;
 		for (Team team : teams) {
 			locs = new LinkedList<Location>();
