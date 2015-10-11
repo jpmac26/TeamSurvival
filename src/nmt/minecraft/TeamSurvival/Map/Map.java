@@ -228,7 +228,7 @@ public class Map {
 			Collection<LocationState> bossArenas = (Collection<LocationState>) config.getList("bossLocations", new LinkedList<LocationState>());
 			
 			for(LocationState l : bossArenas){
-				tmp.arenaLocations.add(l.getLocation());
+				tmp.bossLocations.add(l.getLocation());
 			}
 			
 			tmp.maxTeams = tmp.arenaLocations.size();
@@ -276,5 +276,9 @@ public class Map {
 		}
 		
 		return true;
+	}
+
+	public List<Location> getBossLocations() {
+		return this.getBossLocations();
 	}
 }
