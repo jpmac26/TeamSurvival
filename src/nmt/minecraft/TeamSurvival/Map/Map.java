@@ -279,6 +279,6 @@ public class Map {
 	}
 
 	public List<Location> getBossLocations() {
-		return this.getBossLocations();
+		return this.bossLocations;
 	}
 }
