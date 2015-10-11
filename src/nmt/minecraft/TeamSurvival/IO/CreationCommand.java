@@ -15,7 +15,7 @@ import nmt.minecraft.TeamSurvival.Map.Creator;
  */
 public class CreationCommand implements CommandExecutor{
 	
-	private static final String[] commands = {"open", "close", "setShop", "setStartingLocation", "addArena", "setShopButton", "info"};
+	private static final String[] commands = {"open", "close", "setShop", "setStartingLocation", "addArena", "addBossArena","setShopButton", "info"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -55,6 +55,11 @@ public class CreationCommand implements CommandExecutor{
 		
 		if (args[0].equalsIgnoreCase("addArena")) {
 			onAddArenaCommand(sender, args);
+			return true;
+		}
+		
+		if(args[0].equalsIgnoreCase("addBossArena")){
+			onAddBossArenaCommand(sender,args);
 			return true;
 		}
 		
@@ -154,5 +159,16 @@ public class CreationCommand implements CommandExecutor{
 		}
 		return Creator.addArena(sender);
 	}
-
+	
+	/**
+	 * Handles admin 'addArena' command
+	 * @param sender
+	 * @param args
+	 */
+	private boolean onAddBossArenaCommand(CommandSender sender, String[] args) {
+		if(args.length != 1){
+			sender.sendMessage(ChatFormat.WARNING.wrap("Wrong number of arguments. Still attempting to add..."));
+		}
+		return Creator.addBossArena(sender);
+	}
 }
