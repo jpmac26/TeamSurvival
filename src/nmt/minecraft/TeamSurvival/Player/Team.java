@@ -54,6 +54,11 @@ public class Team implements Listener {
 	private Location arenaLocation;
 	
 	/**
+	 * The location where the team will go to fight the boss
+	 */
+	private Location bossLocation;
+	
+	/**
 	 * Main constructor for the Team Class.
 	 * @param name The name for the team.
 	 * @param players A collection of players that are associated with a team.
@@ -68,6 +73,10 @@ public class Team implements Listener {
 	
 	public void setArenaLocation(Location arenaLocation) {
 		this.arenaLocation = arenaLocation;
+	}
+	
+	public void setBossLocation(Location bossLocation) {
+		this.bossLocation = bossLocation;
 	}
 	
 	
@@ -237,6 +246,15 @@ public class Team implements Listener {
 	 */
 	public Location getArenaLocation() {
 		return arenaLocation;
+	}
+	
+	/**
+	 * Returns whre the boss location is.<br />
+	 * This is the location where the team will go to figh the boss and where the boss will spawn from.
+	 * @return
+	 */
+	public Location getBossLocation() {
+		return bossLocation;
 	}
 	
 	/**
