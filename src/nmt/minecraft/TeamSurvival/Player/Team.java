@@ -17,7 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import nmt.minecraft.TeamSurvival.TeamLossEvent;
+import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
  * A group of players.<br />
@@ -256,6 +258,11 @@ public class Team implements Listener {
 			if (damage >= victim.getHealth() && this.hasPlayer((OfflinePlayer) victim) != null) {
 				//Damage is lethal, prevent them from dying
 				e.setCancelled(true);
+				
+				if (TeamSurvivalManager.getSession(this).getState() != GameSession.State.INWAVE) {
+					return;
+				}
+				
 				victim.setGameMode(GameMode.SPECTATOR);
 				
 				//Check to see if the team is dead
