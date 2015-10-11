@@ -33,7 +33,7 @@ public class LeaveTeamCommand implements CommandExecutor{
 		
 		//remove them from the team
 		team.removePlayer(team.hasPlayer((Player)sender));
-		
+		sender.sendMessage(ChatFormat.SUCCESS.wrap("You have left your team: "+team.getName()));
 		return true;
 	}
 	

@@ -71,6 +71,7 @@ public final class Creator {
 		
 		if(sender instanceof Player){
 			Creator.current.addBossLocation(((Player)sender).getLocation());
+			sender.sendMessage(ChatFormat.SESSION.wrap("Added arena at: "+Creator.getLocation(((Player)sender).getLocation())));
 		}else{
 			sender.sendMessage(ChatFormat.ERROR.wrap("You need to be a player!"));
 		}

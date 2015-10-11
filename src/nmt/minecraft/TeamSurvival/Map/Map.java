@@ -142,6 +142,14 @@ public class Map {
 		return this.arenaLocations.remove(0);
 	}
 	
+	public Location getNextBoss(){
+		if(this.bossLocations.isEmpty()){
+			return null;
+		}
+		
+		return this.bossLocations.remove(0);
+	}
+	
 	/**
 	 * This static method prints out all the yml configuration files<br />
 	 * that could possibly be loaded into a map.
