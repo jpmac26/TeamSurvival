@@ -14,34 +14,345 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
  * The information about equipment and health is stored here so that random-per-mob
- * spawns are do-able
+ * spawns are do-able. Also contains data about what chances a mob has to spawn with
+ * armor and enchantments
  * @author Herobrine
  * @author Franz Chavez
  * @author James Pelster
- *
+ * @author Stephanie
+ * 
  */
 public class Mob {
+	/**
+	 * Wave at which it is possible to get mobs with diamond equipment
+	 */
+	private static final int diamondWave=9;
+	private static final int ironWave=6;
+	private static final int goldWave=4;
+	private static final int leatherWave=3;
+	
+	private static final int diamondChance=15;//1 out of 15 chance for diamond
+	private static final int ironChance=10;
+	private static final int goldChance=4;
+	private static final int leatherChance=2;//about 1/2 mobs have leather armor
 	
 	/**
 	 * Keep track of what type of entity to spawn
 	 */
 	private String type;
+	private ItemStack[] armor;
+	private ItemStack weapon;
+	
+	private int waveNumber;
+	
+	Random rGen;
+	
+	
+	private enum level{
+		DIAMOND,
+		IRON,
+		GOLD,
+		LEATHER,
+		NONE;
+	}
+	
+	private Mob(){
+		type = "";
+		armor = new ItemStack[4];
+		waveNumber=0;
+		rGen = new Random(System.currentTimeMillis());//seed the generator
+	}
 	
 	/**
-	 * Some sort of indication of how hard the mob is.<br />
-	 * For example, high-difficulty zombies might spawn with lots of enchanted equips, while
-	 * low-difficulty zombies would spawn with no equipment at all
+	 * 
+	 * @param type
+	 * @param waveNumber
 	 */
-	private int difficulty;
+	public Mob(String type, int waveNumber){
+		this();
+		this.type = type;
+		this.generateEquipment();
+		this.generateEnchantments();
+	}
 	
 	/**
-	 * Creates a mob archetype from the passed difficulty and type.<br />
-	 * @param mobUsed What kind of mob is this
-	 * @param difficulty How difficult are they. This determines, when entities are spawned, what equips & hp they have
+	 * Generates random equipment for this Mob.
+	 * @return true on success, false if it could not be generated
 	 */
-	public Mob(String mobUsed, int diffBase, int waveNum) {
-		type = mobUsed.toUpperCase();
-		difficulty = diffBase * waveNum;
+	private void generateEquipment(){
+		//generate helmet
+		switch(genEquipLevel()){
+		case DIAMOND:
+			armor[0] = new ItemStack(Material.DIAMOND_HELMET);
+			break;
+		case IRON:
+			armor[0] = new ItemStack(Material.IRON_HELMET);
+			break;
+		case GOLD:
+			armor[0] = new ItemStack(Material.GOLD_HELMET);
+			break;
+		case LEATHER:
+			armor[0] = new ItemStack(Material.LEATHER_HELMET);
+			break;
+		case NONE:
+			armor[0] = null;
+		}
+		
+		//generate Chestplate
+		switch(genEquipLevel()){
+		case DIAMOND:
+			armor[1] = new ItemStack(Material.DIAMOND_CHESTPLATE);
+			break;
+		case IRON:
+			armor[1] = new ItemStack(Material.IRON_CHESTPLATE);
+			break;
+		case GOLD:
+			armor[1] = new ItemStack(Material.GOLD_CHESTPLATE);
+			break;
+		case LEATHER:
+			armor[1] = new ItemStack(Material.LEATHER_CHESTPLATE);
+			break;
+		case NONE:
+			armor[1] = null;
+		}
+		
+		//generate Leggings
+		switch(genEquipLevel()){
+		case DIAMOND:
+			armor[2] = new ItemStack(Material.DIAMOND_LEGGINGS);
+			break;
+		case IRON:
+			armor[2] = new ItemStack(Material.IRON_LEGGINGS);
+			break;
+		case GOLD:
+			armor[2] = new ItemStack(Material.GOLD_LEGGINGS);
+			break;
+		case LEATHER:
+			armor[2] = new ItemStack(Material.LEATHER_LEGGINGS);
+			break;
+		case NONE:
+			armor[2] = null;
+		}
+		
+		//generate Leggings
+		switch(genEquipLevel()){
+		case DIAMOND:
+			armor[3] = new ItemStack(Material.DIAMOND_BOOTS);
+			break;
+		case IRON:
+			armor[3] = new ItemStack(Material.IRON_BOOTS);
+			break;
+		case GOLD:
+			armor[3] = new ItemStack(Material.GOLD_BOOTS);
+			break;
+		case LEATHER:
+			armor[3] = new ItemStack(Material.LEATHER_BOOTS);
+			break;
+		case NONE:
+			armor[3] = null;
+		}
+		
+		if(this.type.equals(EntityType.SKELETON) && rGen.nextInt()%2 == 1){
+			//this skeleton will have a bow
+			weapon = new ItemStack(Material.BOW);
+			return;
+		}
+		
+		//generate sword
+		switch(genEquipLevel()){
+		case DIAMOND:
+			weapon = new ItemStack(Material.DIAMOND_SWORD);
+			break;
+		case IRON:
+			weapon = new ItemStack(Material.IRON_SWORD);
+			break;
+		case GOLD:
+			weapon = new ItemStack(Material.STONE_SWORD);
+			break;
+		case LEATHER:
+			weapon = new ItemStack(Material.WOOD_SWORD);
+			break;
+		case NONE:
+			weapon = null;
+		}
+		return;
+	}
+	
+	private level genEquipLevel(){
+		int rNumber = rGen.nextInt();
+		switch(waveNumber){
+		case diamondWave:
+			if(rNumber%diamondChance == 0 && waveNumber >= diamondWave){
+				return level.DIAMOND;
+			}else{
+				rNumber = rGen.nextInt(); //may need to get rid of this
+			}
+			//purposefully missing the break;
+		case ironWave:
+			if(rNumber%ironChance == 0 && waveNumber >= ironWave){
+				return level.IRON;
+			}else{
+				rNumber=rGen.nextInt();
+			}
+		case goldWave:
+			if(rNumber%goldChance == 0 && waveNumber >= goldWave){
+				return level.GOLD;
+			}else{
+				rNumber=rGen.nextInt();
+			}
+		case leatherWave:
+			if(rNumber%leatherChance == 0 && waveNumber >= leatherWave){
+				return level.LEATHER;
+			}
+		default:
+			return level.NONE;
+		}
+		
+	}
+	
+	/**
+	 * This method will calculate all the equipment that will recieve enchantments
+	 */
+	private void generateEnchantments(){
+		int numEnchant=0;
+		//enchant the weapon
+		if(canEnchant(numEnchant) && enchantWeapon()){
+			numEnchant++;
+		}
+		
+		//enchant the helm
+		if(canEnchant(numEnchant) && enchantArmor(0)){
+			numEnchant++;
+		}
+		
+		//enchant the chest
+		if(canEnchant(numEnchant) && enchantArmor(1)){
+			numEnchant++;
+		}
+		
+		//enchant the legs
+		if(canEnchant(numEnchant) && enchantArmor(2)){
+			numEnchant++;
+		}
+		
+		//enchant the boots
+		if(canEnchant(numEnchant) &&  enchantArmor(3)){
+			numEnchant++;
+		}
+	}
+	
+	/**
+	 * This method actually adds the enchantment to the itemstack for the armor
+	 * @param index the index of the piece of armor to enchant
+	 * @return true if it worked, false otherwise
+	 */
+	private boolean enchantArmor(int index) {
+		
+		switch(rGen.nextInt(5)){
+		case 0:
+			//fire protection
+			armor[index].addEnchantment(Enchantment.PROTECTION_FIRE, 1);
+			if(rGen.nextInt()%100 < 90){
+				break;
+			}
+		case 1:
+			//blast protection
+			armor[index].addEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 1);
+			if(rGen.nextInt()%100 < 90){
+				break;
+			}
+		case 2:
+			//projectile protection
+			armor[index].addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1);
+			if(rGen.nextInt()%100 < 90){
+				break;
+			}
+		case 3:
+			//protection
+			armor[index].addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+			if(rGen.nextInt()%100 < 90){
+				break;
+			}
+		case 4:
+		//thorns
+			armor[index].addEnchantment(Enchantment.THORNS, 1);
+		}
+		return false;
+	}
+	
+	/**
+	 * This method adds teh enchantment to the itemstack for the weapon
+	 * @return true if it worked, false if there was no weapon to enchant
+	 */
+	private boolean enchantWeapon() {
+		//make sure the weapon exists
+		if(weapon == null){
+			return false;
+		}
+		
+		if(weapon.getData().getItemType().equals(Material.BOW)){
+			//its a bow
+			switch(rGen.nextInt(3)){
+			case 0://power
+				weapon.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+				if(rGen.nextInt()%100 < 95){
+					break;
+				}
+			case 1://punch
+				weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
+				if(rGen.nextInt()%100 < 95){
+					break;
+				}
+			case 2://fire aspect
+				weapon.addEnchantment(Enchantment.ARROW_FIRE, 1);
+			}
+		}else{
+			//its a sword
+			
+			//knockback
+			//fire
+			switch(rGen.nextInt(3)){
+			case 0://sharpness
+				weapon.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+				if(rGen.nextInt()%100 < 95){
+					break;
+				}
+			case 1://punch
+				weapon.addEnchantment(Enchantment.KNOCKBACK, 1);
+				if(rGen.nextInt()%100 < 95){
+					break;
+				}
+			case 2://fire aspect
+				weapon.addEnchantment(Enchantment.FIRE_ASPECT, 1);
+			}
+			
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Checks to see if it is ok to enchant a piece of equipment
+	 * @param currentEnchants the number of enchants currently on all equipment
+	 * @return true if it is ok to enchant, false otherwise
+	 */
+	private boolean canEnchant(int currentEnchants){
+		int result = rGen.nextInt(100)+(2*waveNumber)-(5*currentEnchants);
+		return result > 50;
+	}
+	
+	public LivingEntity spawnMob(Location spawnLocation){
+		LivingEntity mob;
+		
+		if(type.equalsIgnoreCase("jockey")){
+			LivingEntity jockeyVehicle = (LivingEntity)spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.SPIDER);
+			mob = (LivingEntity)spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.SKELETON);
+			jockeyVehicle.setPassenger(mob);
+		}else{
+			mob = (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.valueOf(type));
+		}
+		
+		return null;
 	}
 	
 	public LivingEntity SpawnEntity(Location loc) {
@@ -50,94 +361,29 @@ public class Mob {
 		if(type.equalsIgnoreCase("Jockey")) {
 			LivingEntity jockeyVehicle = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.SPIDER);
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.SKELETON);
-			jockeyVehicle.setPassenger(GiveRandomStuff(spawnedEntity, 2));
-			return GiveRandomStuff(jockeyVehicle, 2);
+			jockeyVehicle.setPassenger(spawnedEntity);
 		} else if(type.equalsIgnoreCase("Wither_Skeleton")) {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.SKELETON);
 			((Skeleton)spawnedEntity).setSkeletonType(SkeletonType.WITHER);
-			return GiveRandomStuff(spawnedEntity, 9);
 		} else if(type.equalsIgnoreCase("Creeper") & rn.nextInt(50) == 49) {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.CREEPER);
-			return GiveRandomStuff(spawnedEntity, 7);
 		} else {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.valueOf(type.toUpperCase()));
 			spawnedEntity.setCanPickupItems(false);
-			//set items for spawned entity and return it
-			return GiveRandomStuff(spawnedEntity, difficulty);
 		}
 		
-	}
-	
-	private LivingEntity GiveRandomStuff(LivingEntity ent, int diff) {
-		Random rn = new Random();
-		//int RandChance = diff * ((rn.nextInt(4) + 1) / 10);
-		int RandChance = (rn.nextInt(diff + 1) * 100) / (diff + 1) + 10;
-		if (RandChance >= 90) {
-			ItemStack[] armor = new ItemStack[4];
-			ItemStack weapon;
-			armor[0] = new ItemStack(Material.DIAMOND_HELMET);
-			armor[1] = new ItemStack(Material.DIAMOND_CHESTPLATE);
-			armor[2] = new ItemStack(Material.DIAMOND_LEGGINGS);
-			armor[3] = new ItemStack(Material.DIAMOND_BOOTS);
-			ent.getEquipment().setArmorContents(armor);
-			
-			if(ent.getType() == EntityType.SKELETON) {
-				if(rn.nextInt(2) == 1){
-					weapon = new ItemStack(Material.DIAMOND_SWORD);
-					ent.getEquipment().setItemInHand(weapon);
-				} else if(rn.nextInt(4) == 3) {
-					weapon = ent.getEquipment().getItemInHand();
-					weapon.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
-					if(rn.nextInt(20) == 19) {
-						weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
-					}
-					ent.getEquipment().setItemInHand(weapon);
-				}
-			} else {
-				weapon = new ItemStack(Material.DIAMOND_SWORD);
-				ent.getEquipment().setItemInHand(weapon);
-			}
-		} else if (RandChance >= 75) {
-			ItemStack[] armor = new ItemStack[4];
-			ItemStack weapon;
-			armor[0] = new ItemStack(Material.IRON_HELMET);
-			armor[1] = new ItemStack(Material.IRON_CHESTPLATE);
-			armor[2] = new ItemStack(Material.IRON_LEGGINGS);
-			armor[3] = new ItemStack(Material.IRON_BOOTS);
-			ent.getEquipment().setArmorContents(armor);
-			
-			if(ent.getType() == EntityType.SKELETON) {
-				if(rn.nextInt(2) == 1){
-					weapon = new ItemStack(Material.IRON_SWORD);
-					ent.getEquipment().setItemInHand(weapon);
-				} else if(rn.nextInt(10) == 9) {
-					weapon = ent.getEquipment().getItemInHand();
-					weapon.addEnchantment(Enchantment.ARROW_FIRE, 1);
-					ent.getEquipment().setItemInHand(weapon);
-				}
-			} else {
-				weapon = new ItemStack(Material.IRON_SWORD);
-				ent.getEquipment().setItemInHand(weapon);
-			}
-		} else if (RandChance >= 50) {
-			ItemStack[] armor = new ItemStack[4];
-			ItemStack weapon;
-			armor[0] = new ItemStack(Material.LEATHER_HELMET);
-			armor[1] = new ItemStack(Material.LEATHER_CHESTPLATE);
-			armor[2] = new ItemStack(Material.LEATHER_LEGGINGS);
-			armor[3] = new ItemStack(Material.LEATHER_BOOTS);
-			ent.getEquipment().setArmorContents(armor);
-			
-			if(ent.getType() == EntityType.SKELETON) {
-				if(rn.nextInt(2) == 1){
-					weapon = new ItemStack(Material.STONE_SWORD);
-					ent.getEquipment().setItemInHand(weapon);
-				}
-			} else {
-				weapon = new ItemStack(Material.STONE_SWORD);
-				ent.getEquipment().setItemInHand(weapon);
-			}
-		}
-		return ent;
+		//set items for spawned entity and return it
+		if(armor[0]!= null)
+			spawnedEntity.getEquipment().setHelmet(armor[0]);
+		if(armor[1]!= null)
+			spawnedEntity.getEquipment().setHelmet(armor[0]);
+		if(armor[2]!= null)
+			spawnedEntity.getEquipment().setHelmet(armor[0]);
+		if(armor[3]!= null)
+			spawnedEntity.getEquipment().setHelmet(armor[0]);
+		if(weapon != null)
+			spawnedEntity.getEquipment().setItemInHand(weapon);
+		
+		return spawnedEntity;
 	}
 }
