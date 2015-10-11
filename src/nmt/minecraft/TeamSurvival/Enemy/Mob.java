@@ -179,6 +179,7 @@ public class Mob {
 	}
 	
 	private level genEquipLevel(){
+		//*
 		int rNumber = rGen.nextInt();
 		switch(waveNumber){
 		case diamondWave:
@@ -207,7 +208,7 @@ public class Mob {
 		default:
 			return level.NONE;
 		}
-		
+		//*/
 	}
 	
 	/**
@@ -247,6 +248,10 @@ public class Mob {
 	 * @return true if it worked, false otherwise
 	 */
 	private boolean enchantArmor(int index) {
+		//make sure the armor exists
+		if(armor[index] == null){
+			return false;
+		}
 		
 		switch(rGen.nextInt(5)){
 		case 0:
@@ -373,14 +378,14 @@ public class Mob {
 		}
 		
 		//set items for spawned entity and return it
-		if(armor[0]!= null)
+		if(armor[0]!= null)//set helm
 			spawnedEntity.getEquipment().setHelmet(armor[0]);
-		if(armor[1]!= null)
-			spawnedEntity.getEquipment().setHelmet(armor[0]);
-		if(armor[2]!= null)
-			spawnedEntity.getEquipment().setHelmet(armor[0]);
-		if(armor[3]!= null)
-			spawnedEntity.getEquipment().setHelmet(armor[0]);
+		if(armor[1]!= null)//chest
+			spawnedEntity.getEquipment().setChestplate(armor[1]);
+		if(armor[2]!= null)//legs
+			spawnedEntity.getEquipment().setLeggings(armor[2]);
+		if(armor[3]!= null)//boots
+			spawnedEntity.getEquipment().setBoots(armor[3]);
 		if(weapon != null)
 			spawnedEntity.getEquipment().setItemInHand(weapon);
 		

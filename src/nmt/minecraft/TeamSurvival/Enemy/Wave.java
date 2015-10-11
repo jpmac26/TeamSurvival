@@ -20,8 +20,10 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  * Responsible for keeping track of how many enemies are left to spawn and providing a way to spawn one.
  * @author Franz Chavez
  * @author James Pelster
+ * @author Stephanie
  */
 public class Wave implements Listener {
+	private static final int defaultMaxMobs = 40;
 	private String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
 	private int MobVals[] = {0,4,3,2,7,7,8,6};
 	private List<Mob> Mobs;
@@ -29,6 +31,8 @@ public class Wave implements Listener {
 	private int maxSpawned, waveN;
 	private boolean started;
 	private List<Location> MobSpawnPoints = new ArrayList<Location>();
+	
+	private Random rGen;
 	
 	/**
 	 * Creates a wave with the given types of mobs.
@@ -40,10 +44,9 @@ public class Wave implements Listener {
 	public Wave(int WaveNumber, List<Location> spawnPoints, int TotalMobCount) {
 		this();
 		try {
-			maxSpawned = 40; //#magicNumber
+			maxSpawned = defaultMaxMobs; //#magicNumber
 			waveN = WaveNumber;
 			MobSpawnPoints = spawnPoints;
-			Random rn = new Random();
 			int MobPool = (WaveNumber-1)*2;
 			int RandNum;
 			int UsedCount = 0;
@@ -51,7 +54,7 @@ public class Wave implements Listener {
 			int MobDiffs[] = new int[3];
 			
 			while(MobPool >= 0 & UsedCount < 3) {
-				RandNum = rn.nextInt(7); //#magicNumber -> should be MobVals.size
+				RandNum = rGen.nextInt(7); //#magicNumber -> should be MobVals.size
 				MobDiffs[UsedCount] = MobVals[RandNum];
 				if(MobPool - MobDiffs[UsedCount] >= 0){
 					/* the mob can be added */
@@ -79,7 +82,7 @@ public class Wave implements Listener {
 		this();
 		maxSpawned = MaxToSpawn;
 		MobSpawnPoints = spawnPoints;
-		Random rn = new Random();
+		
 		int MobPool = (WaveNumber-1)*2;
 		int RandNum;
 		int UsedCount = 0;
@@ -87,7 +90,7 @@ public class Wave implements Listener {
 		int MobDiffs[] = new int[3];
 		
 		while(MobPool >= 0 & UsedCount < 3){
-			RandNum = rn.nextInt(7);
+			RandNum = rGen.nextInt(7);
 			MobDiffs[UsedCount] = MobVals[RandNum];
 			if(MobPool - MobDiffs[UsedCount] >= 0){
 				/* the mob can be added */
@@ -105,6 +108,7 @@ public class Wave implements Listener {
 		Mobs = new LinkedList<Mob>();
 		Entities = new LinkedList<LivingEntity>();
 		started = false;
+		rGen = new Random(System.currentTimeMillis());
 		Bukkit.getPluginManager().registerEvents(this, TeamSurvivalPlugin.plugin);
 	}
 	
@@ -116,17 +120,16 @@ public class Wave implements Listener {
 	 * @note calls another function 
 	 */
 	private void SetupMobs(String MobsUsed[], int MobCount, int MobDiffs[], int waveNum){
-		int count = MobCount;
-		while(count > 0){
-			if(count == 0)break;
-			Mobs.add(new Mob(MobsUsed[0],MobDiffs[0], waveNum));
-			count--;
-			if(count == 0)break;
-			Mobs.add(new Mob(MobsUsed[1],MobDiffs[1], waveNum));
-			count--;
-			if(count == 0)break;
-			Mobs.add(new Mob(MobsUsed[2],MobDiffs[2], waveNum));
-			count--;
+		while(MobCount > 0){
+			if(MobCount == 0)break;
+			Mobs.add(new Mob(MobsUsed[0], waveNum));
+			MobCount--;
+			if(MobCount == 0)break;
+			Mobs.add(new Mob(MobsUsed[1], waveNum));
+			MobCount--;
+			if(MobCount == 0)break;
+			Mobs.add(new Mob(MobsUsed[2], waveNum));
+			MobCount--;
 		}
 	}
 	
@@ -136,8 +139,7 @@ public class Wave implements Listener {
 	 * @return
 	 */
 	public void spawnRandomMob(Location location) {
-		Random rn = new Random();
-		int RandNum = rn.nextInt(Mobs.size());
+		int RandNum = rGen.nextInt(Mobs.size());
 		Entities.add(Mobs.get(RandNum).SpawnEntity(location));
 		Mobs.remove(RandNum);
 	}
@@ -149,8 +151,7 @@ public class Wave implements Listener {
 	public void start() {
 		started = true;
 		while(started == true && Entities.size() < maxSpawned && Mobs.size() > 0) {
-			Random rn = new Random();
-			int RandPoint = rn.nextInt(MobSpawnPoints.size());
+			int RandPoint = rGen.nextInt(MobSpawnPoints.size());
 			spawnRandomMob(MobSpawnPoints.get(RandPoint));
 		}
 	}
@@ -180,8 +181,7 @@ public class Wave implements Listener {
 						//Spawn a new mob to replace the one that just died
 						if (Mobs.size() > 0) {
 							TeamSurvivalPlugin.plugin.getLogger().info("Spawning new mob to replace dead one.\n Remaining: " + ((Integer)(Mobs.size() - 1)).toString() + ".\r\n");
-							Random rn = new Random();
-							int RandPoint = rn.nextInt(MobSpawnPoints.size());
+							int RandPoint = rGen.nextInt(MobSpawnPoints.size());
 							spawnRandomMob(MobSpawnPoints.get(RandPoint));
 						}
 						
