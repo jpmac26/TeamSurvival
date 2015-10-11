@@ -569,9 +569,10 @@ public class GameSession implements Listener, Tickable {
 			if (player.getPlayer() == null) {
 				continue;
 			}
-			
-			player.getPlayer().setGameMode(GameMode.SURVIVAL);
-			player.getPlayer().teleport(team.getArenaLocation());
+			if (player.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+				player.getPlayer().setGameMode(GameMode.SURVIVAL);
+				player.getPlayer().teleport(team.getArenaLocation());
+			}
 		}
 		
 		this.waveNumber++;
