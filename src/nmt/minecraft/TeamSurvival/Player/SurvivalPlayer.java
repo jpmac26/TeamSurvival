@@ -12,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 
+import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+
 /**
  * A wrapper class for someone playing the game.<br />
  * @author Skyler
@@ -40,6 +42,7 @@ public class SurvivalPlayer implements Listener {
 		//Only need the Player User ID
 		this.playerID = player.getUniqueId();
 		this.preGameLocation = null;
+		Bukkit.getPluginManager().registerEvents(this, TeamSurvivalPlugin.plugin);
 	}
 	
 	/**
