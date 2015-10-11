@@ -644,4 +644,33 @@ public class GameSession implements Listener, Tickable {
 		
 		return avg + (int)(waveNumber*(avg+5));
 	}
+	
+	/**
+	 * Clears the current wave, trying to eliminate the mess. Then advances to the next wave.<br />
+	 * This method is not meant to be called casually. It's instead provided as an emergency method
+	 * incase entities do what entities do and become rogue.
+	 */
+	public void clearWave() {
+		if (waves.isEmpty()) {
+			return;
+		}
+		
+		Iterator<Wave> it = waves.iterator();
+		Wave wave = null;
+		while (it.hasNext()) {
+			wave = it.next();
+			if (!it.hasNext()) {
+				//this is the last wave. Save it and throw an event
+				break;
+			}
+			
+			//not last wave, so remove it
+			wave.stop();
+			it.remove();
+		}
+		
+		//wave will hold last wave
+		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(wave));
+		
+	}
 }
