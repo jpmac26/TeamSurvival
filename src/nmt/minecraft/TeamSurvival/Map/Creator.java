@@ -145,6 +145,13 @@ public final class Creator {
 		}
 		Map cur = Creator.current;
 		String str = ChatFormat.SESSION.wrap(cur.getName())+"\n";
+		
+		str += "valid: ";
+		if(Creator.current.isValid()){
+			str += ChatFormat.INFO.wrap("YES\n");
+		}else{
+			str += ChatFormat.ERROR.wrap("NO\n");
+		}
 		str += "starting location: "+ getLocation(cur.getStartingLocation())+"\n";
 		str += "shop location: "+ getLocation(cur.getShopLocation())+"\n";
 		str += "shop button location: "+ getLocation(cur.getShopButtonLocation())+ "\n";
