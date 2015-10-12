@@ -1,11 +1,12 @@
 package nmt.minecraft.TeamSurvival.Session;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -105,7 +106,7 @@ public class GameSession implements Listener, Tickable {
 	
 	
 	//private TreeMap<Team, Wave> teams;
-	private TreeMap<Team, Wave> teams;
+	private HashMap<Team, Wave> teams;
 	
 	//private List<Wave> waves;
 	
@@ -132,7 +133,7 @@ public class GameSession implements Listener, Tickable {
 		this.name = name;
 		this.map = map;
 		this.state = State.PREGAME;
-		this.teams = new TreeMap<Team, Wave>();
+		this.teams = new HashMap<Team, Wave>();
 		System.out.println("Shop Location: " + map.getShopButtonLocation());
 		this.sessionShop = new Shop(map.getShopButtonLocation(), null);
 	}
@@ -519,11 +520,20 @@ public class GameSession implements Listener, Tickable {
 	 * Eliminates empty teams from the team list
 	 */
 	private void purgeTeams() {
-		Iterator<Team> it = teams.keySet().iterator();
+		List<Team> teamList = new ArrayList<Team>(teams.keySet().size());
+		
+		teamList.addAll(teams.keySet());
+		
+		Iterator<Team> it = teamList.iterator();
 		Team team;
 		while (it.hasNext()) {
+			for (Team t : teams.keySet()) {
+				System.out.println("Contains key: " + t.getName());
+			}
 			team = it.next();
+			System.out.println("Checking team: " + team.getName());
 			if (team.getPlayerList().isEmpty()) {
+				System.out.println("!!!Removing team: " + team.getName());
 				teams.remove(team);
 			}
 		}
@@ -542,7 +552,7 @@ public class GameSession implements Listener, Tickable {
 
 		Team key = null;
 		for (Team team : teams.keySet()) {
-			if (teams.get(team).equals(event.getWave())) {
+			if (teams.get(team) != null && teams.get(team).equals(event.getWave())) {
 				key = team;
 				break;
 			}
@@ -566,7 +576,7 @@ public class GameSession implements Listener, Tickable {
 		
 		teams.put(key, null);
 		
-		if (!teams.values().isEmpty()) {
+		if (!areWavesNull()) {
 			return;
 		}
 		
@@ -632,12 +642,8 @@ public class GameSession implements Listener, Tickable {
 	
 	/**
 	 * Generates one wave, and then clones it for all teams<br />
-	 * <b>This method will clear the teams map if it's not empty!</b>
 	 */
 	private void fillWaves() {
-		if (!teams.isEmpty()) {
-			teams.clear();
-		}
 		
 		Wave wave = new Wave(waveNumber, null, numberOfMobs());
 		List<Location> locs;
@@ -649,10 +655,6 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	private void fillBossWaves() {
-
-		if (!teams.isEmpty()) {
-			teams.clear();
-		}
 		
 		Wave wave = new BossWave(null, new SkeletonGroupMob());
 		List<Location> locs;
@@ -674,7 +676,7 @@ public class GameSession implements Listener, Tickable {
 			sum += t.getPlayerList().size();
 		}
 		
-		int avg = sum/teams.size();
+		int avg = sum/teams.keySet().size();
 		
 		return avg + (int)(waveNumber*(avg+5));
 	}
@@ -710,7 +712,7 @@ public class GameSession implements Listener, Tickable {
 	 */
 	private boolean areWavesNull() {
 		for (Entry<Team, Wave> entry : teams.entrySet()) {
-			if (entry.getValue() == null) {
+			if (entry.getValue() != null) {
 				return false;
 			}
 		}

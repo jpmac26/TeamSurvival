@@ -31,6 +31,8 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  */
 public class Team implements Listener {
 	
+	private static int lastID = 0;
+	
 	/**
 	 * Collection of the players that are part of this team
 	 */
@@ -40,6 +42,8 @@ public class Team implements Listener {
 	 * This team's name
 	 */
 	private String name;
+	
+	private int ID;
 	
 	/**
 	 * the lcoation of the areana that this team belogns to
@@ -51,6 +55,10 @@ public class Team implements Listener {
 	 */
 	private Location bossLocation;
 	
+	private static int getNextID() {
+		return ++lastID;
+	}
+	
 	/**
 	 * Main constructor for the Team Class.
 	 * @param name The name for the team.
@@ -59,6 +67,7 @@ public class Team implements Listener {
 	 */
 	public Team(String name, Collection<SurvivalPlayer> players) {
 		this.name = name;
+		this.ID = Team.getNextID();
 		this.players = new HashSet<SurvivalPlayer>(players);
 		Bukkit.getPluginManager().registerEvents(this, 
 				TeamSurvivalPlugin.plugin);
@@ -235,6 +244,11 @@ public class Team implements Listener {
 		}
 		
 		return this.name.equals(((Team)o).name);
+	}
+	
+	@Override
+	public int hashCode() {
+		return 886345 + this.ID * 7;
 	}
 	
 	/**
