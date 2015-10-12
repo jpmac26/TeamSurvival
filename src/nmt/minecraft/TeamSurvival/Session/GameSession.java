@@ -298,6 +298,11 @@ public class GameSession implements Listener, Tickable {
 		
 		for (Team team : teams.keySet()) {
 			team.sendTeamMessage(Messages.STARTINFO.toString());
+			for (SurvivalPlayer player : team.getPlayers()) {
+				if (player.getPlayer() != null) {
+					player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
+				}
+			}
 		}
 		return true;
 	}
@@ -587,6 +592,7 @@ public class GameSession implements Listener, Tickable {
 			}
 			if (player.getPlayer().getGameMode() == GameMode.SPECTATOR) {
 				player.getPlayer().setGameMode(GameMode.SURVIVAL);
+				player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
 				player.getPlayer().teleport(team.getArenaLocation());
 			}
 		}
