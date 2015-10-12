@@ -60,6 +60,7 @@ public class SurvivalPlayer implements Listener {
 	 */
 	private void returnToPreGame() {
 		Player p = this.getPlayer();
+
 		//Check to ensure that the player's pregame location was set.
 		if (this.preGameLocation == null) {
 			System.out.println("ERROR: " + this.getOfflinePlayer().getName() + "'s location was not set!");
@@ -68,6 +69,7 @@ public class SurvivalPlayer implements Listener {
 		//Only teleport the player if they are actively in the game.
 		if (p != null) {
 			p.teleport(this.preGameLocation);
+			p.setLevel(0);
 			p.setGameMode(GameMode.SURVIVAL);
 		}
 	}
