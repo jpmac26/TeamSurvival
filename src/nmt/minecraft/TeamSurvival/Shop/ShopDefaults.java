@@ -25,6 +25,8 @@ infinity bow enchantment - 200
 	GOLD_SWORD(Material.GOLD_SWORD, 1, 75),
 	IRON_SWORD(Material.IRON_SWORD, 1, 200),
 	DIAMOND_SWORD(Material.DIAMOND_SWORD, 1, 350),
+	BEEF(Material.COOKED_BEEF, 5, 50),
+	APPLES(Material.APPLE, 20, 50),
 	BOW(Material.BOW, 1, 100),
 	ARROWS(Material.ARROW, 10, 50),
 	SHARPNESS(EnchantedBook.SHARPNESS.getEnchantedBook(), 75),
