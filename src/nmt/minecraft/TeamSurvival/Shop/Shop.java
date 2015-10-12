@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 
+import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
 /**
@@ -59,7 +60,8 @@ public class Shop implements Listener {
 			return;
 		}
 		
-		if (e.getClickedBlock().getLocation().equals(buttonLocation)) {
+		if (e.getClickedBlock().getLocation().equals(buttonLocation))
+		if (TeamSurvivalManager.getPlayer(e.getPlayer()) != null) { //check that they're on a team
 			e.setCancelled(true);
 			
 			//open inventory
