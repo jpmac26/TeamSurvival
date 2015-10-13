@@ -78,6 +78,8 @@ public class Mob {
 		this.generateEnchantments();
 	}
 	
+	private int waveNum;
+	
 	/**
 	 * Generates random equipment for this Mob.
 	 * @return true on success, false if it could not be generated
@@ -364,7 +366,6 @@ public class Mob {
 	}
 	
 	public LivingEntity SpawnEntity(Location loc) {
-		Random rn = new Random();
 		LivingEntity spawnedEntity;
 		if(type.equalsIgnoreCase("Jockey")) {
 			LivingEntity jockeyVehicle = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.SPIDER);
@@ -373,7 +374,7 @@ public class Mob {
 		} else if(type.equalsIgnoreCase("Wither_Skeleton")) {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.SKELETON);
 			((Skeleton)spawnedEntity).setSkeletonType(SkeletonType.WITHER);
-		} else if(type.equalsIgnoreCase("Creeper") & rn.nextInt(50) == 49) {
+		} else if(type.equalsIgnoreCase("Creeper") & rGen.nextInt(50) == 49) {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.CREEPER);
 		} else {
 			spawnedEntity = (LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.valueOf(type.toUpperCase()));
