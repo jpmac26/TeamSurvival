@@ -140,6 +140,13 @@ public class Mob {
 				weapon = new ItemStack(Material.STONE_SWORD);
 				ent.getEquipment().setItemInHand(weapon);
 			}
+		} else {
+			ent.getEquipment().clear();
+			ItemStack weapon;
+			if(ent.getType() == EntityType.SKELETON) {
+				weapon = new ItemStack(Material.BOW);
+				ent.getEquipment().setItemInHand(weapon);
+			}
 		}
 		return ent;
 	}
