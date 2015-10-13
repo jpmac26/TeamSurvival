@@ -32,7 +32,7 @@ public class Wave implements Listener {
 	private boolean started;
 	private List<Location> MobSpawnPoints = new ArrayList<Location>();
 	
-	private Random rGen;
+	private static Random rGen;
 	
 	/**
 	 * Creates a wave with the given types of mobs.
@@ -108,7 +108,9 @@ public class Wave implements Listener {
 		Mobs = new LinkedList<Mob>();
 		Entities = new LinkedList<LivingEntity>();
 		started = false;
-		rGen = new Random(System.currentTimeMillis());
+		if(rGen == null){
+			rGen = new Random(System.currentTimeMillis());
+		}
 		Bukkit.getPluginManager().registerEvents(this, TeamSurvivalPlugin.plugin);
 	}
 	

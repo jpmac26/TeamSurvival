@@ -45,7 +45,7 @@ public class Mob {
 	
 	private int waveNumber;
 	
-	Random rGen;
+	private static Random rGen=null;
 	
 	
 	private enum level{
@@ -60,7 +60,9 @@ public class Mob {
 		type = "";
 		armor = new ItemStack[4];
 		waveNumber=0;
-		rGen = new Random(System.currentTimeMillis());//seed the generator
+		if(rGen==null){
+			rGen = new Random(System.currentTimeMillis());//seed the generator
+		}
 	}
 	
 	/**
