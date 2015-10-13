@@ -299,9 +299,7 @@ public class GameSession implements Listener, Tickable {
 		for (Team team : teams.keySet()) {
 			team.sendTeamMessage(Messages.STARTINFO.toString());
 			for (SurvivalPlayer player : team.getPlayers()) {
-				if (player.getPlayer() != null) {
-					player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
-				}
+				player.healPlayer();
 			}
 		}
 		return true;
@@ -326,7 +324,9 @@ public class GameSession implements Listener, Tickable {
 		state = State.FINISHED;
 		
 		for (Wave wave : teams.values()) {
-			wave.stop();
+			if(wave != null){
+				wave.stop();
+			}
 		}
 		
 		teams.clear();

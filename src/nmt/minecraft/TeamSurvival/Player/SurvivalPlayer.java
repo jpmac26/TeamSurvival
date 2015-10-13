@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.potion.PotionEffect;
 
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
@@ -71,6 +72,22 @@ public class SurvivalPlayer implements Listener {
 			p.teleport(this.preGameLocation);
 			p.setLevel(0);
 			p.setGameMode(GameMode.SURVIVAL);
+			//clear effects
+			for(PotionEffect e : p.getActivePotionEffects()){
+				p.removePotionEffect(e.getType());
+			}
+			//heal the player
+			this.healPlayer();
+		}
+	}
+	
+	/**
+	 * Heals the player to max health
+	 */
+	public void healPlayer(){
+		Player p = this.getPlayer();
+		if(p!=null){
+			p.setHealth(p.getMaxHealth());
 		}
 	}
 	
