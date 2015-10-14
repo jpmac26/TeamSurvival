@@ -224,7 +224,7 @@ public class Wave implements Listener {
 		NW.maxSpawned = maxSpawned;
 		NW.waveN = this.waveN;
 		for (Mob mob : Mobs) {
-			NW.Mobs.add(mob);
+			NW.Mobs.add(mob.clone());
 		}
 		
 		NW.MobSpawnPoints = m;

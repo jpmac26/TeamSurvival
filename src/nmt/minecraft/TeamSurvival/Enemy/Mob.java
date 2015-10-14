@@ -1,5 +1,6 @@
 package nmt.minecraft.TeamSurvival.Enemy;
 
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -77,8 +78,6 @@ public class Mob {
 		this.generateEquipment();
 		this.generateEnchantments();
 	}
-	
-	private int waveNum;
 	
 	/**
 	 * Generates random equipment for this Mob.
@@ -394,5 +393,26 @@ public class Mob {
 			spawnedEntity.getEquipment().setItemInHand(weapon);
 		
 		return spawnedEntity;
+	}
+	
+	/**
+	 * Returns a clone of the wave. 
+	 */
+	@Override
+	public Mob clone(){
+		Mob newMob = new Mob();
+		
+		newMob.type=this.type;
+		
+		for(int i=0; i<this.armor.length; i++){
+			newMob.armor[i] = this.armor[i].clone();
+		}
+		
+		newMob.weapon = this.weapon.clone();
+		
+		newMob.waveNumber = this.waveNumber;
+		
+		
+		return newMob;
 	}
 }
