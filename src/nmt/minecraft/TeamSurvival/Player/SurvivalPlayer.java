@@ -72,6 +72,7 @@ public class SurvivalPlayer implements Listener {
 			p.teleport(this.preGameLocation);
 			p.setLevel(0);
 			p.setGameMode(GameMode.SURVIVAL);
+			
 			//clear effects
 			for(PotionEffect e : p.getActivePotionEffects()){
 				p.removePotionEffect(e.getType());
@@ -88,6 +89,13 @@ public class SurvivalPlayer implements Listener {
 		Player p = this.getPlayer();
 		if(p!=null){
 			p.setHealth(p.getMaxHealth());
+		}
+	}
+	
+	public void setGamemode(GameMode gamemode){
+		Player p = this.getPlayer();
+		if(p!=null){
+			p.setGameMode(gamemode);
 		}
 	}
 	
