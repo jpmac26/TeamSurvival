@@ -1,6 +1,5 @@
 package nmt.minecraft.TeamSurvival.Enemy;
 
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Location;
