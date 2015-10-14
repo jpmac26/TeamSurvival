@@ -404,7 +404,11 @@ public class Mob {
 		newMob.type=this.type;
 		
 		for(int i=0; i<this.armor.length; i++){
-			newMob.armor[i] = this.armor[i].clone();
+			if(this.armor[i] != null){
+				newMob.armor[i] = this.armor[i].clone();
+			}else{
+				newMob.armor[i] = null;
+			}
 		}
 		
 		newMob.weapon = this.weapon.clone();
