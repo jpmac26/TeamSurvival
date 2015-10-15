@@ -169,6 +169,13 @@ public class Wave implements Listener {
 			if(started == true) {
 				if(Entities.contains(event.getEntity())){
 						Entities.remove(event.getEntity());
+						
+						//Give the player that killed the mob the appropriate amount of "money"
+						if (event.getEntity().getKiller() != null) {
+							event.getEntity().getKiller().setLevel(event.getEntity().getKiller().getLevel() + event.getDroppedExp());
+						}
+						event.setDroppedExp(0);
+						
 						//Remove entity drops so we don't clutter up the battlefield
 						event.getDrops().clear();
 						//Spawn a new mob to replace the one that just died

@@ -44,8 +44,10 @@ public class JoinTeamCommand implements CommandExecutor{
 			return true;
 		}
 		
-		if(session.getState() != GameSession.State.PREGAME){
-			sender.sendMessage(ChatFormat.ERROR.wrap("Game session has already started!"));
+		if (session.getState() != GameSession.State.PREGAME) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("Unable to join session ")
+					+ ChatFormat.SESSION.wrap(args[0])
+					+ ChatFormat.ERROR.wrap(" because it's already started!"));
 			return true;
 		}
 		

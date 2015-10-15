@@ -3,6 +3,7 @@ package nmt.minecraft.TeamSurvival.Player;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -13,7 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.potion.PotionEffect;
 
+import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Session.GameSession.State;
 
 /**
  * A wrapper class for someone playing the game.<br />
@@ -105,8 +108,13 @@ public class SurvivalPlayer implements Listener {
 	 */
 	protected void win() {
 		//Send the Player a winning message
-		this.sendMessage("Winning Message!");
+		this.sendMessage(ChatColor.BLUE + "Congratulations! Your team won!" + ChatColor.RESET);
+		Player p = getPlayer();
 		this.returnToPreGame(); //Send then back to their pregame location
+		if (p != null) {
+			p.playSound(p.getLocation(), Sound.LEVEL_UP, 1, 0);
+			p.playSound(p.getLocation(), Sound.FIREWORK_TWINKLE, 1, 0);
+		}
 	}
 	
 	/**
@@ -115,8 +123,12 @@ public class SurvivalPlayer implements Listener {
 	 */
 	protected void lose() {
 		//Send the Player a winning message
-		this.sendMessage("Losing Message!");
+		this.sendMessage(ChatColor.DARK_RED + "Your team lost!" + ChatColor.RESET);
+		Player p = getPlayer();
 		this.returnToPreGame(); //Send them back to their pregame location
+		if (p != null) {
+			p.playSound(p.getLocation(), Sound.ENDERMAN_STARE, 1, 0);
+		}
 	}
 	
 	/**
@@ -189,12 +201,16 @@ public class SurvivalPlayer implements Listener {
 		return Bukkit.getPlayer(this.playerID);
 	}
 	
+	//Made it so the player receives no EXP, because the money/EXP is now given elsewhere
 	@EventHandler
 	public void onExpPickup(PlayerExpChangeEvent e) {
-		if (e.getPlayer().getUniqueId().equals(playerID)) {
-			int amount = e.getAmount();
+		if (e.getPlayer().getUniqueId().equals(playerID)
+				&& TeamSurvivalManager.getSession(TeamSurvivalManager.getTeam(TeamSurvivalManager.getPlayer(e.getPlayer()))) != null
+				&& TeamSurvivalManager.getSession(TeamSurvivalManager.getTeam(TeamSurvivalManager.getPlayer(e.getPlayer()))).getState() == State.INWAVE) {
+			
+			//int amount = e.getAmount();
 			e.setAmount(0);
-			e.getPlayer().setLevel(e.getPlayer().getLevel() + amount);
+			//e.getPlayer().setLevel(e.getPlayer().getLevel() + amount);
 		}
 	}
 	
