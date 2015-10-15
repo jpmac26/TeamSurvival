@@ -31,6 +31,13 @@ public class LeaveTeamCommand implements CommandExecutor{
 			return false;
 		}
 		
+		GameSession session = TeamSurvivalManager.getSession(team);
+		
+		if (session.getState() != GameSession.State.PREGAME) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("You cannot leave a session that's already started!"));
+			return true;
+		}
+		
 		//remove them from the team
 		team.removePlayer(team.hasPlayer((Player)sender));
 		sender.sendMessage(ChatFormat.SUCCESS.wrap("You have left your team: "+team.getName()));
