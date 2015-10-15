@@ -42,7 +42,7 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
-	public static final int defaultWaveCount = 2;
+	public static final int defaultWaveCount = 12;
 	
 	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
@@ -326,7 +326,8 @@ public class GameSession implements Listener, Tickable {
 		state = State.FINISHED;
 		
 		for (Wave wave : teams.values()) {
-			wave.stop();
+			if(wave != null)
+				wave.stop();
 		}
 		
 		teams.clear();
