@@ -11,6 +11,8 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.inventory.ItemStack;
 
+import nmt.minecraft.TeamSurvival.Session.GameSession;
+
 /**
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
  * The information about equipment and health is stored here so that random-per-mob
@@ -40,6 +42,7 @@ public class Mob {
 	 * Keep track of what type of entity to spawn
 	 */
 	private String type;
+	private static Double[] chances;
 	private ItemStack[] armor;
 	private ItemStack weapon;
 	
@@ -74,6 +77,7 @@ public class Mob {
 		this();
 		this.waveNumber = waveNumber;
 		this.type = type;
+		this.generateEnchChance(GameSession.defaultWaveCount);
 		this.generateEquipment();
 		this.generateEnchantments();
 	}
@@ -345,8 +349,32 @@ public class Mob {
 	 * @return true if it is ok to enchant, false otherwise
 	 */
 	private boolean canEnchant(int currentEnchants){
-		int result = rGen.nextInt(100)+(8*waveNumber)-(15*currentEnchants);
-		return result > 80;
+		boolean base = rGen.nextDouble() < chances[this.waveNumber-1];
+		boolean mod = rGen.nextInt(100) < 50-(currentEnchants*20);
+		return base && mod;
+	}
+	
+	private void generateEnchChance(int totalWaves){
+		if(chances != null){
+			return;
+		}
+		double max = (double)2/3;
+		double pivotPoint = 7;
+		chances = new Double[totalWaves];
+		for(int i=0; i<2; i++){
+			chances[i] = 0.0;
+		}
+		for(int wave=2; wave<totalWaves; wave++){
+			double exp = -1 * rGen.nextDouble() * (wave-pivotPoint);
+			double percentEnch = max/(1+Math.pow(Math.E,exp));
+			
+			chances[wave] = percentEnch;
+		}
+		
+		System.out.println("Chances: ");
+		for(int i=0; i<totalWaves; i++){
+			System.out.println("  Wave: "+i+"    %: "+chances[i]);
+		}
 	}
 	
 	public LivingEntity spawnMob(Location spawnLocation){

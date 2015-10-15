@@ -492,7 +492,7 @@ public class SurvivalCommand implements CommandExecutor {
 		
 		session.clearWave();
 		sender.sendMessage(ChatFormat.SUCCESS.wrap("Advancing to the next wave..."));
-		
+		//TODO actually advance to the next wave
 		return true;
 	}
 }
