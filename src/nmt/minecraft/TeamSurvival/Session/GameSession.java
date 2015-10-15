@@ -326,9 +326,8 @@ public class GameSession implements Listener, Tickable {
 		state = State.FINISHED;
 		
 		for (Wave wave : teams.values()) {
-			if(wave != null){
+			if(wave != null)
 				wave.stop();
-			}
 		}
 		
 		teams.clear();
