@@ -345,8 +345,8 @@ public class Mob {
 	 * @return true if it is ok to enchant, false otherwise
 	 */
 	private boolean canEnchant(int currentEnchants){
-		int result = rGen.nextInt(100)+(2*waveNumber)-(5*currentEnchants);
-		return result > 50;
+		int result = rGen.nextInt(100)+(8*waveNumber)-(15*currentEnchants);
+		return result > 80;
 	}
 	
 	public LivingEntity spawnMob(Location spawnLocation){
@@ -410,8 +410,8 @@ public class Mob {
 				newMob.armor[i] = null;
 			}
 		}
-		
-		newMob.weapon = this.weapon.clone();
+		if(this.weapon != null)
+			newMob.weapon = this.weapon.clone();
 		
 		newMob.waveNumber = this.waveNumber;
 		

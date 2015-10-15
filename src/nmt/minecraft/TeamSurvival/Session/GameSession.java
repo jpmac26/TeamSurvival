@@ -42,7 +42,7 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
-	public static final int defaultWaveCount = 2;//TODO change this to 12 for the event
+	public static final int defaultWaveCount = 12;//TODO change this to 12 for the event
 	private static final int defaultStartingTime = 1;//in seconds TODO
 	private static final int defaultStartingBlocksApart = 10;//TODO
 	
