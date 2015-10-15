@@ -75,7 +75,7 @@ public class Mob {
 		int RandPart1 = ((rn.nextInt(difficulty * 2) + 1) * 2) + ((rn.nextInt(waveNum) + 1) * 6);
 		//int RandChance = diff * ((rn.nextInt(4) + 1) / 10);
 		int RandChance = (RandPart1 * 100) / (RandPart1 + 10);
-		if (RandChance >= 85) {
+		if (RandChance >= 95) {
 			ItemStack[] armor = new ItemStack[4];
 			ItemStack weapon;
 			armor[0] = new ItemStack(Material.DIAMOND_HELMET);
@@ -100,7 +100,7 @@ public class Mob {
 				weapon = new ItemStack(Material.DIAMOND_SWORD);
 				ent.getEquipment().setItemInHand(weapon);
 			}
-		} else if (RandChance >= 75) {
+		} else if (RandChance >= 85) {
 			ItemStack[] armor = new ItemStack[4];
 			ItemStack weapon;
 			armor[0] = new ItemStack(Material.IRON_HELMET);
@@ -122,7 +122,7 @@ public class Mob {
 				weapon = new ItemStack(Material.IRON_SWORD);
 				ent.getEquipment().setItemInHand(weapon);
 			}
-		} else if (RandChance >= 50) {
+		} else if (RandChance >= 60) {
 			ItemStack[] armor = new ItemStack[4];
 			ItemStack weapon;
 			armor[0] = new ItemStack(Material.LEATHER_HELMET);
