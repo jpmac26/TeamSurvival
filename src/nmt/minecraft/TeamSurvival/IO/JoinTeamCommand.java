@@ -26,7 +26,7 @@ public class JoinTeamCommand implements CommandExecutor{
 	private boolean onJoinCommand(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player) || !(sender instanceof OfflinePlayer)) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Only players can use this command!"));
-			return true; //The command was usedp roperly, but by wrong people! We don't want to print usage!
+			return true; //The command was used properly, but by wrong people! We don't want to print usage!
 		} else if(args.length != 2 ){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments."));
 			sender.sendMessage(ChatFormat.IMPORTANT.wrap("usage: /jointeam [session] [team]"));
