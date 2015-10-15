@@ -42,7 +42,9 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
-	public static final int defaultWaveCount = 12;
+	public static final int defaultWaveCount = 12;//TODO change this to 12 for the event
+	private static final int defaultStartingTime = 1;//in seconds TODO
+	private static final int defaultStartingBlocksApart = 10;//TODO
 	
 	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
@@ -98,7 +100,6 @@ public class GameSession implements Listener, Tickable {
 		ONEMINUTE,
 		THIRTYSECONDS,
 		PUSHTOARENA,
-		SHOPOVER,
 		STARTWAVE,
 		WAVECONTINUE;
 	}
@@ -288,10 +289,10 @@ public class GameSession implements Listener, Tickable {
 		fillWaves();
 		
 		//teleport teams
-		moveToStart(4);//TODO only 4 blocks apart for testing
+		moveToStart(defaultStartingBlocksApart);
 		
 		//start the timer
-		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1);//TODO 15 min to start
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, defaultStartingTime);
 		//generate waves
 		
 		state = State.STARTINGPERIOD;
@@ -299,9 +300,8 @@ public class GameSession implements Listener, Tickable {
 		for (Team team : teams.keySet()) {
 			team.sendTeamMessage(Messages.STARTINFO.toString());
 			for (SurvivalPlayer player : team.getPlayers()) {
-				if (player.getPlayer() != null) {
-					player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
-				}
+				player.healPlayer();
+				player.setGamemode(GameMode.SURVIVAL);
 			}
 		}
 		return true;
@@ -415,15 +415,6 @@ public class GameSession implements Listener, Tickable {
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			break;
-		case SHOPOVER:
-			state = State.INWAVE;
-			moveToArena();
-			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
-			for (Team t : teams.keySet()) {
-				t.sendTeamMessage("WAVE "+this.waveNumber);
-				t.sendTeamMessage(Messages.WAVEWARNING.toString());
-			}
-			break;
 		case STARTWAVE:
 			startNextWave(true);
 			for (Team t : teams.keySet()) {
@@ -464,6 +455,7 @@ public class GameSession implements Listener, Tickable {
 		
 		for (Team team : teams.keySet()) {
 			team.moveTo(team.getArenaLocation());
+			team.setGamemode(GameMode.ADVENTURE);
 		}
 	}
 	
@@ -508,8 +500,7 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
-		//TODO Kill the related wave
-		
+		//Kill the related wave
 		teams.get(event.getTeam()).stop();
 		
 		teams.remove(event.getTeam());
@@ -586,26 +577,26 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
+		//get ready for the next wave
 		for (Team team : teams.keySet())
 		for (SurvivalPlayer player : team.getPlayers()){
 			if (player.getPlayer() == null) {
 				continue;
 			}
 			if (player.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-				player.getPlayer().setGameMode(GameMode.SURVIVAL);
-				player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
+				player.setGamemode(GameMode.ADVENTURE);
+				player.healPlayer();
 				player.getPlayer().teleport(team.getArenaLocation());
 			}
 		}
 		
 		this.waveNumber++;
 		
-		if (waveNumber > GameSession.defaultWaveCount) { //TODO make a member that's set in constructor?
+		if (waveNumber > GameSession.defaultWaveCount) {
 			fillBossWaves();
 		} else {
 			fillWaves();
 		}
-		//TODO TeamLossEvent
 		
 		//no more waves, but is this the end of our third one?
 		if ((waveNumber-1) % 3 != 0) {
@@ -714,7 +705,7 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	/**
-	 * Goes through the team map and checks whetehr all the waves are null
+	 * Goes through the team map and checks whether all the waves are null
 	 * @return
 	 */
 	private boolean areWavesNull() {
