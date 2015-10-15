@@ -43,6 +43,14 @@ public class JoinTeamCommand implements CommandExecutor{
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate session "+args[0]));
 			return true;
 		}
+		
+		if (session.getState() != GameSession.State.PREGAME) {
+			sender.sendMessage(ChatFormat.ERROR.wrap("Unable to join session ")
+					+ ChatFormat.SESSION.wrap(args[0])
+					+ ChatFormat.ERROR.wrap(" because it's already started!"));
+			return true;
+		}
+		
 		Team team = session.getTeam(args[1]);
 		if(team == null) {
 			sender.sendMessage(ChatFormat.ERROR.wrap("Could not locate team "+args[1]+" in session "+args[0]));
