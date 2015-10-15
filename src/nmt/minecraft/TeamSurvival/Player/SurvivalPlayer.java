@@ -13,7 +13,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 
+import nmt.minecraft.TeamSurvival.TeamSurvivalManager;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
+import nmt.minecraft.TeamSurvival.Session.GameSession.State;
 
 /**
  * A wrapper class for someone playing the game.<br />
@@ -174,12 +176,16 @@ public class SurvivalPlayer implements Listener {
 		return Bukkit.getPlayer(this.playerID);
 	}
 	
+	//Made it so the player receives no EXP, because the money/EXP is now given elsewhere
 	@EventHandler
 	public void onExpPickup(PlayerExpChangeEvent e) {
-		if (e.getPlayer().getUniqueId().equals(playerID)) {
-			int amount = e.getAmount();
+		if (e.getPlayer().getUniqueId().equals(playerID)
+				&& TeamSurvivalManager.getSession(TeamSurvivalManager.getTeam(TeamSurvivalManager.getPlayer(e.getPlayer()))) != null
+				&& TeamSurvivalManager.getSession(TeamSurvivalManager.getTeam(TeamSurvivalManager.getPlayer(e.getPlayer()))).getState() == State.INWAVE) {
+			
+			//int amount = e.getAmount();
 			e.setAmount(0);
-			e.getPlayer().setLevel(e.getPlayer().getLevel() + amount);
+			//e.getPlayer().setLevel(e.getPlayer().getLevel() + amount);
 		}
 	}
 	
