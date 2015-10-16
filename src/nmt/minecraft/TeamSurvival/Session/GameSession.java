@@ -62,7 +62,7 @@ public class GameSession implements Listener, Tickable {
 	 *
 	 */
 	public static enum Messages {
-		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin" + ChatColor.RESET),
+		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin, so prepare yourself!" + ChatColor.RESET),
 		ONEMINUTE(ChatColor.GOLD + "One minute until waves begin!" + ChatColor.RESET),
 		SHOPINFO(ChatColor.GOLD + "You have 2 minutes to use the shop."),
 		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET),
@@ -82,7 +82,7 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		/**
-		 * Returns the stirng equivalent of this predefined message.<br />
+		 * Returns the string equivalent of this predefined message.<br />
 		 * For convenience, consider using {@link #toString()} instead
 		 * @return
 		 */
@@ -541,8 +541,7 @@ public class GameSession implements Listener, Tickable {
 	 * @param event 
 	 */
 	@EventHandler
-	public void onWaveEnd(WaveFinishEvent event){
-		
+	public void onWaveEnd(WaveFinishEvent event) {
 		if (!teams.values().contains(event.getWave())) {
 			return;
 		}
@@ -579,7 +578,7 @@ public class GameSession implements Listener, Tickable {
 		
 		//get ready for the next wave
 		for (Team team : teams.keySet())
-		for (SurvivalPlayer player : team.getPlayers()){
+		for (SurvivalPlayer player : team.getPlayers()) {
 			if (player.getPlayer() == null) {
 				continue;
 			}
@@ -668,8 +667,8 @@ public class GameSession implements Listener, Tickable {
 	 * @return number of mobs to spawn for the waveNumber
 	 */
 	private int numberOfMobs(){
-		//avg the number of players still in
-		int sum =0;
+		//avg. the number of players still in
+		int sum = 0;
 		for(Team t : teams.keySet()){
 			sum += t.getPlayerList().size();
 		}
@@ -682,7 +681,7 @@ public class GameSession implements Listener, Tickable {
 	/**
 	 * Clears the current wave, trying to eliminate the mess. Then advances to the next wave.<br />
 	 * This method is not meant to be called casually. It's instead provided as an emergency method
-	 * incase entities do what entities do and become rogue.
+	 * in case entities do what entities do and become rogue.
 	 */
 	public void clearWave() {
 		if (areWavesNull()) {
