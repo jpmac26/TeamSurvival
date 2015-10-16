@@ -28,7 +28,7 @@ public class SurvivalCommand implements CommandExecutor {
 
 	private static final String[] sessionCommandList = {"list", "create", "info", "remove", "start", "stop", "advance"};
 	
-	private static final String[] teamCommandList = {"list", "create", "info", "dispand"};
+	private static final String[] teamCommandList = {"list", "create", "info", "disband"};
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -89,8 +89,8 @@ public class SurvivalCommand implements CommandExecutor {
 		case "info":
 			onTeamInfo(sender, args);
 		break;
-		case "dispand":
-			onTeamDispand(sender, args);
+		case "disband":
+			onTeamDisband(sender, args);
 		break;
 		}
 	}
@@ -165,11 +165,11 @@ public class SurvivalCommand implements CommandExecutor {
 		
 	}
 
-	private void onTeamDispand(CommandSender sender, String[] args) {
-		// /ts team dispand [sessionName] [teamName]
+	private void onTeamDisband(CommandSender sender, String[] args) {
+		// /ts team disband [sessionName] [teamName]
 		if(args.length != 4){
 			sender.sendMessage(ChatFormat.ERROR.wrap("Incorrect number of arguments! ")
-					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival team dispand [sessionName] [teamName]"));
+					+ ChatFormat.IMPORTANT.wrap("usage: /teamsurvival team disband [sessionName] [teamName]"));
 			return;
 		}
 		
@@ -492,7 +492,7 @@ public class SurvivalCommand implements CommandExecutor {
 		
 		session.clearWave();
 		sender.sendMessage(ChatFormat.SUCCESS.wrap("Advancing to the next wave..."));
-		//TODO actually advance to the next wave
+		
 		return true;
 	}
 }
