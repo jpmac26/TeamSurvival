@@ -689,18 +689,22 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
-		Wave wave = null;
+		Team lastTeam = null;
+		Wave lastWave = null;
 		
 		for (Entry<Team, Wave> entry : teams.entrySet()) {
 			if (entry.getValue() != null) {
-				wave = entry.getValue();
+				lastTeam = entry.getKey();
+				lastWave = entry.getValue();
 				entry.getValue().stop();
 				teams.put(entry.getKey(), null);
 			}
 		}
 		
+		//lame stupid cheat setup to make onWaveEnd work still
+		teams.put(lastTeam, lastWave);
 		//wave will hold last wave
-		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(wave));
+		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(lastWave));
 		
 	}
 	
