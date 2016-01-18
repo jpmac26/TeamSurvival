@@ -63,6 +63,12 @@ public class BossWave extends Wave {
 		
 		if (Entities.contains(e.getEntity())) {
 			Entities.remove(e.getEntity());
+			
+			//Give the player that killed the mob the appropriate amount of "money"
+			if (e.getEntity().getKiller() != null) {
+				e.getEntity().getKiller().setLevel(e.getEntity().getKiller().getLevel() + e.getDroppedExp());
+			}
+			e.setDroppedExp(0);
 		}
 		
 		if (Entities.isEmpty()) {

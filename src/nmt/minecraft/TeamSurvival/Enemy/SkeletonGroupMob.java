@@ -51,7 +51,7 @@ public class SkeletonGroupMob extends Mob {
 	}
 	
 	public SkeletonGroupMob() {
-		super("", 0, 5); //junk
+		super("",0); //junk
 	}
 	
 	@Override

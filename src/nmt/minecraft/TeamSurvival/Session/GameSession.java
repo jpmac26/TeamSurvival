@@ -42,7 +42,9 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
  */
 public class GameSession implements Listener, Tickable {
 	
-	public static final int defaultWaveCount = 2;
+	public static final int defaultWaveCount = 12;//TODO change this to 12 for the event
+	private static final int defaultStartingTime = 1;//in seconds TODO
+	private static final int defaultStartingBlocksApart = 10;//TODO
 	
 	public static final EntityType bossType = EntityType.ENDER_DRAGON;
 	
@@ -60,7 +62,7 @@ public class GameSession implements Listener, Tickable {
 	 *
 	 */
 	public static enum Messages {
-		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin" + ChatColor.RESET),
+		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin, so prepare yourself!" + ChatColor.RESET),
 		ONEMINUTE(ChatColor.GOLD + "One minute until waves begin!" + ChatColor.RESET),
 		SHOPINFO(ChatColor.GOLD + "You have 2 minutes to use the shop."),
 		THIRTYSECONDS(ChatColor.DARK_RED + "30 seconds until waves begin!" + ChatColor.RESET),
@@ -80,7 +82,7 @@ public class GameSession implements Listener, Tickable {
 		}
 		
 		/**
-		 * Returns the stirng equivalent of this predefined message.<br />
+		 * Returns the string equivalent of this predefined message.<br />
 		 * For convenience, consider using {@link #toString()} instead
 		 * @return
 		 */
@@ -98,7 +100,6 @@ public class GameSession implements Listener, Tickable {
 		ONEMINUTE,
 		THIRTYSECONDS,
 		PUSHTOARENA,
-		SHOPOVER,
 		STARTWAVE,
 		WAVECONTINUE;
 	}
@@ -288,10 +289,10 @@ public class GameSession implements Listener, Tickable {
 		fillWaves();
 		
 		//teleport teams
-		moveToStart(4);//TODO only 4 blocks apart for testing
+		moveToStart(defaultStartingBlocksApart);
 		
 		//start the timer
-		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, 1);//TODO 15 min to start
+		Scheduler.getScheduler().schedule(this, Reminders.ONEMINUTE, defaultStartingTime);
 		//generate waves
 		
 		state = State.STARTINGPERIOD;
@@ -299,9 +300,8 @@ public class GameSession implements Listener, Tickable {
 		for (Team team : teams.keySet()) {
 			team.sendTeamMessage(Messages.STARTINFO.toString());
 			for (SurvivalPlayer player : team.getPlayers()) {
-				if (player.getPlayer() != null) {
-					player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
-				}
+				player.healPlayer();
+				player.setGamemode(GameMode.SURVIVAL);
 			}
 		}
 		return true;
@@ -326,7 +326,8 @@ public class GameSession implements Listener, Tickable {
 		state = State.FINISHED;
 		
 		for (Wave wave : teams.values()) {
-			wave.stop();
+			if (wave != null)
+				wave.stop();
 		}
 		
 		teams.clear();
@@ -414,15 +415,6 @@ public class GameSession implements Listener, Tickable {
 				t.sendTeamMessage(Messages.WAVEWARNING.toString());
 			}
 			break;
-		case SHOPOVER:
-			state = State.INWAVE;
-			moveToArena();
-			Scheduler.getScheduler().schedule(this, Reminders.STARTWAVE, 10);
-			for (Team t : teams.keySet()) {
-				t.sendTeamMessage("WAVE "+this.waveNumber);
-				t.sendTeamMessage(Messages.WAVEWARNING.toString());
-			}
-			break;
 		case STARTWAVE:
 			startNextWave(true);
 			for (Team t : teams.keySet()) {
@@ -463,6 +455,7 @@ public class GameSession implements Listener, Tickable {
 		
 		for (Team team : teams.keySet()) {
 			team.moveTo(team.getArenaLocation());
+			team.setGamemode(GameMode.ADVENTURE);
 		}
 	}
 	
@@ -507,8 +500,7 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
-		//TODO Kill the related wave
-		
+		//Kill the related wave
 		teams.get(event.getTeam()).stop();
 		
 		teams.remove(event.getTeam());
@@ -549,8 +541,7 @@ public class GameSession implements Listener, Tickable {
 	 * @param event 
 	 */
 	@EventHandler
-	public void onWaveEnd(WaveFinishEvent event){
-		
+	public void onWaveEnd(WaveFinishEvent event) {
 		if (!teams.values().contains(event.getWave())) {
 			return;
 		}
@@ -585,26 +576,26 @@ public class GameSession implements Listener, Tickable {
 			return;
 		}
 		
+		//get ready for the next wave
 		for (Team team : teams.keySet())
-		for (SurvivalPlayer player : team.getPlayers()){
+		for (SurvivalPlayer player : team.getPlayers()) {
 			if (player.getPlayer() == null) {
 				continue;
 			}
 			if (player.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-				player.getPlayer().setGameMode(GameMode.SURVIVAL);
-				player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
+				player.setGamemode(GameMode.ADVENTURE);
+				player.healPlayer();
 				player.getPlayer().teleport(team.getArenaLocation());
 			}
 		}
 		
 		this.waveNumber++;
 		
-		if (waveNumber > GameSession.defaultWaveCount) { //TODO make a member that's set in constructor?
+		if (waveNumber > GameSession.defaultWaveCount) {
 			fillBossWaves();
 		} else {
 			fillWaves();
 		}
-		//TODO TeamLossEvent
 		
 		//no more waves, but is this the end of our third one?
 		if ((waveNumber-1) % 3 != 0) {
@@ -676,8 +667,8 @@ public class GameSession implements Listener, Tickable {
 	 * @return number of mobs to spawn for the waveNumber
 	 */
 	private int numberOfMobs(){
-		//avg the number of players still in
-		int sum =0;
+		//avg. the number of players still in
+		int sum = 0;
 		for(Team t : teams.keySet()){
 			sum += t.getPlayerList().size();
 		}
@@ -690,30 +681,34 @@ public class GameSession implements Listener, Tickable {
 	/**
 	 * Clears the current wave, trying to eliminate the mess. Then advances to the next wave.<br />
 	 * This method is not meant to be called casually. It's instead provided as an emergency method
-	 * incase entities do what entities do and become rogue.
+	 * in case entities do what entities do and become rogue.
 	 */
 	public void clearWave() {
 		if (areWavesNull()) {
 			return;
 		}
 		
-		Wave wave = null;
+		Team lastTeam = null;
+		Wave lastWave = null;
 		
 		for (Entry<Team, Wave> entry : teams.entrySet()) {
 			if (entry.getValue() != null) {
-				wave = entry.getValue();
+				lastTeam = entry.getKey();
+				lastWave = entry.getValue();
 				entry.getValue().stop();
 				teams.put(entry.getKey(), null);
 			}
 		}
 		
+		//lame stupid cheat setup to make onWaveEnd work still
+		teams.put(lastTeam, lastWave);
 		//wave will hold last wave
-		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(wave));
+		Bukkit.getPluginManager().callEvent(new WaveFinishEvent(lastWave));
 		
 	}
 	
 	/**
-	 * Goes through the team map and checks whetehr all the waves are null
+	 * Goes through the team map and checks whether all the waves are null
 	 * @return
 	 */
 	private boolean areWavesNull() {

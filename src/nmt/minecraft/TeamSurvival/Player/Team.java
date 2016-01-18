@@ -316,4 +316,13 @@ public class Team implements Listener {
 	public Set<SurvivalPlayer> getPlayers() {
 		return players;
 	}
+	
+	public void setGamemode(GameMode gamemode){
+		for(SurvivalPlayer p : players){
+			GameMode current = p.getPlayer().getGameMode();
+			if(p.getPlayer()!=null && current != GameMode.CREATIVE && current != gamemode){
+				p.setGamemode(gamemode);
+			}
+		}
+	}
 }
