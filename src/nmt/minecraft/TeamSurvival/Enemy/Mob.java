@@ -437,6 +437,13 @@ public class Mob {
 			}else{
 				newMob.armor[i] = null;
 			}
+		} else {
+			ent.getEquipment().clear();
+			ItemStack weapon;
+			if(ent.getType() == EntityType.SKELETON) {
+				weapon = new ItemStack(Material.BOW);
+				ent.getEquipment().setItemInHand(weapon);
+			}
 		}
 		if(this.weapon != null)
 			newMob.weapon = this.weapon.clone();
