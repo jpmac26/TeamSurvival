@@ -3,7 +3,7 @@ package nmt.minecraft.TeamSurvival.IO;
 import org.bukkit.ChatColor;
 
 /**
- * Holds standardized chat formats
+ * Holds standardized chat formats.
  * @author Skyler
  *
  */
@@ -34,7 +34,7 @@ public enum ChatFormat {
 	}
 	
 	/**
-	 * Wraps the passed string in the format, including resetting afterwards
+	 * Wraps the passed string in the format, including resetting afterwards.
 	 * @param msg
 	 * @return
 	 */

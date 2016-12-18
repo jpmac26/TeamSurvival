@@ -10,7 +10,7 @@ import org.bukkit.command.TabCompleter;
 import nmt.minecraft.TeamSurvival.Map.Map;
 
 /**
- * Does tab completion for the creation command
+ * Does tab completion for the creation command.
  * @author Stephanie
  */
 public class CreationTabCompleter implements TabCompleter{

@@ -26,7 +26,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession.State;
 public class SurvivalPlayer implements Listener {
 	
 	/**
-	 * The UUID of the player we're following
+	 * The UUID of the player we're following.
 	 */
 	private UUID playerID;
 	
@@ -39,7 +39,7 @@ public class SurvivalPlayer implements Listener {
 	
 	/**
 	 * Creates a new wrapper survival player.<br />
-	 * Since we only want one survival player per player, we make this private and use static getter
+	 * Since we only want one survival player per player, we make this private and use static getter.
 	 * @param player The player to wrap around
 	 */
 	public SurvivalPlayer(OfflinePlayer player) {
@@ -50,17 +50,17 @@ public class SurvivalPlayer implements Listener {
 	}
 	
 	/**
-	 * This method sets the Pre-Game location of the Player<br />
+	 * This method sets the Pre-Game location of the Player.<br />
 	 * Remember that this is where the player is returned to after a 
 	 * game session.
-	 * @param location The Pre-Game location.
+	 * @param location The Pre-Game location
 	 */
 	protected void setPreGameLocation(Location location) {
 		this.preGameLocation = location;
 	}
 	
 	/**
-	 * This method teleports the player to the set PreGame Location<br />
+	 * This method teleports the player to the set PreGame location.<br />
 	 */
 	private void returnToPreGame() {
 		Player p = this.getPlayer();
@@ -86,7 +86,7 @@ public class SurvivalPlayer implements Listener {
 	}
 	
 	/**
-	 * Heals the player to max health
+	 * Heals the player to max health.
 	 */
 	public void healPlayer(){
 		Player p = this.getPlayer();
@@ -103,8 +103,8 @@ public class SurvivalPlayer implements Listener {
 	}
 	
 	/**
-	 * @see Team#win()
 	 * TODO Add more 'winning' content
+	 * @see Team#win() Team.win()<br/>
 	 */
 	protected void win() {
 		//Send the Player a winning message
@@ -134,7 +134,7 @@ public class SurvivalPlayer implements Listener {
 	/**
 	 * This method sends a message to the player.<br />
 	 * If no player exists for this class then nothing is performed.
-	 * @param message The string message to send to the player.
+	 * @param message The string message to send to the player
 	 */
 	protected void sendMessage(String message) {
 		Player p = this.getPlayer();
@@ -146,7 +146,7 @@ public class SurvivalPlayer implements Listener {
 	/**
 	 * This method plays a sound to the player using default pitch and volume.<br />
 	 * If no player exists for this class then nothing is performed.
-	 * @param sound The sound to be played.
+	 * @param sound The sound to be played
 	 */
 	protected void playSound(Sound sound) {
 		Player p = this.getPlayer();
@@ -158,9 +158,9 @@ public class SurvivalPlayer implements Listener {
 	/**
 	 * This method plays a sound to the player using the specified pitch and volume.<br />
 	 * If no player exists for this class then nothing is performed.
-	 * @param sound The sound to be played.
-	 * @param volume The volume of the sound (default value is 1).
-	 * @param pitch The pitch of the sound (default value is 0).
+	 * @param sound The sound to be played
+	 * @param volume The volume of the sound (default value is 1)
+	 * @param pitch The pitch of the sound (default value is 0)
 	 */
 	protected void playSound(Sound sound, float volume, float pitch) {
 		Player p = this.getPlayer();
@@ -172,7 +172,7 @@ public class SurvivalPlayer implements Listener {
 	/**
 	 * This method teleports a player to a given location.<br />
 	 * If no player exists for this class then nothing is performed.
-	 * @param location The location to send the SurvivalPlayer to.
+	 * @param location The location to send the SurvivalPlayer to
 	 */
 	protected void teleportPlayer(Location location) {
 		Player p = this.getPlayer();
@@ -195,7 +195,7 @@ public class SurvivalPlayer implements Listener {
 	/**
 	 * This method performs a UUID lookup with bukkit to return a Player class.<br />
 	 * <b>WARNING</b>: This method returns <i>null</i> if no Player class could be returned.
-	 * @return A the Player class or null if no player could be found.
+	 * @return The Player class or null if no player could be found
 	 */
 	public Player getPlayer() {
 		return Bukkit.getPlayer(this.playerID);

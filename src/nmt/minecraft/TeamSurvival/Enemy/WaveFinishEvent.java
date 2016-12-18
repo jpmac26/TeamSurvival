@@ -7,7 +7,6 @@ import org.bukkit.event.HandlerList;
  * Event signaling that an event has finished.<br />
  * Waves should be certain to only send this once.
  * @author Skyler
- *
  */
 public class WaveFinishEvent extends Event {
 
@@ -25,7 +24,7 @@ public class WaveFinishEvent extends Event {
 	}
 	
 	/**
-	 * Creates a wave finish event, which houses which wave has finished
+	 * Creates a wave finish event, which houses which wave has finished.
 	 * @param wave The wave that finished
 	 */
 	public WaveFinishEvent(Wave wave) {
@@ -33,8 +32,7 @@ public class WaveFinishEvent extends Event {
 	}
 	
 	/**
-	 * Returns the wave that signaled this event.
-	 * @return
+	 * @return the wave that signaled this event
 	 */
 	public Wave getWave() {
 		return wave;

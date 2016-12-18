@@ -17,12 +17,13 @@ import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
+ * Command for general-purpose functions, such as creating and removing teams, and starting/stopping and modifying sessions.
  * @author Stephanie
  */
 public class SurvivalCommand implements CommandExecutor {
 
 	/**
-	 * A list of commands handled by the 'team survival' wrapping command
+	 * A list of commands handled by the 'team survival' wrapping command.
 	 */
 	private static final String[] teamSurvivalCommandList = {"session", "team"};
 
@@ -65,7 +66,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Handles the admin 'team' command
+	 * Handles the admin 'team' command.
 	 * @param sender
 	 * @param args
 	 * TODO: don't let them create a session using the same map as another session
@@ -226,7 +227,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 
 	/**
-	 * Handles the admin 'session' command
+	 * Handles the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 * @return 
@@ -272,7 +273,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 
 	/**
-	 * Handles the 'list' argument for the admin 'session' command
+	 * Handles the 'list' argument for the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 */
@@ -303,7 +304,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Handles the 'create' argument for the admin 'session' command
+	 * Handles the 'create' argument for the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 */
@@ -351,7 +352,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Handles the 'start' argument for the admin 'session' command
+	 * Handles the 'start' argument for the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 */
@@ -380,7 +381,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Handles the 'stop' argument for the admin 'session' command
+	 * Handles the 'stop' argument for the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 */
@@ -405,7 +406,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Handles the 'remove' argument for the admin 'session' command
+	 * Handles the 'remove' argument for the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 */
@@ -433,7 +434,7 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Handles the 'info' argument for the admin 'session' command
+	 * Handles the 'info' argument for the admin 'session' command.
 	 * @param sender
 	 * @param args
 	 */
@@ -471,11 +472,11 @@ public class SurvivalCommand implements CommandExecutor {
 	}
 	
 	/**
-	 * Advanced the session
+	 * Advances the session.
 	 * @param sender
 	 * @param args
 	 * @return
-	 * @see {@link nmt.minecraft.TeamSurvival.Session.GameSession#clearWave() GameSession.clearWave()}
+	 * @see GameSession#clearWave() GameSession.clearWave()
 	 */
 	private boolean onSessionAdvanceCommand(CommandSender sender, String[] args) {
 		//ts session advance [session]

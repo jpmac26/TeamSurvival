@@ -7,6 +7,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * An item that can be bought at a Shop in-between rounds.
+ */
 public class ShopItem {
 	
 	private int cost;

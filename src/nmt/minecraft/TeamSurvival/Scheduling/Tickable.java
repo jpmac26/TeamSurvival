@@ -1,9 +1,8 @@
 package nmt.minecraft.TeamSurvival.Scheduling;
 
 /**
- * Tickable instances can be registered with the scheduler to receive a notification after some amount of time.<br />
+ * Tickable instances can be registered with the scheduler to receive a notification after some amount of time.
  * @author Skyler
- *
  */
 public interface Tickable {
 	

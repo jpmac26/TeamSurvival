@@ -6,10 +6,10 @@ import org.bukkit.event.HandlerList;
 import nmt.minecraft.TeamSurvival.Player.Team;
 
 /**
- * This Event Class is called whenever a team has officially lost.
+ * This Event is called whenever a team has officially lost.
  * It contains the team class.
- * @author William
  *
+ * @author William
  */
 public class TeamLossEvent extends Event {
 
@@ -25,12 +25,12 @@ public class TeamLossEvent extends Event {
 	}
 	
 	/**
-	 * This variable contains a reference to the losing team.
+	 * This variable contains a reference to the losing team
 	 */
 	private Team losingTeam;
 	
 	/**
-	 * The constructor for this event requires the reference to the team that lost.
+	 * The constructor for this event requires the reference to the team that lost
 	 * @param losingTeam
 	 */
 	public TeamLossEvent(Team losingTeam) {
@@ -38,8 +38,8 @@ public class TeamLossEvent extends Event {
 	}
 	
 	/**
-	 * Return the losing team's object.
-	 * @return The team that just lost.
+	 * Return the losing team's object
+	 * @return The team that just lost
 	 */
 	public Team getTeam() {
 		return this.losingTeam;

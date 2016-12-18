@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
 
 /**
- * A boss wave
+ * A boss wave.
  * @author Skyler
  *
  */

@@ -17,8 +17,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  * Holds information about a possible mob spawn, and spawns it when willed.<br />
  * The information about equipment and health is stored here so that random-per-mob
  * spawns are do-able. Also contains data about what chances a mob has to spawn with
- * armor and enchantments
- * @author Herobrine
+ * armor and enchantments.
  * @author Franz Chavez
  * @author James Pelster
  * @author Stephanie
@@ -26,20 +25,20 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
  */
 public class Mob {
 	/**
-	 * Wave at which it is possible to get mobs with diamond equipment
+	 * Wave at which it is possible to get mobs with diamond equipment.
 	 */
 	private static final int diamondWave=9;
 	private static final int ironWave=6;
 	private static final int goldWave=4;
 	private static final int leatherWave=3;
 	
-	private final int diamondChance=10;//10% chance for diamond
-	private final int ironChance=20;
-	private final int goldChance=25; //
-	private final int leatherChance=50;//50% of mobs have leather armor
+	private final int diamondChance=10; //10% chance for diamond
+    private final int ironChance=20; //20% of mobs have iron armor
+    private final int goldChance=25; //25% of mobs have gold armor
+	private final int leatherChance=50; //50% of mobs have leather armor
 	
 	/**
-	 * Keep track of what type of entity to spawn
+	 * Keep track of what type of entity to spawn.
 	 */
 	private String type;
 	private static Double[] chances;
@@ -64,7 +63,7 @@ public class Mob {
 		armor = new ItemStack[4];
 		waveNumber=0;
 		if(rGen==null){
-			rGen = new Random(System.currentTimeMillis());//seed the generator
+			rGen = new Random(System.currentTimeMillis()); //seed the generator
 		}
 	}
 	
@@ -105,7 +104,7 @@ public class Mob {
 			armor[0] = null;
 		}
 		
-		//generate Chestplate
+		//generate chestplate
 		switch(genEquipLevel()){
 		case DIAMOND:
 			armor[1] = new ItemStack(Material.DIAMOND_CHESTPLATE);
@@ -123,7 +122,7 @@ public class Mob {
 			armor[1] = null;
 		}
 		
-		//generate Leggings
+		//generate leggings
 		switch(genEquipLevel()){
 		case DIAMOND:
 			armor[2] = new ItemStack(Material.DIAMOND_LEGGINGS);
@@ -141,7 +140,7 @@ public class Mob {
 			armor[2] = null;
 		}
 		
-		//generate Leggings
+		//generate boots
 		switch(genEquipLevel()){
 		case DIAMOND:
 			armor[3] = new ItemStack(Material.DIAMOND_BOOTS);
@@ -185,8 +184,7 @@ public class Mob {
 		return;
 	}
 	
-	private level genEquipLevel(){
-		//*
+	private level genEquipLevel() {
 		int rNumber = rGen.nextInt(100);
 		switch(waveNumber){
 		case diamondWave:
@@ -215,11 +213,10 @@ public class Mob {
 		default:
 			return level.NONE;
 		}
-		//*/
 	}
 	
 	/**
-	 * This method will calculate all the equipment that will recieve enchantments
+	 * Calculate all the equipment that will recieve enchantments.
 	 */
 	private void generateEnchantments(){
 		int numEnchant=0;
@@ -250,7 +247,7 @@ public class Mob {
 	}
 	
 	/**
-	 * This method actually adds the enchantment to the itemstack for the armor
+	 * This method actually adds the enchantment to the ItemStack for the armor.
 	 * @param index the index of the piece of armor to enchant
 	 * @return true if it worked, false otherwise
 	 */
@@ -293,7 +290,7 @@ public class Mob {
 	}
 	
 	/**
-	 * This method adds the enchantment to the itemstack for the weapon
+	 * This method adds the enchantment to the itemstack for the weapon.
 	 * @return true if it worked, false if there was no weapon to enchant
 	 */
 	private boolean enchantWeapon() {
@@ -344,7 +341,7 @@ public class Mob {
 	}
 
 	/**
-	 * Checks to see if it is ok to enchant a piece of equipment
+	 * Checks to see if it is ok to enchant a piece of equipment.
 	 * @param currentEnchants the number of enchants currently on all equipment
 	 * @return true if it is ok to enchant, false otherwise
 	 */
@@ -423,7 +420,7 @@ public class Mob {
 	}
 	
 	/**
-	 * Returns a clone of the wave. 
+	 * Returns a clone of the mob.
 	 */
 	@Override
 	public Mob clone(){

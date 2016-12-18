@@ -11,7 +11,7 @@ import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
  * Manager class for all sessions.<br />
- * Static class that gives access to global information
+ * Static class that gives access to global information.
  * @author Skyler
  * @author Stephanie
  * @note Classified as a session job
@@ -37,7 +37,7 @@ public class TeamSurvivalManager {
 	
 	/**
 	 * Looks up a team by a player.<br />
-	 * In other words, this method returns the team a player belongs to
+	 * In other words, this method returns the team a player belongs to.
 	 * @param player
 	 * @return
 	 */
@@ -53,7 +53,7 @@ public class TeamSurvivalManager {
 	
 	/**
 	 * Returns the underlying collection of sessions.<br />
-	 * Does NOT clone! This collection is the same collection this thing holds
+	 * Does NOT clone! This collection is the same collection this thing holds.
 	 * @return
 	 */
 	public static Collection<GameSession> getSessions() {
@@ -61,8 +61,8 @@ public class TeamSurvivalManager {
 	}
 	
 	/**
-	 * Registers a game session, if it's not already registered
-	 * @param session The game session to add.
+	 * Registers a game session, if it's not already registered.
+	 * @param session The game session to add
 	 * @return true if the session was added
 	 */
 	public static boolean register(GameSession session) {

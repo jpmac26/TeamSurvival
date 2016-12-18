@@ -34,24 +34,24 @@ public class Team implements Listener {
 	private static int lastID = 0;
 	
 	/**
-	 * Collection of the players that are part of this team
+	 * Collection of the players that are part of this team.
 	 */
 	private HashSet<SurvivalPlayer> players;
 
 	/**
-	 * This team's name
+	 * This team's name.
 	 */
 	private String name;
 	
 	private int ID;
 	
 	/**
-	 * the lcoation of the areana that this team belogns to
+	 * The location of the arena that this team belongs to.
 	 */
 	private Location arenaLocation;
 	
 	/**
-	 * The location where the team will go to fight the boss
+	 * The location where the team will go to fight the boss.
 	 */
 	private Location bossLocation;
 	
@@ -60,9 +60,9 @@ public class Team implements Listener {
 	}
 	
 	/**
-	 * Main constructor for the Team Class.
-	 * @param name The name for the team.
-	 * @param players A collection of players that are associated with a team.
+	 * Main constructor for the Team class.
+	 * @param name The name for the team
+	 * @param players A collection of players that are associated with a team
 	 * TODO We should probably somehow limit the size and character set of a team name.
 	 */
 	public Team(String name, Collection<SurvivalPlayer> players) {
@@ -83,8 +83,7 @@ public class Team implements Listener {
 	
 	
 	/**
-	 * Returns a team's name.
-	 * @return the Team's name.
+	 * @return The Team's name
 	 */
 	public String getName() {
 		return this.name;
@@ -92,10 +91,10 @@ public class Team implements Listener {
 	
 
 	/**
-	 * This method adds a player to a team.<br />
+	 * This method adds a player to a team<.br />
 	 * The player's pregame location is also set at this point.
-	 * @param player
-	 * @return True if the player was successfully added to the Team.
+	 * @param player the player to be added to the team
+	 * @return true, if the player was successfully added to the Team
 	 */
 	public boolean addPlayer(SurvivalPlayer player) {
 		player.setPreGameLocation(player.getPlayer().getLocation());
@@ -108,17 +107,17 @@ public class Team implements Listener {
 	
 	/**
 	 * This method removes a player from a team.
-	 * @param player The player to be removed.
-	 * @return <b>True</b> if the player was successfully removed.<br>
+	 * @param player The player to be removed
+	 * @return <b>True</b> if the player was successfully removed<br>
 	 * <b>False</b> if the player could not be removed or was not in the team to 
-	 * begin with.
+	 * begin with
 	 */
 	public boolean removePlayer(SurvivalPlayer player) {
 		return this.players.remove(player);
 	}
 	
 	/**
-	 * Checks to see if a player is on this team
+	 * Checks to see if a player is on this team.
 	 * @param player the player to look for
 	 * @return true if the player is on the team, false otherwise
 	 */
@@ -127,7 +126,7 @@ public class Team implements Listener {
 	}
 	
 	/**
-	 * Checks to see if a player is on this team
+	 * Checks to see if a player is on this team.
 	 * @param player the player to look for
 	 * @return will return the SurvivalPlayer if found, null otherwise
 	 */
@@ -144,7 +143,7 @@ public class Team implements Listener {
 	/**
 	 * Mainly a glamour function. Does whatever we want the players see/experience when they win, like
 	 * play a sound and display something in chat, etc. Lots of room for creativity here.<br />
-	 * Should also return players to lobby, etc
+	 * Should also return players to lobby, etc.
 	 */
 	public void win() {
 		//For each player in this team...

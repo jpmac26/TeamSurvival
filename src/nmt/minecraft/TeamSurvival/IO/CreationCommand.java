@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import nmt.minecraft.TeamSurvival.Map.Creator;
 
 /**
- * 
+ * Command for creating and editing arenas and their associated shops, starting locations, etc.
  * @author Stephanie
  */
 public class CreationCommand implements CommandExecutor{

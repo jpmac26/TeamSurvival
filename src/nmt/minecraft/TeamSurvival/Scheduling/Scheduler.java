@@ -42,8 +42,7 @@ public final class Scheduler {
 	
 	
 	/**
-	 * Returns the scheduler that can be used to registered {@link Tickable} objects
-	 * @return
+	 * @return the scheduler that can be used to registered {@link Tickable} objects
 	 */
 	public static Scheduler getScheduler() {
 		if (scheduler == null) {
@@ -58,7 +57,7 @@ public final class Scheduler {
 	}
 	
 	/**
-	 * Internal reminder mechanism that allows the scheduler to know 
+	 * Internal reminder mechanism that allows the scheduler to remember something.
 	 * @param reminder
 	 */
 	private void notify(Reminder reminder) {
@@ -74,7 +73,7 @@ public final class Scheduler {
 	 * @param tickable The instance to 'tick' when the time is up
 	 * @param reference An object that can be identified and acted upon when the instance if 'ticked'
 	 * @param seconds How many seconds to remind the instance after. <b>Please Note:</b> values that
-	 * are not divisible by .05 will be rounded to the nearest .05 (a server tick).
+	 * are not divisible by .05 will be rounded to the nearest .05 (a server tick)
 	 * @return True if there was already a scheduled event for this tickable instance that was overwritten, false otherwise
 	 */
 	public boolean schedule(Tickable tickable, Object reference, double seconds) {
@@ -99,7 +98,7 @@ public final class Scheduler {
 	
 	/**
 	 * Attempts to unregister the tickable instance.
-	 * @param tickable
+	 * @param tickable the instance to unregister
 	 * @return Whether or not this was successful, including whther there was something waiting
 	 */
 	public boolean unregister(Tickable tickable) {

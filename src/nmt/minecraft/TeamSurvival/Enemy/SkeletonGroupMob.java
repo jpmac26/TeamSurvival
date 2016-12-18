@@ -12,7 +12,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * A mob that consists of a member of a hardcore skeleton group -- a boss
+ * A mob that consists of a member of a hardcore skeleton group -- a boss.
  * @author Skyler
  *
  */

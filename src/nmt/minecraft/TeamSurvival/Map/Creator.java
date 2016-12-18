@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import nmt.minecraft.TeamSurvival.IO.ChatFormat;
 
 /**
- * This is basically a static wrapper for the Map class and handles all creation commmands
+ * This is basically a static wrapper for the Map class and handles all creation commands.
  * @author Stephanie
  */
 public final class Creator {

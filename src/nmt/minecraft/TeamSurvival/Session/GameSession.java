@@ -35,10 +35,9 @@ import nmt.minecraft.TeamSurvival.Shop.Shop;
 
 /**
  * Holds a single game session.<br />
- * Game sessions will hold the current state of things, the teams involved, etc
+ * Game sessions will hold the current state of things, the teams involved, etc.
  * @author Skyler
  * @author Stephanie
- *
  */
 public class GameSession implements Listener, Tickable {
 	
@@ -57,9 +56,8 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	/**
-	 * Defines standard messages that GameSessions will send out
+	 * Defines standard messages that GameSessions will send out.
 	 * @author Skyler
-	 *
 	 */
 	public static enum Messages {
 		STARTINFO("The game has begun!\n" + ChatColor.GREEN + "15 Minutes until waves begin, so prepare yourself!" + ChatColor.RESET),
@@ -83,8 +81,7 @@ public class GameSession implements Listener, Tickable {
 		
 		/**
 		 * Returns the string equivalent of this predefined message.<br />
-		 * For convenience, consider using {@link #toString()} instead
-		 * @return
+		 * For convenience, consider using {@link #toString()} instead.
 		 */
 		public String getString() {
 			return message;
@@ -92,9 +89,9 @@ public class GameSession implements Listener, Tickable {
 	}
 	
 	/**
-	 * Holds the different types of time-based reminders we'd need
+	 * Holds the different types of time-based reminders we'd need.
 	 * @author Skyler
-	 * @see {@link GameSession#tick(Object)}
+	 * @see GameSession#tick(Object)
 	 */
 	private enum Reminders {
 		ONEMINUTE,

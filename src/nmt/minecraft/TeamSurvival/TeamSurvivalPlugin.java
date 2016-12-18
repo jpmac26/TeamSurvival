@@ -18,7 +18,6 @@ import nmt.minecraft.TeamSurvival.Util.LocationState;
  * Creates everything and all things and everything.
  * @author Skyler
  * @author Stephanie
- *
  */
 public class TeamSurvivalPlugin extends JavaPlugin {
 	

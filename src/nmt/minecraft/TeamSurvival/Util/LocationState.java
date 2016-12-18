@@ -10,17 +10,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 /**
- * Convenience class for saving and loading location data from config 
+ * Convenience class for saving and loading location data from config.
  * @author Skyler
- *
  */
 public class LocationState implements ConfigurationSerializable {
 	
 	Location location;
 	
 	/**
-	 * Registers this class as configuration serializable with all defined 
-	 * {@link aliases aliases}
+	 * Registers this class as configuration serializable with all defined {@link aliases aliases}.
 	 */
 	public static void registerWithAliases() {
 		for (aliases alias : aliases.values()) {
@@ -29,7 +27,7 @@ public class LocationState implements ConfigurationSerializable {
 	}
 	
 	/**
-	 * Registers this class as configuration serializable with only the default alias
+	 * Registers this class as configuration serializable with only the default alias.
 	 */
 	public static void registerWithoutAliases() {
 		ConfigurationSerialization.registerClass(LocationState.class);
@@ -56,9 +54,8 @@ public class LocationState implements ConfigurationSerializable {
 	}
 	
 	/**
-	 * Stores fields and their config keys
+	 * Stores fields and their config keys.
 	 * @author Skyler
-	 *
 	 */
 	private enum fields {
 		X("x"),
@@ -75,8 +72,7 @@ public class LocationState implements ConfigurationSerializable {
 		}
 		
 		/**
-		 * Returns the configuration key mapped to this field
-		 * @return
+		 * @return the configuration key mapped to this field
 		 */
 		public String getKey() {
 			return this.key;
@@ -85,7 +81,7 @@ public class LocationState implements ConfigurationSerializable {
 	
 	/**
 	 * Creates a LocationState with the information from the passed location.
-	 * @param location
+	 * @param location the location to generate a state from
 	 */
 	public LocationState(Location location) {
 		this.location = location;
@@ -108,8 +104,8 @@ public class LocationState implements ConfigurationSerializable {
 	
 	/**
 	 * Uses the passed configuration map to instantiate a new location (and wrapper).
-	 * @param configMap
-	 * @return
+	 * @param configMap the input configuration map
+	 * @return the instantiated LocationState
 	 */
 	public static LocationState valueOf(Map<String, Object> configMap) {
 		World world = Bukkit.getWorld((String) configMap.get(fields.WORLD.getKey()));
@@ -138,8 +134,7 @@ public class LocationState implements ConfigurationSerializable {
 	}
 	
 	/**
-	 * Return the location wrapped by this class
-	 * @return
+	 * @return the location wrapped by this class
 	 */
 	public Location getLocation() {
 		return location;

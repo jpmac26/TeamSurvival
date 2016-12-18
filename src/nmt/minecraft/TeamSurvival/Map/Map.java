@@ -17,8 +17,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 /**
  * This Class represents a single map within Team Survival.<br />
  * Each map will contain a Shop Location and a Collection of Locations<br>
- * for players to spawn in.
- * TODO Check for valid on load
+ * for players to spawn in. <br/>
+ * TODO: Check if valid on load
  * @author William
  * @author Stephanie
  */
@@ -48,7 +48,7 @@ public class Map {
 	
 	/**
 	 * This method sets the Shop Location for the Map.
-	 * @param location The Location of the Shop.
+	 * @param location The Location of the Shop
 	 */
 	public void setShopLocation(Location location) {
 		this.shopLocation = location;
@@ -64,8 +64,8 @@ public class Map {
 
 	/**
 	 * This adds a single location to this Map's Arena Locations.
-	 * @param location The location to add.
-	 * @return True if the location was successfully added.
+	 * @param location The location to add
+	 * @return True if the location was successfully added
 	 */
 	public boolean addArenaLocation(Location location) {
 		return this.arenaLocations.add(location);
@@ -73,8 +73,8 @@ public class Map {
 	
 	/**
 	 * This method adds multiple locations to this Map's Arena Locations.
-	 * @param locations The Collection of Locations to add.
-	 * @return True if all the locations could be added.
+	 * @param locations The Collection of Locations to add
+	 * @return True if all the locations could be added
 	 */
 	public boolean addArenaLocation(Collection<Location> locations) {
 		return this.arenaLocations.addAll(locations);
@@ -90,7 +90,7 @@ public class Map {
 	}
 	
 	/**
-	 * This method adds all given locations to this maps boss locations
+	 * This method adds all given locations to this maps boss locations.
 	 * @param locations the locations to add to the boss locations
 	 * @return true if all locations were added sucessfully
 	 */
@@ -100,7 +100,7 @@ public class Map {
 	
 	/**
 	 * This method returns the Arena Locations of this Map.
-	 * @return A collection of all the Arena Locations.
+	 * @return A collection of all the Arena Locations
 	 */
 	public Collection<Location> getArenaLocations()	{
 		return this.arenaLocations;
@@ -131,7 +131,7 @@ public class Map {
 	}
 	
 	/**
-	 * returns the next arena and removes it from the list
+	 * Returns the next arena and removes it from the list.
 	 * @return the next arena location or null if there are no more locations
 	 */
 	public Location getNextArena(){
@@ -179,9 +179,9 @@ public class Map {
 	}
 	
 	/**
-	 * loads a new Map from the configuration file with name.yml
+	 * Loads a new Map from the configuration file with [name].yml.
 	 * @param name name of the file
-	 * @return the new Map or null if something went wrong.
+	 * @return the new Map or null if something went wrong
 	 */
 	public static Map loadConfig(String name){
 		Map tmp = new Map();
@@ -244,7 +244,7 @@ public class Map {
 	}
 	
 	/**
-	 * Saves this Map to a config file name.yml
+	 * Saves this Map to a config file [name].yml.
 	 * @return true if it worked, false otherwise
 	 */
 	public boolean saveConfig(){
@@ -268,7 +268,7 @@ public class Map {
 	}
 	
 	/**
-	 * Checks to see if this map is valid to play on
+	 * Checks to see if this map is valid to play on.
 	 * @return true if it can be played as is
 	 */
 	public boolean isValid(){

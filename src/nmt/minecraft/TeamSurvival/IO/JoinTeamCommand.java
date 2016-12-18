@@ -11,6 +11,10 @@ import nmt.minecraft.TeamSurvival.Player.SurvivalPlayer;
 import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
+/**
+ * Command for adding a player to a team.
+ * @author Stephanie
+ */
 public class JoinTeamCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -18,7 +22,7 @@ public class JoinTeamCommand implements CommandExecutor{
 	}
 	
 	/**
-	 * Handles a join command
+	 * Handles a join command.
 	 * @param sender Who send the command
 	 * @param args The args passed to the command
 	 * @return true if the sender was successfully added
@@ -72,7 +76,7 @@ public class JoinTeamCommand implements CommandExecutor{
 	}
 	
 	/**
-	 * Checks to see if player is on any team
+	 * Checks to see if player is on any team.
 	 * @param player the player to look for
 	 * @return true if the player is on a team
 	 */

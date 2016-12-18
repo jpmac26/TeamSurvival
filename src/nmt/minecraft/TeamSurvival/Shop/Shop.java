@@ -21,21 +21,20 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  * A shop that offers items to players for a price.<br />
  * Has a location that it listens for to interact with, and then presents an inventory menu.
  * @author Skyler
- *
  */
 public class Shop implements Listener {
 	
 	/**
-	 * Map between integer position and the item
+	 * Map between integer position and the item.
 	 */
 	private Map<Integer, ShopItem> items;
 	
 	private Location buttonLocation;
 	
 	/**
-	 * Sets up a shop, with a list of items and a button location
+	 * Sets up a shop, with a list of items and a button location.
 	 * @param buttonLocation The location of the button to listen for
-	 * @param items The list of items. If this is null, will use {@link ShopDefaults} to generate defaults.
+	 * @param items The list of items. If this is null, will use {@link ShopDefaults} to generate defaults
 	 */
 	public Shop(Location buttonLocation, Map<Integer, ShopItem> items) {
 		this.buttonLocation = buttonLocation.getBlock().getLocation();
@@ -108,9 +107,9 @@ public class Shop implements Listener {
 	}
 	
 	/**
-	 * Attempts to purchase an item for the given player
-	 * @param player
-	 * @param item
+	 * Attempts to purchase an item for the given player.
+	 * @param player the player that is buying the item
+	 * @param item the item to buy
 	 */
 	private static void purchaseItem(Player player, ShopItem item) {
 		if (player.getLevel() < item.getCost()) {

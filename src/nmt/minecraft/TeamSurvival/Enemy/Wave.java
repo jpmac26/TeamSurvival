@@ -24,7 +24,7 @@ import nmt.minecraft.TeamSurvival.TeamSurvivalPlugin;
  */
 public class Wave implements Listener {
 	private static final int defaultMaxMobs = 40;
-	private String MobTypes[] = {"Zombie","Skeleton","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
+	private String MobTypes[] = {"Zombie","Husk","Skeleton","Stray","Cave_Spider","Endermite","Creeper","Jockey","Wither_Skeleton"};
 	private int MobVals[] = {0,4,3,2,7,7,8,6};
 	private List<Mob> Mobs;
 	protected List<LivingEntity> Entities;
@@ -102,7 +102,8 @@ public class Wave implements Listener {
 	}
 	
 	/**
-	 * Sets up a basic wave with no specifications, for construction in a factory method (see {@link #clone})
+	 * Sets up a basic wave with no specifications, for construction in a factory method.
+     * @see Wave#clone(List<Location>) Wave.clone()
 	 */
 	protected Wave() {
 		Mobs = new LinkedList<Mob>();
@@ -115,10 +116,9 @@ public class Wave implements Listener {
 	}
 	
 	/**
-	 * Gets the list of mobs in the wave and produces the random equipment
-	 * @param mobsUsed is the array of 3 types of mobs
-	 * @param mobCount is the number of mobs in the wave
-	 * @return 
+	 * Gets the list of mobs in the wave and produces the random equipment.
+	 * @param mobsUsed the array of 3 types of mobs
+	 * @param mobCount the number of mobs in the wave
 	 * @note calls another function 
 	 */
 	private void SetupMobs(String[] mobsUsed, int mobCount, int waveNum){
@@ -130,8 +130,8 @@ public class Wave implements Listener {
 	
 
 	/**
-	 * Gets a random mob from what's left to spawn and spawns it, returning the entity
-	 * @return
+	 * Gets a random mob from what's left to spawn and spawns it.
+	 * @return the entity spawned
 	 */
 	public void spawnRandomMob(Location location) {
 		Entities.add(Mobs.remove(rGen.nextInt(Mobs.size())).SpawnEntity(location));
@@ -143,7 +143,7 @@ public class Wave implements Listener {
 	 */
 	public void start() {
 		started = true;
-		while(started == true && Entities.size() < maxSpawned && Mobs.size() > 0) {
+		while (started == true && Entities.size() < maxSpawned && Mobs.size() > 0) {
 			int RandPoint = rGen.nextInt(MobSpawnPoints.size());
 			spawnRandomMob(MobSpawnPoints.get(RandPoint));
 		}
@@ -221,11 +221,12 @@ public class Wave implements Listener {
 	public boolean isComplete() {
 		return Entities.isEmpty();
 	}
+
 	/**
 	 * Returns a clone of the wave. 
-	 * @param needs the list of the locations of the new 
+	 * @param mobSpawnPoints the list of the locations of the new wave
 	 */
-	public Wave clone(List<Location> m){
+	public Wave clone(List<Location> mobSpawnPoints){
 		Wave NW = new Wave();
 
 		NW.maxSpawned = maxSpawned;
@@ -234,7 +235,7 @@ public class Wave implements Listener {
 			NW.Mobs.add(mob.clone());
 		}
 		
-		NW.MobSpawnPoints = m;
+		NW.MobSpawnPoints = mobSpawnPoints;
 		
 		return NW;
 	}

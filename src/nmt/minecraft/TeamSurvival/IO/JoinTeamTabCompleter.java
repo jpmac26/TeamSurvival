@@ -13,7 +13,7 @@ import nmt.minecraft.TeamSurvival.Player.Team;
 import nmt.minecraft.TeamSurvival.Session.GameSession;
 
 /**
- * 
+ * Does tab completion for the join command.
  * @author Stephanie
  */
 public class JoinTeamTabCompleter implements TabCompleter{
